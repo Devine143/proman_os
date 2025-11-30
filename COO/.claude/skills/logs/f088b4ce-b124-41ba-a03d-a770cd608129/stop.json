@@ -1,0 +1,10 @@
+[
+  {
+    "session_id": "f088b4ce-b124-41ba-a03d-a770cd608129",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-AGENT/f088b4ce-b124-41ba-a03d-a770cd608129.jsonl",
+    "cwd": "/Users/donovan/AGENT/.claude/skills",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "Stop",
+    "stop_hook_active": false
+  }
+]

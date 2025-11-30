@@ -1,0 +1,10 @@
+{
+  "session_id": "b0582bfd-024e-42d9-ba24-7787777e07db",
+  "prompts": [
+    "You are an expert in LLM memory systems.\nBegin with a concise checklist (3-7 bullets) of steps you will take to review the current memory system and generate suggestions for improvement; keep items conceptual, not implementation-level.\nAfter providing your suggestions, briefly validate that your recommendations address identifiable weaknesses or gaps in the system, and clarify the next best step for follow-up evaluation or implementation.",
+    "the work flows how do they work and what benefit will it have?",
+    "The example of the AI cahse list, is this not somehting the operaton-manger does? ",
+    "With the no agent approach will I am worried about context windows, and with agents I can run things in parallet with the git worktree function. Will this not be better and less complicated? ",
+    "I would like to update all documenaiton in the repo including the claude.md file to take into account the archtiect menation above. and then create a MD file that I can reference goig forward"
+  ]
+}

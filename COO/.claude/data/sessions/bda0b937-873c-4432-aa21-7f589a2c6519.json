@@ -1,0 +1,8 @@
+{
+  "session_id": "bda0b937-873c-4432-aa21-7f589a2c6519",
+  "prompts": [
+    "Go throuhg the 11 buck project folder, see what is in the folder and give a short confidence score of if it should be there. if its a lowe confiednce scrore give me a suggest place to put it in another folder, you can suggest folders that are not there. I would like to follow ISO 19650 convention ",
+    "'/Users/donovan/AGENT/projects/11_Buck_Road_ISO19650_Assessment.md' implement this",
+    "/organize_gdrive "
+  ]
+}

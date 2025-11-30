@@ -1,0 +1,11 @@
+{
+  "session_id": "b100ab8b-f12c-478c-bc02-909554af2e96",
+  "prompts": [
+    "'/Users/donovan/Desktop/Screenshot 2025-11-08 at 07.31.05.png' based on the screen shot and the '/Users/donovan/AGENT/.claude/status_lines/status_line_main.py' why am i seeing two agents. lets add in the context window to the statusline'/Users/donovan/AGENT/ai_docs/claude-code-statusline-docs.md'",
+    "2 an 3 please ",
+    "ok great thanks",
+    "I see the statusline returns 3p/0t that can be right? ",
+    "what is the contect window length? ",
+    "I dont see the costing "
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "session_id": "9e63612c-fde3-48ae-b3a8-360714c481dd",
+  "prompts": [
+    "go throuhg the code base and name all the different files and what they do",
+    "GO through the seesion logs and give me an evolution of this repo, what patterns do you see? ",
+    "based on the the above, if I had to take about 80% of what been built what would you keep? this is the 20 ",
+    "let do it the other way around what 20% would you keep and 80 remove an why? ",
+    "'/Users/donovan/AGENT/.claude/commands/occams-razor.md'"
+  ]
+}

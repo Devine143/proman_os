@@ -1,0 +1,14 @@
+{
+  "session_id": "65210cc7-7747-4fa9-b13f-8646b191d6dd",
+  "prompts": [
+    "Organize procurement files for 11 Buck project",
+    "I dont see the project-doc -manger working on this why not?",
+    "why did it happen and what did you fix?",
+    "Organise the 11 buck procurement folder",
+    "before proceedig what are the 9 duplicared files",
+    "yes proceed with all",
+    "I see there are two goc files in the main procurement folder, where can we pu t this. All file sneneds a folder",
+    "yes proceed with this",
+    "can we make a rule that the agent follows to say that not files are allowed in the main folder procurement, they need to be in foolder. Ask clarifying questions"
+  ]
+}

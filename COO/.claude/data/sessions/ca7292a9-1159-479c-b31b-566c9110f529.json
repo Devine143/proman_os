@@ -1,0 +1,15 @@
+{
+  "session_id": "ca7292a9-1159-479c-b31b-566c9110f529",
+  "prompts": [
+    "I've been thinking about my business system that we are building and would\n  like to use subagents as different departments in my busienss that handle\n  different things. We have a two tired system at the moment, knwledge base of\n  existing project for contesxt and a operations system to follow up on the day\n  to day things that need to be done. What subagents would you suggest? ",
+    "Save this to md. Once done give me a comprehensive plan with excurating deal on how you would implement into my current system and how confident you are it will work and increase the system as a whole ",
+    "Why do we start wiht the omnifocus export are we not talking about the operations manger agent?",
+    "before we get going with the agent, I have changed the script a little for the export and started using tags like High priorty, and giving dates for completion to have something to work for. Not one do I use a waiting for tag. Can we make sure we are using the right catergories first before starting the operations agent",
+    "use the '/Users/donovan/AGENT/scripts/sync-omnifocus.py' to see what tagging and infmaton I have ",
+    "1.Can the agent automatically add the time estmiate.Follow up email will be about 3 to 5 mintues, same for calls et.2 yes please autmatically do that in omnifocus files so I can see them clearly if I open up onmifocus app manually. 3 Option a for now.4 agent to convert to full dates",
+    "have a look at the agent docs and make sure you've followed best practices'/Users/donovan/AGENT/ai_docs/sub-agents.md'",
+    "when create agents for this system always create subagents - refernce this in the claude.md so in future we don't try running a script agent. Also deleted all script agents docs",
+    "What's on my plate?",
+    "The subagent isn't being recognized by the Task tool. Let me read\n  the latest OmniFocus data directly and generate your chase list:\\\n\\\nwhy did this happen? "
+  ]
+}

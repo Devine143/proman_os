@@ -1,0 +1,6 @@
+{
+  "session_id": "4eec5cc8-11ad-4297-9d48-78c03fabba39",
+  "prompts": [
+    "/t_metaprompt_workflow I would like to create this command please ## PROTOCOL: AI Chase List\n\n**Trigger:** \"AI Chase List\" or \"Generate Chase List\"\n\n**Creates prioritized follow-up list:**\n\n1. Pull all tasks waiting on external parties (contractors, consultants, clients, authorities)\n2. Calculate days waiting for each item\n3. Assign urgency level:\n   - \ud83d\udd34 URGENT: >7 days waiting\n   - \ud83d\udfe1 HIGH: 4-7 days waiting\n   - \ud83d\udfe2 ROUTINE: <4 days waiting\n4. Sort by urgency (URGENT first)\n5. Include for each: task description, who we're waiting on, project name, days waiting, last contact date, recommended action\n\n**Output:** Table sorted by urgency, ready to work top to bottom. use the omnifocus mcp"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "session_id": "fbc8e6c3-d0ce-456d-ae40-0f6c0415c346",
+  "prompts": [
+    "use proejct docs manager doest get trigger when I ask it to \"Organize procurement files for 11 Buck project\" I think the proejct docs agent is doing to much and hence claude main agent cant pick up the subagent",
+    "I want the agent to only organsie docs nothing else for now"
+  ]
+}

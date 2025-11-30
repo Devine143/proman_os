@@ -1,0 +1,9 @@
+{
+  "session_id": "2da0210a-5f6d-4d4d-8a52-ce1999da97f6",
+  "prompts": [
+    "revise all readme in the repo to accurately communnicate the state of\n  the folder and then consolidate it to give me a overview of how the\n  whole system works, what parts speak to each other and what parts have\n  open nodes or floating by themselves. Ask claridying quesitons if\n  need be ",
+    "1. yes remove all refence of non existing scriots2. update based on what is in the files3. remove its from teh main readme then4.remove it then5. yes",
+    "I would like to create a slash command based on your work that was done above. Ask clarifying questions if need be?",
+    "1. system overview is nice\\\n2.option c\\\n3.review first\\\n4Detailed\\\n5. I will run the slash command manullay "
+  ]
+}

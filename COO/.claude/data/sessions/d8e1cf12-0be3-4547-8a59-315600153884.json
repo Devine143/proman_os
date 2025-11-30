@@ -1,0 +1,19 @@
+{
+  "session_id": "d8e1cf12-0be3-4547-8a59-315600153884",
+  "prompts": [
+    "/chase-list ",
+    "do we need the mcp if I know the direct path to the data on my mac?",
+    "  ~/Library/Containers/com.omnigroup.OmniFocus4/Data/Library/Application Support/OmniFocus/",
+    "OK, looks like you are geting the directly, lets remove the mcp server and and configuratons and query OmniFocus directly via\n  AppleScript.",
+    "I have tags of High priority, meduim and low with dates. I want o format the chaselist to be more useful for me. look at the data adn come up with auser freidnly way to read adn follow up on the items - ultrathink",
+    "will this save to a MD file? if not I would like to do that. with this it will ahve to lok for the previous days file see what on ther and note duplicaiton so there no double entires - ask clarufying questions",
+    "/chase-list ",
+    "can we change it to a folder callde chase list instead of saving to logs?",
+    "/chase-list ",
+    "I have items in the inbox I would like to create a system that tags them and asks if this is correct, I them confirm and its is place in the approcate project - there must be a minimun of 3 tags project, who or priorpty and date ",
+    "Is there a way i can mark some as done and then create a whatsapp and email to the relevant people - Ultrathink ask clarifying questions",
+    "think about it, can we have a check box in the md chase lsit file I go through it, the comamand then reads to see if ther are any marks or ticks one, then writes an email and whats app to the people. ",
+    "I would also like to be able to re alloacte then to other people sometime I have a task that needs to be done after someone has give me work, like Weidman Architect glass balsstrading task is done by I need to follow up with a new contractor ",
+    "I will create a list of people for the different tags - weideman architects is Rayaana, Spotlight is spotlight team, BHR - BHR team, Pyscom is Bianca & Keaton, Techsequence is Charl, Gustav is Gustav, PR eng is paul, Client is kevin"
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "session_id": "1d1edbf8-a1f6-4908-aeb6-9394f8274726",
+  "prompts": [
+    "There a lot of big files in the projects, would you suggest a seperate agent to have a look at them and provide a summary of them? ",
+    "an example would be the '/Users/donovan/AGENT/projects/11_Buck_Road/05_Procurement/Tender/00 Specifications/dhk_11 Buck Street_Architectural Specification_Interim Tender Issue Rev A_2025 11 07.pdf' its 201 pages. I dont want to read this all. I would like AI to help me with it. what are your thiughts on this use case?",
+    "use the @agent-meta-agent to createe the doc-analyzer -there will be other docs that are long and I want a general analyzer not just for spec. Akk clarifying questions"
+  ]
+}

@@ -1,0 +1,9 @@
+[
+  {
+    "session_id": "f088b4ce-b124-41ba-a03d-a770cd608129",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-AGENT/f088b4ce-b124-41ba-a03d-a770cd608129.jsonl",
+    "cwd": "/Users/donovan/AGENT/.claude/skills",
+    "hook_event_name": "Notification",
+    "message": "Claude is waiting for your input"
+  }
+]

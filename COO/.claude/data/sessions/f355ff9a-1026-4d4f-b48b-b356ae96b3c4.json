@@ -1,0 +1,9 @@
+{
+  "session_id": "f355ff9a-1026-4d4f-b48b-b356ae96b3c4",
+  "prompts": [
+    "I see whe log AI logs in the log file, can we make sure this is a 7 day rolloff? ask clarifying questions",
+    "1. all log files2. delete files older than 7 days3. a mauly script 4. no ",
+    "before we run the script what patterns have you picked up in the logs?",
+    "perfect"
+  ]
+}
