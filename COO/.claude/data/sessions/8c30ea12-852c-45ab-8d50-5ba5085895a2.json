@@ -1,0 +1,8 @@
+{
+  "session_id": "8c30ea12-852c-45ab-8d50-5ba5085895a2",
+  "prompts": [
+    "@'/Users/donovan/Archive/AGENT/.claude/agents/budget-template-filler.md' run th'/Users/donovan/Archive/AGENT/projects/11_Buck_Road/05_Procurement/PPS/Budget_Status_Reports/Budget_Status_Report_20251119.md'",
+    "I see the agnet doesnt use the skills to create or fill out the tempaltes, why?",
+    "1"
+  ]
+}

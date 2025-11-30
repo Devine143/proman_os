@@ -1,0 +1,11 @@
+{
+  "session_id": "928c240a-db46-4130-9abd-933e5160e30a",
+  "prompts": [
+    "I would like to have a look at creating a finicial agent that help with with the finance of project. Currently i have the feasibiliyt study and PPS for 11 Buck, what other informaiton can the finace agent use? ",
+    "one you are making to to complicated at the moment. I want simple. Also the PPS is called the project payment system'/Users/donovan/AGENT/projects/11_Buck_Road/05_Procurement/PPS' I want simple for now, What can I get from the feasibility study that worth reporting as well as the PPS ?",
+    "ok, so what will  the subagent do then? ",
+    "what are the general cost  you talkonig about?",
+    "It looks like a big portion of the cost is going to lan purchase of aorunf R4 million",
+    "Yes, use the @agent-meta-agent to create teh finacial-controller agent"
+  ]
+}

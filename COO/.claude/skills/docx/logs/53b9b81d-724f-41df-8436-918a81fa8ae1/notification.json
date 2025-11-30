@@ -1,0 +1,10 @@
+[
+  {
+    "session_id": "53b9b81d-724f-41df-8436-918a81fa8ae1",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-Archive-AGENT/53b9b81d-724f-41df-8436-918a81fa8ae1.jsonl",
+    "cwd": "/Users/donovan/Archive/AGENT/.claude/skills/docx",
+    "hook_event_name": "Notification",
+    "message": "Claude is waiting for your input",
+    "notification_type": "idle_prompt"
+  }
+]

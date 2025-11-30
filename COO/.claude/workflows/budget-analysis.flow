@@ -1,0 +1,8 @@
+# Budget Analysis Workflow for Proman Projects
+# Sequential workflow: Financial analysis → Template filling
+
+# Step 1: Analyze project finances
+financial-controller:"Perform comprehensive budget status analysis for the project. Read PPS documents and feasibility study. Calculate all EVM metrics (BAC, PV, EV, AC, CV, SV, CPI, SPI, EAC, ETC, VAC). Perform variance analysis by category. Generate alerts for overspending, timing mismatches, and risks. Develop corrective action recommendations with priority levels and financial impacts. Output structured data including all metrics, category breakdowns, variances, alerts, and recommendations.":analysis_complete ->
+
+# Step 2: Fill professional templates with analysis data
+budget-template-filler:"Using the financial analysis data from the previous step (analysis_complete), fill all 5 professional budget status reporting templates. The analysis data includes: project name, PPS reference, EVM metrics (BAC, PV, EV, AC, CV, SV, CPI, SPI, EAC, ETC, VAC), category breakdowns (Building/Fees/General), variances with root causes, alerts, and corrective action recommendations. Use Skill: xlsx to fill 4 Excel templates with proper formulas (not hardcoded values): EVM_Calculation_Spreadsheet.xlsx, Variance_Analysis_Template.xlsx, Corrective_Action_Tracking_Log.xlsx, Cash_Flow_Forecast_S-Curve.xlsx. Use Skill: docx to fill Budget_Status_Report_Template.docx. Ask user for save location. Save all files with naming convention: [Project]_[Type]_YYYYMMDD.[ext]. Verify zero formula errors. Return list of saved file paths.":templates_complete

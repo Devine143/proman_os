@@ -1,0 +1,8 @@
+{
+  "session_id": "744d3da2-8a71-4edc-8aa9-67afc310b181",
+  "prompts": [
+    "I am having issue with PDF being to big whihc is preventing my doc-agent from analysising the page. What can I do to make it work? ultrathink ",
+    "use UV for running python files . will the agent automatically use the script to parse the big PDF, will it only trigger for big documents?",
+    "will the docs agent use this slash command? "
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "session_id": "e9ae3412-a62e-4564-9d09-ac8a53931c68",
+  "prompts": [
+    "@agent-doc-analyzer please go through this folder and give me a comprehensive summary of it. Are the any duplications and ambiguoty in it'/Users/donovan/AGENT/projects/11_Buck_Road/05_Procurement/Tender/00 Specifications/dhk_11 Buck Street_Architectural Specification_Interim Tender Issue Rev A_2025 11 07.pdf'",
+    "there was a issue with the pdf being to long, what can we do to prevent this from happening? "
+  ]
+}

@@ -1,0 +1,238 @@
+[
+  {
+    "timestamp": "2025-11-20T12:37:26.692910",
+    "input_data": {
+      "session_id": "53b9b81d-724f-41df-8436-918a81fa8ae1",
+      "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-Archive-AGENT/53b9b81d-724f-41df-8436-918a81fa8ae1.jsonl",
+      "cwd": "/Users/donovan/Archive/AGENT/.claude/skills/docx",
+      "model": {
+        "id": "claude-sonnet-4-5-20250929",
+        "display_name": "Sonnet 4.5"
+      },
+      "workspace": {
+        "current_dir": "/Users/donovan/Archive/AGENT/.claude/skills/docx",
+        "project_dir": "/Users/donovan/Archive/AGENT"
+      },
+      "version": "2.0.47",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 0.5990996499999999,
+        "total_duration_ms": 203401,
+        "total_api_duration_ms": 205522,
+        "total_lines_added": 431,
+        "total_lines_removed": 0
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "[Sonnet 4.5] \ud83d\udcad No session data",
+    "error": "Session file .claude/data/sessions/53b9b81d-724f-41df-8436-918a81fa8ae1.json does not exist"
+  },
+  {
+    "timestamp": "2025-11-20T12:37:26.693194",
+    "input_data": {
+      "session_id": "53b9b81d-724f-41df-8436-918a81fa8ae1",
+      "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-Archive-AGENT/53b9b81d-724f-41df-8436-918a81fa8ae1.jsonl",
+      "cwd": "/Users/donovan/Archive/AGENT/.claude/skills/docx",
+      "model": {
+        "id": "claude-sonnet-4-5-20250929",
+        "display_name": "Sonnet 4.5"
+      },
+      "workspace": {
+        "current_dir": "/Users/donovan/Archive/AGENT/.claude/skills/docx",
+        "project_dir": "/Users/donovan/Archive/AGENT"
+      },
+      "version": "2.0.47",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 0.5990996499999999,
+        "total_duration_ms": 203403,
+        "total_api_duration_ms": 205522,
+        "total_lines_added": 431,
+        "total_lines_removed": 0
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4.5]\u001b[0m \u001b[90m\ud83d\udcad No session data\u001b[0m"
+  },
+  {
+    "timestamp": "2025-11-20T12:37:26.695287",
+    "input_data": {
+      "session_id": "53b9b81d-724f-41df-8436-918a81fa8ae1",
+      "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-Archive-AGENT/53b9b81d-724f-41df-8436-918a81fa8ae1.jsonl",
+      "cwd": "/Users/donovan/Archive/AGENT/.claude/skills/docx",
+      "model": {
+        "id": "claude-sonnet-4-5-20250929",
+        "display_name": "Sonnet 4.5"
+      },
+      "workspace": {
+        "current_dir": "/Users/donovan/Archive/AGENT/.claude/skills/docx",
+        "project_dir": "/Users/donovan/Archive/AGENT"
+      },
+      "version": "2.0.47",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 0.5990996499999999,
+        "total_duration_ms": 203404,
+        "total_api_duration_ms": 205522,
+        "total_lines_added": 431,
+        "total_lines_removed": 0
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "[Sonnet 4.5] \ud83d\udcad No session data",
+    "error": "Session file .claude/data/sessions/53b9b81d-724f-41df-8436-918a81fa8ae1.json does not exist"
+  },
+  {
+    "timestamp": "2025-11-20T12:37:26.695628",
+    "input_data": {
+      "session_id": "53b9b81d-724f-41df-8436-918a81fa8ae1",
+      "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-Archive-AGENT/53b9b81d-724f-41df-8436-918a81fa8ae1.jsonl",
+      "cwd": "/Users/donovan/Archive/AGENT/.claude/skills/docx",
+      "model": {
+        "id": "claude-sonnet-4-5-20250929",
+        "display_name": "Sonnet 4.5"
+      },
+      "workspace": {
+        "current_dir": "/Users/donovan/Archive/AGENT/.claude/skills/docx",
+        "project_dir": "/Users/donovan/Archive/AGENT"
+      },
+      "version": "2.0.47",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 0.5990996499999999,
+        "total_duration_ms": 203404,
+        "total_api_duration_ms": 205522,
+        "total_lines_added": 431,
+        "total_lines_removed": 0
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4.5]\u001b[0m \u001b[90m\ud83d\udcad No session data\u001b[0m"
+  },
+  {
+    "timestamp": "2025-11-20T12:38:01.585582",
+    "input_data": {
+      "session_id": "53b9b81d-724f-41df-8436-918a81fa8ae1",
+      "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-Archive-AGENT/53b9b81d-724f-41df-8436-918a81fa8ae1.jsonl",
+      "cwd": "/Users/donovan/Archive/AGENT/.claude/skills/docx",
+      "model": {
+        "id": "claude-sonnet-4-5-20250929",
+        "display_name": "Sonnet 4.5"
+      },
+      "workspace": {
+        "current_dir": "/Users/donovan/Archive/AGENT/.claude/skills/docx",
+        "project_dir": "/Users/donovan/Archive/AGENT"
+      },
+      "version": "2.0.47",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 0.6243050499999998,
+        "total_duration_ms": 238272,
+        "total_api_duration_ms": 256535,
+        "total_lines_added": 431,
+        "total_lines_removed": 0
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "[Sonnet 4.5] \ud83d\udcad No session data",
+    "error": "Session file .claude/data/sessions/53b9b81d-724f-41df-8436-918a81fa8ae1.json does not exist"
+  },
+  {
+    "timestamp": "2025-11-20T12:38:01.586328",
+    "input_data": {
+      "session_id": "53b9b81d-724f-41df-8436-918a81fa8ae1",
+      "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-Archive-AGENT/53b9b81d-724f-41df-8436-918a81fa8ae1.jsonl",
+      "cwd": "/Users/donovan/Archive/AGENT/.claude/skills/docx",
+      "model": {
+        "id": "claude-sonnet-4-5-20250929",
+        "display_name": "Sonnet 4.5"
+      },
+      "workspace": {
+        "current_dir": "/Users/donovan/Archive/AGENT/.claude/skills/docx",
+        "project_dir": "/Users/donovan/Archive/AGENT"
+      },
+      "version": "2.0.47",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 0.6243050499999998,
+        "total_duration_ms": 238272,
+        "total_api_duration_ms": 256535,
+        "total_lines_added": 431,
+        "total_lines_removed": 0
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4.5]\u001b[0m \u001b[90m\ud83d\udcad No session data\u001b[0m"
+  },
+  {
+    "timestamp": "2025-11-20T12:38:01.592704",
+    "input_data": {
+      "session_id": "53b9b81d-724f-41df-8436-918a81fa8ae1",
+      "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-Archive-AGENT/53b9b81d-724f-41df-8436-918a81fa8ae1.jsonl",
+      "cwd": "/Users/donovan/Archive/AGENT/.claude/skills/docx",
+      "model": {
+        "id": "claude-sonnet-4-5-20250929",
+        "display_name": "Sonnet 4.5"
+      },
+      "workspace": {
+        "current_dir": "/Users/donovan/Archive/AGENT/.claude/skills/docx",
+        "project_dir": "/Users/donovan/Archive/AGENT"
+      },
+      "version": "2.0.47",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 0.6243050499999998,
+        "total_duration_ms": 238280,
+        "total_api_duration_ms": 256535,
+        "total_lines_added": 431,
+        "total_lines_removed": 0
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "[Sonnet 4.5] \ud83d\udcad No session data",
+    "error": "Session file .claude/data/sessions/53b9b81d-724f-41df-8436-918a81fa8ae1.json does not exist"
+  },
+  {
+    "timestamp": "2025-11-20T12:38:01.593314",
+    "input_data": {
+      "session_id": "53b9b81d-724f-41df-8436-918a81fa8ae1",
+      "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-Archive-AGENT/53b9b81d-724f-41df-8436-918a81fa8ae1.jsonl",
+      "cwd": "/Users/donovan/Archive/AGENT/.claude/skills/docx",
+      "model": {
+        "id": "claude-sonnet-4-5-20250929",
+        "display_name": "Sonnet 4.5"
+      },
+      "workspace": {
+        "current_dir": "/Users/donovan/Archive/AGENT/.claude/skills/docx",
+        "project_dir": "/Users/donovan/Archive/AGENT"
+      },
+      "version": "2.0.47",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 0.6243050499999998,
+        "total_duration_ms": 238280,
+        "total_api_duration_ms": 256535,
+        "total_lines_added": 431,
+        "total_lines_removed": 0
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4.5]\u001b[0m \u001b[90m\ud83d\udcad No session data\u001b[0m"
+  }
+]

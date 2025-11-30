@@ -1,0 +1,11 @@
+{
+  "session_id": "89b5d9de-3fbf-49e8-a210-d8f1ce841bf2",
+  "prompts": [
+    "I want to implement the negotiation system according to the roadmap in:\n~/Archive/AGENT/docs/NEGOTIATION-SYSTEM-IMPLEMENTATION-ROADMAP.md\n\nLet's start with Phase 1, Deliverable 1.1: Negotiation Preparation SOP\n\nPlease create the SOP following the s",
+    "lets do the rest",
+    "lets proceed wiht your recommendations",
+    "can you confirm the meta-agent was used to create thepreoceurement manager agent?",
+    "please use the meta-agent and make sure it is used. ",
+    "'/Users/donovan/Archive/AGENT/.claude/agents/meta-agent.md' use this "
+  ]
+}
