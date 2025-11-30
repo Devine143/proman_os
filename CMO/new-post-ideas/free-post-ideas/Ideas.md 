@@ -1,0 +1,13 @@
+Hey everyone!
+
+I built a free web app with ClaudeAI to export prompt logs for Claude users and would love some feedback from the community:
+
+https://prompt-export-free.com
+
+Exports your Claude prompt history into clean, professional-looking PDFs (great for documentation, sharing prompts, or keeping a personal archive)
+
+Upload the .JSONL file in @ user/.claude/projects/* andgive it a try!
+
+Let me know what you think!
+
+*This app runs entirely in your browser using DuckDB WASM.
