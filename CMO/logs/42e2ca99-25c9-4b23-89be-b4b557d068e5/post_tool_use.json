@@ -1,0 +1,569 @@
+[
+  {
+    "session_id": "42e2ca99-25c9-4b23-89be-b4b557d068e5",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS-CMO/42e2ca99-25c9-4b23-89be-b4b557d068e5.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/CMO",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Read",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/hooks/post_tool_use.py"
+    },
+    "tool_response": {
+      "type": "text",
+      "file": {
+        "filePath": "/Users/donovan/PROMAN_OS/.claude/hooks/post_tool_use.py",
+        "content": "#!/usr/bin/env -S uv run --script\n# /// script\n# requires-python = \">=3.8\"\n# ///\n\nimport json\nimport os\nimport sys\nfrom pathlib import Path\nfrom utils.constants import ensure_session_log_dir\n\ndef main():\n    try:\n        # Read JSON input from stdin\n        input_data = json.load(sys.stdin)\n        \n        # Extract session_id\n        session_id = input_data.get('session_id', 'unknown')\n        \n        # Ensure session log directory exists\n        log_dir = ensure_session_log_dir(session_id)\n        log_path = log_dir / 'post_tool_use.json'\n        \n        # Read existing log data or initialize empty list\n        if log_path.exists():\n            with open(log_path, 'r') as f:\n                try:\n                    log_data = json.load(f)\n                except (json.JSONDecodeError, ValueError):\n                    log_data = []\n        else:\n            log_data = []\n        \n        # Append new data\n        log_data.append(input_data)\n        \n        # Write back to file with formatting\n        with open(log_path, 'w') as f:\n            json.dump(log_data, f, indent=2)\n        \n        sys.exit(0)\n        \n    except json.JSONDecodeError:\n        # Handle JSON decode errors gracefully\n        sys.exit(0)\n    except Exception:\n        # Exit cleanly on any other error\n        sys.exit(0)\n\nif __name__ == '__main__':\n    main()",
+        "numLines": 51,
+        "startLine": 1,
+        "totalLines": 51
+      }
+    },
+    "tool_use_id": "toolu_01U4Q4WTvXNdfhRTvt6NCWyd"
+  },
+  {
+    "session_id": "42e2ca99-25c9-4b23-89be-b4b557d068e5",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS-CMO/42e2ca99-25c9-4b23-89be-b4b557d068e5.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/CMO",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Read",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/hooks/utils/constants.py"
+    },
+    "tool_response": {
+      "type": "text",
+      "file": {
+        "filePath": "/Users/donovan/PROMAN_OS/.claude/hooks/utils/constants.py",
+        "content": "#!/usr/bin/env -S uv run --script\n# /// script\n# requires-python = \">=3.8\"\n# ///\n\n\"\"\"\nConstants for Claude Code Hooks.\n\"\"\"\n\nimport os\nfrom pathlib import Path\n\n# Base directory for all logs\n# Default is 'logs' in the current working directory\nLOG_BASE_DIR = os.environ.get(\"CLAUDE_HOOKS_LOG_DIR\", \"logs\")\n\ndef get_session_log_dir(session_id: str) -> Path:\n    \"\"\"\n    Get the log directory for a specific session.\n    \n    Args:\n        session_id: The Claude session ID\n        \n    Returns:\n        Path object for the session's log directory\n    \"\"\"\n    return Path(LOG_BASE_DIR) / session_id\n\ndef ensure_session_log_dir(session_id: str) -> Path:\n    \"\"\"\n    Ensure the log directory for a session exists.\n    \n    Args:\n        session_id: The Claude session ID\n        \n    Returns:\n        Path object for the session's log directory\n    \"\"\"\n    log_dir = get_session_log_dir(session_id)\n    log_dir.mkdir(parents=True, exist_ok=True)\n    return log_dir",
+        "numLines": 41,
+        "startLine": 1,
+        "totalLines": 41
+      }
+    },
+    "tool_use_id": "toolu_01HkwER9AraqARWmq899wyyy"
+  },
+  {
+    "session_id": "42e2ca99-25c9-4b23-89be-b4b557d068e5",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS-CMO/42e2ca99-25c9-4b23-89be-b4b557d068e5.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/CMO",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "TodoWrite",
+    "tool_input": {
+      "todos": [
+        {
+          "content": "Test pre_tool_use.py hook (rm -rf blocking)",
+          "status": "in_progress",
+          "activeForm": "Testing pre_tool_use.py hook"
+        },
+        {
+          "content": "Test post_tool_use.py hook (logging)",
+          "status": "pending",
+          "activeForm": "Testing post_tool_use.py hook"
+        },
+        {
+          "content": "Test subagent_stop.py hook",
+          "status": "pending",
+          "activeForm": "Testing subagent_stop.py hook"
+        },
+        {
+          "content": "Verify log files are created correctly",
+          "status": "pending",
+          "activeForm": "Verifying log files"
+        }
+      ]
+    },
+    "tool_response": {
+      "oldTodos": [],
+      "newTodos": [
+        {
+          "content": "Test pre_tool_use.py hook (rm -rf blocking)",
+          "status": "in_progress",
+          "activeForm": "Testing pre_tool_use.py hook"
+        },
+        {
+          "content": "Test post_tool_use.py hook (logging)",
+          "status": "pending",
+          "activeForm": "Testing post_tool_use.py hook"
+        },
+        {
+          "content": "Test subagent_stop.py hook",
+          "status": "pending",
+          "activeForm": "Testing subagent_stop.py hook"
+        },
+        {
+          "content": "Verify log files are created correctly",
+          "status": "pending",
+          "activeForm": "Verifying log files"
+        }
+      ]
+    },
+    "tool_use_id": "toolu_018xCZCT421sahAmDKFNedpr"
+  },
+  {
+    "session_id": "42e2ca99-25c9-4b23-89be-b4b557d068e5",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS-CMO/42e2ca99-25c9-4b23-89be-b4b557d068e5.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/CMO",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "cd /Users/donovan/PROMAN_OS && echo '{\"tool_name\": \"Bash\", \"tool_input\": {\"command\": \"rm -rf /\"}, \"session_id\": \"test-session-123\"}' | uv run .claude/hooks/pre_tool_use.py; echo \"Exit code: $?\"",
+      "description": "Test pre_tool_use rm -rf blocking"
+    },
+    "tool_response": {
+      "stdout": "Exit code:\nReading inline script metadata from `.claude/hooks/pre_tool_use.py`\nBLOCKED: Dangerous rm command detected and prevented\nTip: rm -rf is only allowed in these directories: trees/",
+      "stderr": "Shell cwd was reset to /Users/donovan/PROMAN_OS/CMO",
+      "interrupted": false,
+      "isImage": false
+    },
+    "tool_use_id": "toolu_01EgHUHAWjZRkwSnZ8ihmAJX"
+  },
+  {
+    "session_id": "42e2ca99-25c9-4b23-89be-b4b557d068e5",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS-CMO/42e2ca99-25c9-4b23-89be-b4b557d068e5.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/CMO",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "cd /Users/donovan/PROMAN_OS && echo '{\"tool_name\": \"Bash\", \"tool_input\": {\"command\": \"rm -rf trees/test\"}, \"session_id\": \"test-session-123\"}' | uv run .claude/hooks/pre_tool_use.py; echo \"Exit code: $?\"",
+      "description": "Test allowed rm in trees/ directory"
+    },
+    "tool_response": {
+      "stdout": "Exit code:\nReading inline script metadata from `.claude/hooks/pre_tool_use.py`",
+      "stderr": "Shell cwd was reset to /Users/donovan/PROMAN_OS/CMO",
+      "interrupted": false,
+      "isImage": false
+    },
+    "tool_use_id": "toolu_0141zVYvukSjFSmQhBq3aXGz"
+  },
+  {
+    "session_id": "42e2ca99-25c9-4b23-89be-b4b557d068e5",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS-CMO/42e2ca99-25c9-4b23-89be-b4b557d068e5.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/CMO",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "cd /Users/donovan/PROMAN_OS && echo '{\"tool_name\": \"Read\", \"tool_input\": {\"file_path\": \"/some/file.txt\"}, \"session_id\": \"test-session-123\"}' | uv run .claude/hooks/pre_tool_use.py; echo \"Exit code: $?\"",
+      "description": "Test normal Read tool passes"
+    },
+    "tool_response": {
+      "stdout": "Exit code:\nReading inline script metadata from `.claude/hooks/pre_tool_use.py`",
+      "stderr": "Shell cwd was reset to /Users/donovan/PROMAN_OS/CMO",
+      "interrupted": false,
+      "isImage": false
+    },
+    "tool_use_id": "toolu_01Cb6q4YNVXdVuejfsDvG6Ne"
+  },
+  {
+    "session_id": "42e2ca99-25c9-4b23-89be-b4b557d068e5",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS-CMO/42e2ca99-25c9-4b23-89be-b4b557d068e5.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/CMO",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "TodoWrite",
+    "tool_input": {
+      "todos": [
+        {
+          "content": "Test pre_tool_use.py hook (rm -rf blocking)",
+          "status": "completed",
+          "activeForm": "Testing pre_tool_use.py hook"
+        },
+        {
+          "content": "Test post_tool_use.py hook (logging)",
+          "status": "in_progress",
+          "activeForm": "Testing post_tool_use.py hook"
+        },
+        {
+          "content": "Test subagent_stop.py hook",
+          "status": "pending",
+          "activeForm": "Testing subagent_stop.py hook"
+        },
+        {
+          "content": "Verify log files are created correctly",
+          "status": "pending",
+          "activeForm": "Verifying log files"
+        }
+      ]
+    },
+    "tool_response": {
+      "oldTodos": [
+        {
+          "content": "Test pre_tool_use.py hook (rm -rf blocking)",
+          "status": "in_progress",
+          "activeForm": "Testing pre_tool_use.py hook"
+        },
+        {
+          "content": "Test post_tool_use.py hook (logging)",
+          "status": "pending",
+          "activeForm": "Testing post_tool_use.py hook"
+        },
+        {
+          "content": "Test subagent_stop.py hook",
+          "status": "pending",
+          "activeForm": "Testing subagent_stop.py hook"
+        },
+        {
+          "content": "Verify log files are created correctly",
+          "status": "pending",
+          "activeForm": "Verifying log files"
+        }
+      ],
+      "newTodos": [
+        {
+          "content": "Test pre_tool_use.py hook (rm -rf blocking)",
+          "status": "completed",
+          "activeForm": "Testing pre_tool_use.py hook"
+        },
+        {
+          "content": "Test post_tool_use.py hook (logging)",
+          "status": "in_progress",
+          "activeForm": "Testing post_tool_use.py hook"
+        },
+        {
+          "content": "Test subagent_stop.py hook",
+          "status": "pending",
+          "activeForm": "Testing subagent_stop.py hook"
+        },
+        {
+          "content": "Verify log files are created correctly",
+          "status": "pending",
+          "activeForm": "Verifying log files"
+        }
+      ]
+    },
+    "tool_use_id": "toolu_016SyWB3oSaC58i3zkhQ3XpE"
+  },
+  {
+    "session_id": "42e2ca99-25c9-4b23-89be-b4b557d068e5",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS-CMO/42e2ca99-25c9-4b23-89be-b4b557d068e5.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/CMO",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "cd /Users/donovan/PROMAN_OS && echo '{\"tool_name\": \"Read\", \"tool_output\": \"file content...\", \"session_id\": \"test-session-123\"}' | uv run .claude/hooks/post_tool_use.py; echo \"Exit code: $?\"",
+      "description": "Test post_tool_use logging"
+    },
+    "tool_response": {
+      "stdout": "Exit code:\nReading inline script metadata from `.claude/hooks/post_tool_use.py`",
+      "stderr": "Shell cwd was reset to /Users/donovan/PROMAN_OS/CMO",
+      "interrupted": false,
+      "isImage": false
+    },
+    "tool_use_id": "toolu_01Vroehc5VWT3CMnMwo1znqa"
+  },
+  {
+    "session_id": "42e2ca99-25c9-4b23-89be-b4b557d068e5",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS-CMO/42e2ca99-25c9-4b23-89be-b4b557d068e5.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/CMO",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "cd /Users/donovan/PROMAN_OS && echo '{\"session_id\": \"test-session-123\", \"stop_hook_active\": false}' | uv run .claude/hooks/subagent_stop.py; echo \"Exit code: $?\"",
+      "description": "Test subagent_stop hook"
+    },
+    "tool_response": {
+      "stdout": "Exit code:\nReading inline script metadata from `.claude/hooks/subagent_stop.py`",
+      "stderr": "Shell cwd was reset to /Users/donovan/PROMAN_OS/CMO",
+      "interrupted": false,
+      "isImage": false
+    },
+    "tool_use_id": "toolu_01WodbTiYxK7PzSEZ59qdkvy"
+  },
+  {
+    "session_id": "42e2ca99-25c9-4b23-89be-b4b557d068e5",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS-CMO/42e2ca99-25c9-4b23-89be-b4b557d068e5.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/CMO",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "TodoWrite",
+    "tool_input": {
+      "todos": [
+        {
+          "content": "Test pre_tool_use.py hook (rm -rf blocking)",
+          "status": "completed",
+          "activeForm": "Testing pre_tool_use.py hook"
+        },
+        {
+          "content": "Test post_tool_use.py hook (logging)",
+          "status": "completed",
+          "activeForm": "Testing post_tool_use.py hook"
+        },
+        {
+          "content": "Test subagent_stop.py hook",
+          "status": "completed",
+          "activeForm": "Testing subagent_stop.py hook"
+        },
+        {
+          "content": "Verify log files are created correctly",
+          "status": "in_progress",
+          "activeForm": "Verifying log files"
+        }
+      ]
+    },
+    "tool_response": {
+      "oldTodos": [
+        {
+          "content": "Test pre_tool_use.py hook (rm -rf blocking)",
+          "status": "completed",
+          "activeForm": "Testing pre_tool_use.py hook"
+        },
+        {
+          "content": "Test post_tool_use.py hook (logging)",
+          "status": "in_progress",
+          "activeForm": "Testing post_tool_use.py hook"
+        },
+        {
+          "content": "Test subagent_stop.py hook",
+          "status": "pending",
+          "activeForm": "Testing subagent_stop.py hook"
+        },
+        {
+          "content": "Verify log files are created correctly",
+          "status": "pending",
+          "activeForm": "Verifying log files"
+        }
+      ],
+      "newTodos": [
+        {
+          "content": "Test pre_tool_use.py hook (rm -rf blocking)",
+          "status": "completed",
+          "activeForm": "Testing pre_tool_use.py hook"
+        },
+        {
+          "content": "Test post_tool_use.py hook (logging)",
+          "status": "completed",
+          "activeForm": "Testing post_tool_use.py hook"
+        },
+        {
+          "content": "Test subagent_stop.py hook",
+          "status": "completed",
+          "activeForm": "Testing subagent_stop.py hook"
+        },
+        {
+          "content": "Verify log files are created correctly",
+          "status": "in_progress",
+          "activeForm": "Verifying log files"
+        }
+      ]
+    },
+    "tool_use_id": "toolu_01NxbMsdjUSAjjPMg6qHZV8o"
+  },
+  {
+    "session_id": "42e2ca99-25c9-4b23-89be-b4b557d068e5",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS-CMO/42e2ca99-25c9-4b23-89be-b4b557d068e5.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/CMO",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "ls -la /Users/donovan/PROMAN_OS/logs/test-session-123/ 2>/dev/null || echo \"Log directory not found\"",
+      "description": "Check log directory for test session"
+    },
+    "tool_response": {
+      "stdout": "Log directory not found",
+      "stderr": "",
+      "interrupted": false,
+      "isImage": false
+    },
+    "tool_use_id": "toolu_01TbYe3nCT1yHhpAEcE9hEQv"
+  },
+  {
+    "session_id": "42e2ca99-25c9-4b23-89be-b4b557d068e5",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS-CMO/42e2ca99-25c9-4b23-89be-b4b557d068e5.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/CMO",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "ls -la /Users/donovan/PROMAN_OS/CMO/logs/ 2>/dev/null || echo \"Not found in CMO\"",
+      "description": "Check CMO logs directory"
+    },
+    "tool_response": {
+      "stdout": "total 0\ndrwxr-xr-x@  3 donovan  staff   96 Nov 30 08:16 .\ndrwxr-xr-x  25 donovan  staff  800 Nov 30 08:16 ..\ndrwxr-xr-x@  3 donovan  staff   96 Nov 30 08:16 42e2ca99-25c9-4b23-89be-b4b557d068e5",
+      "stderr": "",
+      "interrupted": false,
+      "isImage": false
+    },
+    "tool_use_id": "toolu_01HUHqzkURv9yuMcDePv7yRH"
+  },
+  {
+    "session_id": "42e2ca99-25c9-4b23-89be-b4b557d068e5",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS-CMO/42e2ca99-25c9-4b23-89be-b4b557d068e5.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/CMO",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "find /Users/donovan/PROMAN_OS -type d -name \"test-session-123\" 2>/dev/null",
+      "description": "Search for test session logs"
+    },
+    "tool_response": {
+      "stdout": "",
+      "stderr": "",
+      "interrupted": false,
+      "isImage": false
+    },
+    "tool_use_id": "toolu_016kMga1tFdeAdLaLPia84zx"
+  },
+  {
+    "session_id": "42e2ca99-25c9-4b23-89be-b4b557d068e5",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS-CMO/42e2ca99-25c9-4b23-89be-b4b557d068e5.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/CMO",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "ls -la /Users/donovan/PROMAN_OS/logs/ 2>/dev/null | head -20",
+      "description": "Check PROMAN_OS logs directory"
+    },
+    "tool_response": {
+      "stdout": "total 8\ndrwxr-xr-x@ 5 donovan  staff  160 Nov 30 08:17 .\ndrwxr-xr-x  9 donovan  staff  288 Nov 30 08:12 ..\ndrwxr-xr-x@ 5 donovan  staff  160 Nov 30 08:17 3abe6a00-5f9c-439a-a757-44d1d703b08f\ndrwxr-xr-x@ 7 donovan  staff  224 Nov 30 08:15 ddbaf413-7128-416f-a857-23ef037de61e\n-rw-r--r--@ 1 donovan  staff  898 Nov 30 08:16 user_prompt_submit.json",
+      "stderr": "",
+      "interrupted": false,
+      "isImage": false
+    },
+    "tool_use_id": "toolu_01A8pbBorhno4pLUh6Sbvi79"
+  },
+  {
+    "session_id": "42e2ca99-25c9-4b23-89be-b4b557d068e5",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS-CMO/42e2ca99-25c9-4b23-89be-b4b557d068e5.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/CMO",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "ls -la /Users/donovan/PROMAN_OS/CMO/logs/42e2ca99-25c9-4b23-89be-b4b557d068e5/",
+      "description": "List current session logs"
+    },
+    "tool_response": {
+      "stdout": "total 40\ndrwxr-xr-x@ 3 donovan  staff     96 Nov 30 08:16 .\ndrwxr-xr-x@ 3 donovan  staff     96 Nov 30 08:16 ..\n-rw-r--r--@ 1 donovan  staff  19181 Nov 30 08:17 post_tool_use.json",
+      "stderr": "",
+      "interrupted": false,
+      "isImage": false
+    },
+    "tool_use_id": "toolu_01AQ7r9mo7wCLV2wq4XfZ2Mr"
+  },
+  {
+    "session_id": "42e2ca99-25c9-4b23-89be-b4b557d068e5",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS-CMO/42e2ca99-25c9-4b23-89be-b4b557d068e5.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/CMO",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "cat /Users/donovan/PROMAN_OS/CMO/logs/42e2ca99-25c9-4b23-89be-b4b557d068e5/pre_tool_use.json 2>/dev/null | head -50",
+      "description": "Read pre_tool_use log"
+    },
+    "tool_response": {
+      "stdout": "",
+      "stderr": "",
+      "interrupted": false,
+      "isImage": false
+    },
+    "tool_use_id": "toolu_015hSvPw76jMeDLu7aQxCZ2B"
+  },
+  {
+    "session_id": "42e2ca99-25c9-4b23-89be-b4b557d068e5",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS-CMO/42e2ca99-25c9-4b23-89be-b4b557d068e5.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/CMO",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "head -100 /Users/donovan/PROMAN_OS/CMO/logs/42e2ca99-25c9-4b23-89be-b4b557d068e5/post_tool_use.json",
+      "description": "Read post_tool_use log sample"
+    },
+    "tool_response": {
+      "stdout": "[\n  {\n    \"session_id\": \"42e2ca99-25c9-4b23-89be-b4b557d068e5\",\n    \"transcript_path\": \"/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS-CMO/42e2ca99-25c9-4b23-89be-b4b557d068e5.jsonl\",\n    \"cwd\": \"/Users/donovan/PROMAN_OS/CMO\",\n    \"permission_mode\": \"bypassPermissions\",\n    \"hook_event_name\": \"PostToolUse\",\n    \"tool_name\": \"Read\",\n    \"tool_input\": {\n      \"file_path\": \"/Users/donovan/PROMAN_OS/.claude/hooks/post_tool_use.py\"\n    },\n    \"tool_response\": {\n      \"type\": \"text\",\n      \"file\": {\n        \"filePath\": \"/Users/donovan/PROMAN_OS/.claude/hooks/post_tool_use.py\",\n        \"content\": \"#!/usr/bin/env -S uv run --script\\n# /// script\\n# requires-python = \\\">=3.8\\\"\\n# ///\\n\\nimport json\\nimport os\\nimport sys\\nfrom pathlib import Path\\nfrom utils.constants import ensure_session_log_dir\\n\\ndef main():\\n    try:\\n        # Read JSON input from stdin\\n        input_data = json.load(sys.stdin)\\n        \\n        # Extract session_id\\n        session_id = input_data.get('session_id', 'unknown')\\n        \\n        # Ensure session log directory exists\\n        log_dir = ensure_session_log_dir(session_id)\\n        log_path = log_dir / 'post_tool_use.json'\\n        \\n        # Read existing log data or initialize empty list\\n        if log_path.exists():\\n            with open(log_path, 'r') as f:\\n                try:\\n                    log_data = json.load(f)\\n                except (json.JSONDecodeError, ValueError):\\n                    log_data = []\\n        else:\\n            log_data = []\\n        \\n        # Append new data\\n        log_data.append(input_data)\\n        \\n        # Write back to file with formatting\\n        with open(log_path, 'w') as f:\\n            json.dump(log_data, f, indent=2)\\n        \\n        sys.exit(0)\\n        \\n    except json.JSONDecodeError:\\n        # Handle JSON decode errors gracefully\\n        sys.exit(0)\\n    except Exception:\\n        # Exit cleanly on any other error\\n        sys.exit(0)\\n\\nif __name__ == '__main__':\\n    main()\",\n        \"numLines\": 51,\n        \"startLine\": 1,\n        \"totalLines\": 51\n      }\n    },\n    \"tool_use_id\": \"toolu_01U4Q4WTvXNdfhRTvt6NCWyd\"\n  },\n  {\n    \"session_id\": \"42e2ca99-25c9-4b23-89be-b4b557d068e5\",\n    \"transcript_path\": \"/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS-CMO/42e2ca99-25c9-4b23-89be-b4b557d068e5.jsonl\",\n    \"cwd\": \"/Users/donovan/PROMAN_OS/CMO\",\n    \"permission_mode\": \"bypassPermissions\",\n    \"hook_event_name\": \"PostToolUse\",\n    \"tool_name\": \"Read\",\n    \"tool_input\": {\n      \"file_path\": \"/Users/donovan/PROMAN_OS/.claude/hooks/utils/constants.py\"\n    },\n    \"tool_response\": {\n      \"type\": \"text\",\n      \"file\": {\n        \"filePath\": \"/Users/donovan/PROMAN_OS/.claude/hooks/utils/constants.py\",\n        \"content\": \"#!/usr/bin/env -S uv run --script\\n# /// script\\n# requires-python = \\\">=3.8\\\"\\n# ///\\n\\n\\\"\\\"\\\"\\nConstants for Claude Code Hooks.\\n\\\"\\\"\\\"\\n\\nimport os\\nfrom pathlib import Path\\n\\n# Base directory for all logs\\n# Default is 'logs' in the current working directory\\nLOG_BASE_DIR = os.environ.get(\\\"CLAUDE_HOOKS_LOG_DIR\\\", \\\"logs\\\")\\n\\ndef get_session_log_dir(session_id: str) -> Path:\\n    \\\"\\\"\\\"\\n    Get the log directory for a specific session.\\n    \\n    Args:\\n        session_id: The Claude session ID\\n        \\n    Returns:\\n        Path object for the session's log directory\\n    \\\"\\\"\\\"\\n    return Path(LOG_BASE_DIR) / session_id\\n\\ndef ensure_session_log_dir(session_id: str) -> Path:\\n    \\\"\\\"\\\"\\n    Ensure the log directory for a session exists.\\n    \\n    Args:\\n        session_id: The Claude session ID\\n        \\n    Returns:\\n        Path object for the session's log directory\\n    \\\"\\\"\\\"\\n    log_dir = get_session_log_dir(session_id)\\n    log_dir.mkdir(parents=True, exist_ok=True)\\n    return log_dir\",\n        \"numLines\": 41,\n        \"startLine\": 1,\n        \"totalLines\": 41\n      }\n    },\n    \"tool_use_id\": \"toolu_01HkwER9AraqARWmq899wyyy\"\n  },\n  {\n    \"session_id\": \"42e2ca99-25c9-4b23-89be-b4b557d068e5\",\n    \"transcript_path\": \"/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS-CMO/42e2ca99-25c9-4b23-89be-b4b557d068e5.jsonl\",\n    \"cwd\": \"/Users/donovan/PROMAN_OS/CMO\",\n    \"permission_mode\": \"bypassPermissions\",\n    \"hook_event_name\": \"PostToolUse\",\n    \"tool_name\": \"TodoWrite\",\n    \"tool_input\": {\n      \"todos\": [\n        {\n          \"content\": \"Test pre_tool_use.py hook (rm -rf blocking)\",\n          \"status\": \"in_progress\",\n          \"activeForm\": \"Testing pre_tool_use.py hook\"\n        },\n        {\n          \"content\": \"Test post_tool_use.py hook (logging)\",\n          \"status\": \"pending\",\n          \"activeForm\": \"Testing post_tool_use.py hook\"\n        },\n        {\n          \"content\": \"Test subagent_stop.py hook\",\n          \"status\": \"pending\",\n          \"activeForm\": \"Testing subagent_stop.py hook\"\n        },\n        {\n          \"content\": \"Verify log files are created correctly\",\n          \"status\": \"pending\",\n          \"activeForm\": \"Verifying log files\"\n        }\n      ]\n    },\n    \"tool_response\": {\n      \"oldTodos\": [],\n      \"newTodos\": [\n        {\n          \"content\": \"Test pre_tool_use.py hook (rm -rf blocking)\",\n          \"status\": \"in_progress\",\n          \"activeForm\": \"Testing pre_tool_use.py hook\"\n        },\n        {\n          \"content\": \"Test post_tool_use.py hook (logging)\",\n          \"status\": \"pending\",\n          \"activeForm\": \"Testing post_tool_use.py hook\"\n        },\n        {\n          \"content\": \"Test subagent_stop.py hook\",\n          \"status\": \"pending\",\n          \"activeForm\": \"Testing subagent_stop.py hook\"\n        },\n        {\n          \"content\": \"Verify log files are created correctly\",\n          \"status\": \"pending\",\n          \"activeForm\": \"Verifying log files\"\n        }\n      ]",
+      "stderr": "",
+      "interrupted": false,
+      "isImage": false
+    },
+    "tool_use_id": "toolu_0175sSRCzznwPJoHR6gMZfX2"
+  },
+  {
+    "session_id": "42e2ca99-25c9-4b23-89be-b4b557d068e5",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS-CMO/42e2ca99-25c9-4b23-89be-b4b557d068e5.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/CMO",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "TodoWrite",
+    "tool_input": {
+      "todos": [
+        {
+          "content": "Test pre_tool_use.py hook (rm -rf blocking)",
+          "status": "completed",
+          "activeForm": "Testing pre_tool_use.py hook"
+        },
+        {
+          "content": "Test post_tool_use.py hook (logging)",
+          "status": "completed",
+          "activeForm": "Testing post_tool_use.py hook"
+        },
+        {
+          "content": "Test subagent_stop.py hook",
+          "status": "completed",
+          "activeForm": "Testing subagent_stop.py hook"
+        },
+        {
+          "content": "Verify log files are created correctly",
+          "status": "completed",
+          "activeForm": "Verifying log files"
+        }
+      ]
+    },
+    "tool_response": {
+      "oldTodos": [
+        {
+          "content": "Test pre_tool_use.py hook (rm -rf blocking)",
+          "status": "completed",
+          "activeForm": "Testing pre_tool_use.py hook"
+        },
+        {
+          "content": "Test post_tool_use.py hook (logging)",
+          "status": "completed",
+          "activeForm": "Testing post_tool_use.py hook"
+        },
+        {
+          "content": "Test subagent_stop.py hook",
+          "status": "completed",
+          "activeForm": "Testing subagent_stop.py hook"
+        },
+        {
+          "content": "Verify log files are created correctly",
+          "status": "in_progress",
+          "activeForm": "Verifying log files"
+        }
+      ],
+      "newTodos": [
+        {
+          "content": "Test pre_tool_use.py hook (rm -rf blocking)",
+          "status": "completed",
+          "activeForm": "Testing pre_tool_use.py hook"
+        },
+        {
+          "content": "Test post_tool_use.py hook (logging)",
+          "status": "completed",
+          "activeForm": "Testing post_tool_use.py hook"
+        },
+        {
+          "content": "Test subagent_stop.py hook",
+          "status": "completed",
+          "activeForm": "Testing subagent_stop.py hook"
+        },
+        {
+          "content": "Verify log files are created correctly",
+          "status": "completed",
+          "activeForm": "Verifying log files"
+        }
+      ]
+    },
+    "tool_use_id": "toolu_01WSddxr1d4TQiocogHqqdoc"
+  }
+]

@@ -1,0 +1,2 @@
+post_id,timestamp,email,post_type,post_audience,active_subscription,country,city,region,device_type,client_os,client_type,user_agent
+179714605,2025-11-23T12:29:04.669Z,dpainews@gmail.com,newsletter,everyone,false,ZA,,,,,,Mozilla/5.0

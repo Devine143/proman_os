@@ -1,0 +1,11 @@
+[
+  {
+    "session_id": "42e2ca99-25c9-4b23-89be-b4b557d068e5",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS-CMO/42e2ca99-25c9-4b23-89be-b4b557d068e5.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/CMO",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "Stop",
+    "stop_hook_active": false,
+    "logged_at": "2025-11-30T08:17:49.643815"
+  }
+]
