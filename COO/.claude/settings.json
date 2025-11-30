@@ -7,7 +7,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash ../.claude/hooks/session-start-dashboard.sh"
+            "command": "uv run \"$CLAUDE_PROJECT_DIR\"/../.claude/hooks/session_start.py",
+            "timeout": 10
           }
         ]
       }
@@ -18,7 +19,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash ../.claude/hooks/pre-compact-save-state.sh"
+            "command": "uv run \"$CLAUDE_PROJECT_DIR\"/../.claude/hooks/pre_compact.py"
           }
         ]
       }
@@ -29,7 +30,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash ../.claude/hooks/pre-tool-backup.sh \"$TOOL_INPUT\""
+            "command": "uv run \"$CLAUDE_PROJECT_DIR\"/../.claude/hooks/pre_tool_use.py"
           }
         ]
       }
@@ -40,7 +41,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash ../.claude/hooks/session-end-cleanup.sh"
+            "command": "uv run \"$CLAUDE_PROJECT_DIR\"/../.claude/hooks/session_end.py"
           }
         ]
       }

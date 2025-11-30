@@ -1,0 +1,527 @@
+[
+  {
+    "session_id": "0869f7f3-b0b5-4487-8df8-2e6716c3c3f3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/0869f7f3-b0b5-4487-8df8-2e6716c3c3f3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Write",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/hooks/session_start.py",
+      "content": "#!/usr/bin/env -S uv run --script\n# /// script\n# requires-python = \">=3.11\"\n# ///\n\"\"\"\nSessionStart Hook: Injects WORKING.md task state into Claude's context.\nRuns automatically on startup, resume, clear, and compact.\n\nWhatever prints to stdout gets injected into Claude's context.\n\"\"\"\n\nimport json\nimport sys\nimport os\nfrom datetime import datetime, timedelta\nfrom pathlib import Path\n\n\ndef parse_working_file(filepath: Path) -> dict:\n    \"\"\"Parse a WORKING.md file and extract tasks by status.\"\"\"\n    if not filepath.exists():\n        return {\"in_progress\": [], \"blocked\": [], \"completed\": []}\n\n    content = filepath.read_text()\n    result = {\"in_progress\": [], \"blocked\": [], \"completed\": [], \"raw\": content}\n\n    current_section = None\n    for line in content.split(\"\\n\"):\n        line_stripped = line.strip()\n        line_lower = line_stripped.lower()\n\n        if \"## in progress\" in line_lower:\n            current_section = \"in_progress\"\n        elif \"## blocked\" in line_lower:\n            current_section = \"blocked\"\n        elif \"## recently completed\" in line_lower:\n            current_section = \"completed\"\n        elif \"## active flywheel\" in line_lower:\n            current_section = \"in_progress\"\n        elif \"## strategic priorities\" in line_lower:\n            current_section = \"priorities\"\n        elif line_stripped.startswith(\"- **\") and current_section in [\"in_progress\", \"blocked\"]:\n            result[current_section].append(line_stripped)\n        elif line_stripped.startswith(\"- ~~\") and current_section == \"completed\":\n            result[current_section].append(line_stripped)\n\n    return result\n\n\ndef check_stale_tasks(tasks: list, days_threshold: int = 3) -> list:\n    \"\"\"Identify tasks older than threshold.\"\"\"\n    stale = []\n    today = datetime.now()\n\n    for task in tasks:\n        if \"(started:\" in task:\n            try:\n                date_str = task.split(\"(started:\")[1].split(\")\")[0].strip()\n                started = datetime.strptime(date_str, \"%Y-%m-%d\")\n                age = (today - started).days\n                if age >= days_threshold:\n                    stale.append((task, age))\n            except (IndexError, ValueError):\n                pass\n\n    return stale\n\n\ndef extract_task_name(task: str) -> str:\n    \"\"\"Extract clean task name from markdown format.\"\"\"\n    # Handle: - **Task Name** (started: 2025-01-01)\n    if \"**\" in task:\n        parts = task.split(\"**\")\n        if len(parts) >= 2:\n            return parts[1]\n    return task.replace(\"- \", \"\").strip()[:50]\n\n\ndef format_domain_summary(domain: str, data: dict) -> list:\n    \"\"\"Format a domain's task summary as lines.\"\"\"\n    lines = []\n\n    if data.get(\"in_progress\"):\n        for task in data[\"in_progress\"]:\n            task_name = extract_task_name(task)\n            lines.append(f\"  - [In Progress] {task_name}\")\n\n    if data.get(\"blocked\"):\n        for task in data[\"blocked\"]:\n            task_name = extract_task_name(task)\n            lines.append(f\"  - [BLOCKED] {task_name}\")\n\n    return lines\n\n\ndef detect_domain(cwd: str) -> str:\n    \"\"\"Detect which domain we're running from.\"\"\"\n    cwd_lower = cwd.lower()\n    if \"/cmo\" in cwd_lower:\n        return \"CMO\"\n    elif \"/coo\" in cwd_lower:\n        return \"COO\"\n    return \"ROOT\"\n\n\ndef main():\n    try:\n        input_data = json.load(sys.stdin)\n    except (json.JSONDecodeError, EOFError):\n        input_data = {}\n\n    # Get working directory\n    cwd = input_data.get(\"cwd\", os.getcwd())\n    source = input_data.get(\"source\", \"startup\")\n    current_domain = detect_domain(cwd)\n\n    # Find project root (contains WORKING.md)\n    project_dir = Path(cwd)\n\n    # Walk up to find PROMAN_OS root if we're in a subdomain\n    while project_dir.name not in [\"PROMAN_OS\", \"\"] and not (project_dir / \"WORKING.md\").exists():\n        if project_dir.parent == project_dir:\n            break\n        project_dir = project_dir.parent\n\n    # If we found PROMAN_OS, use it; otherwise use cwd\n    if project_dir.name != \"PROMAN_OS\":\n        project_dir = Path(cwd)\n        # Try going up from CMO or COO\n        if project_dir.name in [\"CMO\", \"COO\"]:\n            project_dir = project_dir.parent\n\n    output_lines = []\n    all_stale = []\n    has_tasks = False\n\n    # Define domains to check based on current location\n    if current_domain == \"CMO\":\n        domains = {\n            \"CMO\": project_dir / \"CMO\" / \"WORKING.md\",\n            \"Cross-Domain\": project_dir / \"WORKING.md\",\n        }\n    elif current_domain == \"COO\":\n        domains = {\n            \"COO\": project_dir / \"COO\" / \"WORKING.md\",\n            \"Cross-Domain\": project_dir / \"WORKING.md\",\n        }\n    else:\n        # Root - show all\n        domains = {\n            \"COO\": project_dir / \"COO\" / \"WORKING.md\",\n            \"CMO\": project_dir / \"CMO\" / \"WORKING.md\",\n            \"Cross-Domain\": project_dir / \"WORKING.md\",\n        }\n\n    # Parse each WORKING.md\n    for domain, filepath in domains.items():\n        data = parse_working_file(filepath)\n\n        domain_lines = format_domain_summary(domain, data)\n        if domain_lines:\n            has_tasks = True\n            output_lines.append(f\"[{domain}]\")\n            output_lines.extend(domain_lines)\n\n            # Check for stale tasks\n            stale = check_stale_tasks(data.get(\"in_progress\", []))\n            for task, age in stale:\n                all_stale.append((domain, task, age))\n\n    # Build output\n    if has_tasks:\n        print(\"=== ACTIVE TASKS ===\")\n        print(\"\\n\".join(output_lines))\n\n        if all_stale:\n            print(\"\\n[!] STALE (3+ days):\")\n            for domain, task, age in all_stale:\n                task_name = extract_task_name(task)\n                print(f\"  - [{domain}] {task_name} ({age}d)\")\n\n    # Check for learnings index\n    learnings_index = project_dir / \"docs\" / \"learnings\" / \"README.md\"\n    if learnings_index.exists():\n        print(f\"\\n[Learnings available: docs/learnings/README.md]\")\n\n    sys.exit(0)\n\n\nif __name__ == \"__main__\":\n    main()\n"
+    },
+    "tool_use_id": "toolu_016Frj1Brt4G15P1FKce6VKJ"
+  },
+  {
+    "session_id": "0869f7f3-b0b5-4487-8df8-2e6716c3c3f3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/0869f7f3-b0b5-4487-8df8-2e6716c3c3f3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Edit",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/settings.json",
+      "old_string": "{\n  \"$schema\": \"https://json.schemastore.org/claude-code-settings.json\",\n  \"hooks\": {\n    \"PreToolUse\": [",
+      "new_string": "{\n  \"$schema\": \"https://json.schemastore.org/claude-code-settings.json\",\n  \"hooks\": {\n    \"SessionStart\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run \\\"$CLAUDE_PROJECT_DIR\\\"/.claude/hooks/session_start.py\",\n            \"timeout\": 10\n          }\n        ]\n      }\n    ],\n    \"PreToolUse\": ["
+    },
+    "tool_use_id": "toolu_0183zrqGALmZo7Np3zokj8jB"
+  },
+  {
+    "session_id": "0869f7f3-b0b5-4487-8df8-2e6716c3c3f3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/0869f7f3-b0b5-4487-8df8-2e6716c3c3f3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Edit",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/settings.json",
+      "old_string": "\"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/pre_tool_use.py\"",
+      "new_string": "\"command\": \"uv run \\\"$CLAUDE_PROJECT_DIR\\\"/.claude/hooks/pre_tool_use.py\""
+    },
+    "tool_use_id": "toolu_011ddt6UARQ2Xc7AtvtFwGMb"
+  },
+  {
+    "session_id": "0869f7f3-b0b5-4487-8df8-2e6716c3c3f3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/0869f7f3-b0b5-4487-8df8-2e6716c3c3f3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Edit",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/settings.json",
+      "old_string": "\"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/user_prompt_submit.py\"",
+      "new_string": "\"command\": \"uv run \\\"$CLAUDE_PROJECT_DIR\\\"/.claude/hooks/user_prompt_submit.py\""
+    },
+    "tool_use_id": "toolu_01MnasvtYy35f9HpqueLbfEt"
+  },
+  {
+    "session_id": "0869f7f3-b0b5-4487-8df8-2e6716c3c3f3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/0869f7f3-b0b5-4487-8df8-2e6716c3c3f3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Edit",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/settings.json",
+      "old_string": "\"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/stop.py\"",
+      "new_string": "\"command\": \"uv run \\\"$CLAUDE_PROJECT_DIR\\\"/.claude/hooks/stop.py\""
+    },
+    "tool_use_id": "toolu_01E2fcXxAAnJA8sRXoTWDF1x"
+  },
+  {
+    "session_id": "0869f7f3-b0b5-4487-8df8-2e6716c3c3f3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/0869f7f3-b0b5-4487-8df8-2e6716c3c3f3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Edit",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/settings.json",
+      "old_string": "\"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/pre_compact.py\"",
+      "new_string": "\"command\": \"uv run \\\"$CLAUDE_PROJECT_DIR\\\"/.claude/hooks/pre_compact.py\""
+    },
+    "tool_use_id": "toolu_01BPNRwxiGbCAH5DGLRr2veR"
+  },
+  {
+    "session_id": "0869f7f3-b0b5-4487-8df8-2e6716c3c3f3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/0869f7f3-b0b5-4487-8df8-2e6716c3c3f3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Edit",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/settings.json",
+      "old_string": "\"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/session_end.py\"",
+      "new_string": "\"command\": \"uv run \\\"$CLAUDE_PROJECT_DIR\\\"/.claude/hooks/session_end.py\""
+    },
+    "tool_use_id": "toolu_01R5YbG7ToVkhamXghoK2zxn"
+  },
+  {
+    "session_id": "0869f7f3-b0b5-4487-8df8-2e6716c3c3f3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/0869f7f3-b0b5-4487-8df8-2e6716c3c3f3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Edit",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/settings.json",
+      "old_string": "\"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/notification.py\"",
+      "new_string": "\"command\": \"uv run \\\"$CLAUDE_PROJECT_DIR\\\"/.claude/hooks/notification.py\""
+    },
+    "tool_use_id": "toolu_012kBZuD1ETyJx7XsSgcfoy1"
+  },
+  {
+    "session_id": "0869f7f3-b0b5-4487-8df8-2e6716c3c3f3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/0869f7f3-b0b5-4487-8df8-2e6716c3c3f3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Edit",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/settings.json",
+      "old_string": "\"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/subagent_stop.py\"",
+      "new_string": "\"command\": \"uv run \\\"$CLAUDE_PROJECT_DIR\\\"/.claude/hooks/subagent_stop.py\""
+    },
+    "tool_use_id": "toolu_017oFwjNswyvRr55WCRMVQ3X"
+  },
+  {
+    "session_id": "0869f7f3-b0b5-4487-8df8-2e6716c3c3f3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/0869f7f3-b0b5-4487-8df8-2e6716c3c3f3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Edit",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/CMO/.claude/settings.json",
+      "old_string": "\"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/session_start.py\"",
+      "new_string": "\"command\": \"uv run \\\"$CLAUDE_PROJECT_DIR\\\"/../.claude/hooks/session_start.py\",\n            \"timeout\": 10"
+    },
+    "tool_use_id": "toolu_01BvoJzgtYMSBHx28azQq1MF"
+  },
+  {
+    "session_id": "0869f7f3-b0b5-4487-8df8-2e6716c3c3f3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/0869f7f3-b0b5-4487-8df8-2e6716c3c3f3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Edit",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/CMO/.claude/settings.json",
+      "old_string": "\"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/pre_tool_use.py\"",
+      "new_string": "\"command\": \"uv run \\\"$CLAUDE_PROJECT_DIR\\\"/../.claude/hooks/pre_tool_use.py\""
+    },
+    "tool_use_id": "toolu_01HEM1ECvPDp9jjAjBAjzg2B"
+  },
+  {
+    "session_id": "0869f7f3-b0b5-4487-8df8-2e6716c3c3f3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/0869f7f3-b0b5-4487-8df8-2e6716c3c3f3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Edit",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/CMO/.claude/settings.json",
+      "old_string": "\"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/pre_compact.py\"",
+      "new_string": "\"command\": \"uv run \\\"$CLAUDE_PROJECT_DIR\\\"/../.claude/hooks/pre_compact.py\""
+    },
+    "tool_use_id": "toolu_01ALjDDL2htkXQW5XCqf7rwY"
+  },
+  {
+    "session_id": "0869f7f3-b0b5-4487-8df8-2e6716c3c3f3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/0869f7f3-b0b5-4487-8df8-2e6716c3c3f3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Edit",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/CMO/.claude/settings.json",
+      "old_string": "\"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/session_end.py\"",
+      "new_string": "\"command\": \"uv run \\\"$CLAUDE_PROJECT_DIR\\\"/../.claude/hooks/session_end.py\""
+    },
+    "tool_use_id": "toolu_01WJXkX5zM5xJddaeyfhKUUv"
+  },
+  {
+    "session_id": "0869f7f3-b0b5-4487-8df8-2e6716c3c3f3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/0869f7f3-b0b5-4487-8df8-2e6716c3c3f3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Write",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/COO/.claude/settings.json",
+      "content": "{\n  \"$schema\": \"https://json.schemastore.org/claude-code-settings.json\",\n  \"hooks\": {\n    \"SessionStart\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run \\\"$CLAUDE_PROJECT_DIR\\\"/../.claude/hooks/session_start.py\",\n            \"timeout\": 10\n          }\n        ]\n      }\n    ],\n    \"PreCompact\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run \\\"$CLAUDE_PROJECT_DIR\\\"/../.claude/hooks/pre_compact.py\"\n          }\n        ]\n      }\n    ],\n    \"PreToolUse\": [\n      {\n        \"matcher\": \"Write|Edit|MultiEdit\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run \\\"$CLAUDE_PROJECT_DIR\\\"/../.claude/hooks/pre_tool_use.py\"\n          }\n        ]\n      }\n    ],\n    \"Stop\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run \\\"$CLAUDE_PROJECT_DIR\\\"/../.claude/hooks/session_end.py\"\n          }\n        ]\n      }\n    ]\n  }\n}\n"
+    },
+    "tool_use_id": "toolu_018MhEntt3PhzWGz2JgPG5Ck"
+  },
+  {
+    "session_id": "0869f7f3-b0b5-4487-8df8-2e6716c3c3f3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/0869f7f3-b0b5-4487-8df8-2e6716c3c3f3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "TodoWrite",
+    "tool_input": {
+      "todos": [
+        {
+          "content": "Create session_start.py hook",
+          "status": "completed",
+          "activeForm": "Creating session_start.py hook"
+        },
+        {
+          "content": "Update root settings.json with SessionStart",
+          "status": "completed",
+          "activeForm": "Updating root settings.json"
+        },
+        {
+          "content": "Update CMO settings.json paths",
+          "status": "completed",
+          "activeForm": "Updating CMO settings.json"
+        },
+        {
+          "content": "Update COO settings.json paths",
+          "status": "completed",
+          "activeForm": "Updating COO settings.json"
+        },
+        {
+          "content": "Add memory instructions to root CLAUDE.md",
+          "status": "in_progress",
+          "activeForm": "Adding memory instructions"
+        }
+      ]
+    },
+    "tool_use_id": "toolu_01683ishRVBebvShWeNjYm5T"
+  },
+  {
+    "session_id": "0869f7f3-b0b5-4487-8df8-2e6716c3c3f3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/0869f7f3-b0b5-4487-8df8-2e6716c3c3f3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Read",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/CLAUDE.md"
+    },
+    "tool_use_id": "toolu_013oy3DAsjURpbvswBkb1fwj"
+  },
+  {
+    "session_id": "0869f7f3-b0b5-4487-8df8-2e6716c3c3f3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/0869f7f3-b0b5-4487-8df8-2e6716c3c3f3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Edit",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/CLAUDE.md",
+      "old_string": "**Pre-compact checklist:**\n1. Note any critical context in the compaction summary\n2. Verify TodoWrite reflects actual progress\n\n---\n\n## Departments",
+      "new_string": "**Pre-compact checklist:**\n1. Note any critical context in the compaction summary\n2. Verify TodoWrite reflects actual progress\n\n---\n\n## Task Continuity & Memory\n\n### Automatic Task Injection (WORKING.md)\n\nActive tasks are **automatically injected** at session start via hook. You'll see them in context without asking.\n\n| File | Purpose |\n|------|---------|\n| `WORKING.md` | Cross-domain/strategic priorities |\n| `COO/WORKING.md` | Operations active tasks |\n| `CMO/WORKING.md` | Content/marketing active tasks |\n\n**Updating tasks:** Edit the relevant WORKING.md when:\n- Starting new work \u2192 Add to \"In Progress\" with `(started: YYYY-MM-DD)`\n- Completing work \u2192 Move to \"Recently Completed\" with `(completed: YYYY-MM-DD)`\n- Blocked \u2192 Move to \"Blocked\" with \"Waiting on:\" note\n\n### Institutional Knowledge (docs/learnings/)\n\nBefore starting unfamiliar tasks:\n1. Check `docs/learnings/README.md` for relevant workflows\n2. Read any matching workflow file completely\n3. Follow documented patterns unless user requests otherwise\n\n**After completing novel workflows:**\n1. Create or update relevant file in `docs/learnings/`\n2. Update the README.md index\n\n| Type | Location | When to Check |\n|------|----------|---------------|\n| Workflows | `docs/learnings/workflows/` | \"How do we do X?\" |\n| Decisions | `docs/learnings/decisions/` | \"Why did we choose X?\" |\n| Gotchas | `docs/learnings/gotchas/` | Errors or confusion |\n\n---\n\n## Departments"
+    },
+    "tool_use_id": "toolu_01P8bxJCoVqZaJK8T8AMeQbh"
+  },
+  {
+    "session_id": "0869f7f3-b0b5-4487-8df8-2e6716c3c3f3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/0869f7f3-b0b5-4487-8df8-2e6716c3c3f3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Edit",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/CLAUDE.md",
+      "old_string": "**Version:** 5.2 - Fixed COO agent count after cleanup\n**Last Updated:** 2025-11-30",
+      "new_string": "**Version:** 6.0 - Added Task Continuity (WORKING.md) & Memory System (docs/learnings/)\n**Last Updated:** 2025-11-30"
+    },
+    "tool_use_id": "toolu_013nda4Cgi999Yw8DZbGUX8w"
+  },
+  {
+    "session_id": "0869f7f3-b0b5-4487-8df8-2e6716c3c3f3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/0869f7f3-b0b5-4487-8df8-2e6716c3c3f3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "TodoWrite",
+    "tool_input": {
+      "todos": [
+        {
+          "content": "Create session_start.py hook",
+          "status": "completed",
+          "activeForm": "Creating session_start.py hook"
+        },
+        {
+          "content": "Update root settings.json with SessionStart",
+          "status": "completed",
+          "activeForm": "Updating root settings.json"
+        },
+        {
+          "content": "Update CMO settings.json paths",
+          "status": "completed",
+          "activeForm": "Updating CMO settings.json"
+        },
+        {
+          "content": "Update COO settings.json paths",
+          "status": "completed",
+          "activeForm": "Updating COO settings.json"
+        },
+        {
+          "content": "Add memory instructions to root CLAUDE.md",
+          "status": "completed",
+          "activeForm": "Adding memory instructions"
+        }
+      ]
+    },
+    "tool_use_id": "toolu_01Kww8bxskB2ypbYkr5HSFQi"
+  },
+  {
+    "session_id": "0869f7f3-b0b5-4487-8df8-2e6716c3c3f3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/0869f7f3-b0b5-4487-8df8-2e6716c3c3f3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "echo '{\"session_id\": \"test\", \"source\": \"startup\", \"cwd\": \"/Users/donovan/PROMAN_OS\"}' | uv run /Users/donovan/PROMAN_OS/.claude/hooks/session_start.py",
+      "description": "Test session_start hook"
+    },
+    "tool_use_id": "toolu_01MjCTmjxgK5zp821NobQTb1"
+  },
+  {
+    "session_id": "0869f7f3-b0b5-4487-8df8-2e6716c3c3f3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/0869f7f3-b0b5-4487-8df8-2e6716c3c3f3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Edit",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/WORKING.md",
+      "old_string": "## In Progress\n<!-- Cross-domain or system-level tasks -->",
+      "new_string": "## In Progress\n<!-- Cross-domain or system-level tasks -->\n- **Test SessionStart hook implementation** (started: 2025-11-30)\n  - Status: Testing hook injection\n  - Next: Verify output in new session"
+    },
+    "tool_use_id": "toolu_011AFN6kyjx27Sp18VQiK24i"
+  },
+  {
+    "session_id": "0869f7f3-b0b5-4487-8df8-2e6716c3c3f3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/0869f7f3-b0b5-4487-8df8-2e6716c3c3f3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "echo '{\"session_id\": \"test\", \"source\": \"startup\", \"cwd\": \"/Users/donovan/PROMAN_OS\"}' | uv run /Users/donovan/PROMAN_OS/.claude/hooks/session_start.py",
+      "description": "Test hook with active task"
+    },
+    "tool_use_id": "toolu_01NZr7ffMnVrdw53XGnbEEba"
+  },
+  {
+    "session_id": "0869f7f3-b0b5-4487-8df8-2e6716c3c3f3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/0869f7f3-b0b5-4487-8df8-2e6716c3c3f3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "echo '{\"session_id\": \"test\", \"source\": \"startup\", \"cwd\": \"/Users/donovan/PROMAN_OS/CMO\"}' | uv run /Users/donovan/PROMAN_OS/.claude/hooks/session_start.py",
+      "description": "Test hook from CMO context"
+    },
+    "tool_use_id": "toolu_01Wo1fBxcuHxu5EFvRycd54V"
+  },
+  {
+    "session_id": "0869f7f3-b0b5-4487-8df8-2e6716c3c3f3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/0869f7f3-b0b5-4487-8df8-2e6716c3c3f3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "echo '{\"session_id\": \"test\", \"source\": \"startup\", \"cwd\": \"/Users/donovan/PROMAN_OS/COO\"}' | uv run /Users/donovan/PROMAN_OS/.claude/hooks/session_start.py",
+      "description": "Test hook from COO context"
+    },
+    "tool_use_id": "toolu_01CHTm4Lmck3Yw3supAbWubZ"
+  },
+  {
+    "session_id": "0869f7f3-b0b5-4487-8df8-2e6716c3c3f3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/0869f7f3-b0b5-4487-8df8-2e6716c3c3f3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Edit",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/WORKING.md",
+      "old_string": "## In Progress\n<!-- Cross-domain or system-level tasks -->\n- **Test SessionStart hook implementation** (started: 2025-11-30)\n  - Status: Testing hook injection\n  - Next: Verify output in new session",
+      "new_string": "## In Progress\n<!-- Cross-domain or system-level tasks -->"
+    },
+    "tool_use_id": "toolu_018gKiLgtB1RiFcZtctMVMBj"
+  },
+  {
+    "session_id": "0869f7f3-b0b5-4487-8df8-2e6716c3c3f3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/0869f7f3-b0b5-4487-8df8-2e6716c3c3f3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Read",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/settings.json"
+    },
+    "tool_use_id": "toolu_011JvxDQe3hJqvaujwvQVMkS"
+  },
+  {
+    "session_id": "0869f7f3-b0b5-4487-8df8-2e6716c3c3f3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/0869f7f3-b0b5-4487-8df8-2e6716c3c3f3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "AskUserQuestion",
+    "tool_input": {
+      "questions": [
+        {
+          "question": "How do you want to trigger the memory health check?",
+          "header": "Health Check",
+          "options": [
+            {
+              "label": "Slash command",
+              "description": "/memory-health - run anytime in conversation"
+            },
+            {
+              "label": "Python script",
+              "description": "uv run .claude/hooks/utils/memory_health.py - CLI tool"
+            },
+            {
+              "label": "Both",
+              "description": "Script + command that calls it"
+            }
+          ],
+          "multiSelect": false
+        }
+      ]
+    },
+    "tool_use_id": "toolu_01Ru7URepDcCnsk24gvmeT2u"
+  },
+  {
+    "session_id": "0869f7f3-b0b5-4487-8df8-2e6716c3c3f3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/0869f7f3-b0b5-4487-8df8-2e6716c3c3f3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Write",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/hooks/utils/memory_health.py",
+      "content": "#!/usr/bin/env -S uv run --script\n# /// script\n# requires-python = \">=3.11\"\n# ///\n\"\"\"\nMemory Health Check - Validates WORKING.md and docs/learnings/ structure.\n\nUsage:\n  uv run .claude/hooks/utils/memory_health.py [--fix]\n\nOptions:\n  --fix    Attempt to fix issues (create missing files/dirs)\n\"\"\"\n\nimport sys\nimport os\nfrom datetime import datetime, timedelta\nfrom pathlib import Path\n\n\ndef check_working_files(project_dir: Path, fix: bool = False) -> list:\n    \"\"\"Check WORKING.md files exist and have proper structure.\"\"\"\n    issues = []\n\n    working_files = {\n        \"Root\": project_dir / \"WORKING.md\",\n        \"COO\": project_dir / \"COO\" / \"WORKING.md\",\n        \"CMO\": project_dir / \"CMO\" / \"WORKING.md\",\n    }\n\n    required_sections = [\"## In Progress\", \"## Blocked\", \"## Recently Completed\"]\n\n    for domain, filepath in working_files.items():\n        if not filepath.exists():\n            issues.append(f\"[MISSING] {domain}/WORKING.md\")\n            if fix:\n                filepath.parent.mkdir(parents=True, exist_ok=True)\n                filepath.write_text(f\"\"\"# {domain} Active Work\n> Last updated: {datetime.now().strftime('%Y-%m-%d')}\n\n## In Progress\n<!-- Format: - **Task Name** (started: YYYY-MM-DD) -->\n\n## Blocked\n<!-- Format: - **Task Name** (started: YYYY-MM-DD) -->\n\n## Recently Completed\n<!-- Format: - ~~Task Name~~ (completed: YYYY-MM-DD) -->\n\"\"\")\n                issues[-1] += \" [FIXED]\"\n        else:\n            content = filepath.read_text()\n            for section in required_sections:\n                if section.lower() not in content.lower():\n                    issues.append(f\"[STRUCTURE] {domain}/WORKING.md missing '{section}'\")\n\n    return issues\n\n\ndef check_stale_tasks(project_dir: Path, days_threshold: int = 3) -> list:\n    \"\"\"Find tasks older than threshold.\"\"\"\n    stale = []\n    today = datetime.now()\n\n    working_files = [\n        project_dir / \"WORKING.md\",\n        project_dir / \"COO\" / \"WORKING.md\",\n        project_dir / \"CMO\" / \"WORKING.md\",\n    ]\n\n    for filepath in working_files:\n        if not filepath.exists():\n            continue\n\n        content = filepath.read_text()\n        in_progress = False\n\n        for line in content.split(\"\\n\"):\n            if \"## in progress\" in line.lower():\n                in_progress = True\n            elif line.startswith(\"## \"):\n                in_progress = False\n            elif in_progress and \"(started:\" in line:\n                try:\n                    date_str = line.split(\"(started:\")[1].split(\")\")[0].strip()\n                    started = datetime.strptime(date_str, \"%Y-%m-%d\")\n                    age = (today - started).days\n                    if age >= days_threshold:\n                        task_name = line.split(\"**\")[1] if \"**\" in line else line[:40]\n                        domain = filepath.parent.name if filepath.parent.name in [\"COO\", \"CMO\"] else \"Root\"\n                        stale.append(f\"[STALE {age}d] {domain}: {task_name}\")\n                except (IndexError, ValueError):\n                    pass\n\n    return stale\n\n\ndef check_learnings_structure(project_dir: Path, fix: bool = False) -> list:\n    \"\"\"Check docs/learnings/ directory structure.\"\"\"\n    issues = []\n\n    learnings_dir = project_dir / \"docs\" / \"learnings\"\n    required_dirs = [\"workflows\", \"decisions\", \"gotchas\"]\n\n    if not learnings_dir.exists():\n        issues.append(\"[MISSING] docs/learnings/ directory\")\n        if fix:\n            learnings_dir.mkdir(parents=True, exist_ok=True)\n            issues[-1] += \" [FIXED]\"\n\n    for subdir in required_dirs:\n        subdir_path = learnings_dir / subdir\n        if not subdir_path.exists():\n            issues.append(f\"[MISSING] docs/learnings/{subdir}/\")\n            if fix:\n                subdir_path.mkdir(parents=True, exist_ok=True)\n                issues[-1] += \" [FIXED]\"\n\n    # Check README.md index\n    readme = learnings_dir / \"README.md\"\n    if not readme.exists():\n        issues.append(\"[MISSING] docs/learnings/README.md (index)\")\n    elif readme.stat().st_size < 100:\n        issues.append(\"[EMPTY] docs/learnings/README.md needs content\")\n\n    return issues\n\n\ndef check_learnings_content(project_dir: Path) -> dict:\n    \"\"\"Count and summarize learnings content.\"\"\"\n    learnings_dir = project_dir / \"docs\" / \"learnings\"\n\n    stats = {\n        \"workflows\": 0,\n        \"decisions\": 0,\n        \"gotchas\": 0,\n    }\n\n    for category in stats.keys():\n        category_dir = learnings_dir / category\n        if category_dir.exists():\n            stats[category] = len(list(category_dir.glob(\"*.md\")))\n\n    return stats\n\n\ndef check_index_sync(project_dir: Path) -> list:\n    \"\"\"Check if README.md index matches actual files.\"\"\"\n    issues = []\n    learnings_dir = project_dir / \"docs\" / \"learnings\"\n    readme = learnings_dir / \"README.md\"\n\n    if not readme.exists():\n        return issues\n\n    index_content = readme.read_text().lower()\n\n    # Check each .md file is referenced in index\n    for md_file in learnings_dir.rglob(\"*.md\"):\n        if md_file.name == \"README.md\":\n            continue\n        relative = md_file.relative_to(learnings_dir)\n        if str(relative).lower() not in index_content:\n            issues.append(f\"[UNINDEXED] {relative} not in README.md\")\n\n    return issues\n\n\ndef main():\n    fix_mode = \"--fix\" in sys.argv\n\n    # Find project root\n    project_dir = Path(os.getcwd())\n    if not (project_dir / \"CLAUDE.md\").exists():\n        # Try parent\n        if (project_dir.parent / \"CLAUDE.md\").exists():\n            project_dir = project_dir.parent\n\n    print(\"=\" * 50)\n    print(\"MEMORY SYSTEM HEALTH CHECK\")\n    print(\"=\" * 50)\n\n    all_issues = []\n\n    # 1. WORKING.md files\n    print(\"\\n[1] WORKING.md Files\")\n    print(\"-\" * 30)\n    working_issues = check_working_files(project_dir, fix_mode)\n    if working_issues:\n        all_issues.extend(working_issues)\n        for issue in working_issues:\n            print(f\"  {issue}\")\n    else:\n        print(\"  \u2713 All WORKING.md files present and structured\")\n\n    # 2. Stale tasks\n    print(\"\\n[2] Stale Tasks (3+ days)\")\n    print(\"-\" * 30)\n    stale_tasks = check_stale_tasks(project_dir)\n    if stale_tasks:\n        all_issues.extend(stale_tasks)\n        for task in stale_tasks:\n            print(f\"  {task}\")\n    else:\n        print(\"  \u2713 No stale tasks\")\n\n    # 3. Learnings structure\n    print(\"\\n[3] Learnings Structure\")\n    print(\"-\" * 30)\n    structure_issues = check_learnings_structure(project_dir, fix_mode)\n    if structure_issues:\n        all_issues.extend(structure_issues)\n        for issue in structure_issues:\n            print(f\"  {issue}\")\n    else:\n        print(\"  \u2713 Directory structure intact\")\n\n    # 4. Learnings content\n    print(\"\\n[4] Learnings Content\")\n    print(\"-\" * 30)\n    stats = check_learnings_content(project_dir)\n    print(f\"  Workflows: {stats['workflows']} files\")\n    print(f\"  Decisions: {stats['decisions']} files\")\n    print(f\"  Gotchas:   {stats['gotchas']} files\")\n\n    total = sum(stats.values())\n    if total == 0:\n        all_issues.append(\"[EMPTY] No learnings documented yet\")\n        print(\"  \u26a0 No learnings documented yet\")\n\n    # 5. Index sync\n    print(\"\\n[5] Index Synchronization\")\n    print(\"-\" * 30)\n    sync_issues = check_index_sync(project_dir)\n    if sync_issues:\n        all_issues.extend(sync_issues)\n        for issue in sync_issues:\n            print(f\"  {issue}\")\n    else:\n        print(\"  \u2713 Index matches files\")\n\n    # Summary\n    print(\"\\n\" + \"=\" * 50)\n    if all_issues:\n        print(f\"HEALTH: {'\u26a0 NEEDS ATTENTION' if len(all_issues) <= 3 else '\u2717 ISSUES FOUND'}\")\n        print(f\"Issues: {len(all_issues)}\")\n        if not fix_mode:\n            print(\"\\nRun with --fix to auto-repair missing files/dirs\")\n    else:\n        print(\"HEALTH: \u2713 ALL SYSTEMS HEALTHY\")\n    print(\"=\" * 50)\n\n    sys.exit(0 if not all_issues else 1)\n\n\nif __name__ == \"__main__\":\n    main()\n"
+    },
+    "tool_use_id": "toolu_01X5rK4rcwGZipmTdm8WmH1S"
+  },
+  {
+    "session_id": "0869f7f3-b0b5-4487-8df8-2e6716c3c3f3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/0869f7f3-b0b5-4487-8df8-2e6716c3c3f3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "ls -la /Users/donovan/PROMAN_OS/.claude/commands/ 2>/dev/null | head -5",
+      "description": "Check if commands directory exists"
+    },
+    "tool_use_id": "toolu_016vhxthh3KRLqB4wESMFXam"
+  },
+  {
+    "session_id": "0869f7f3-b0b5-4487-8df8-2e6716c3c3f3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/0869f7f3-b0b5-4487-8df8-2e6716c3c3f3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "mkdir -p /Users/donovan/PROMAN_OS/.claude/commands",
+      "description": "Create commands directory"
+    },
+    "tool_use_id": "toolu_01BpCDpVFnhxQDuRrn55Lx3B"
+  },
+  {
+    "session_id": "0869f7f3-b0b5-4487-8df8-2e6716c3c3f3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/0869f7f3-b0b5-4487-8df8-2e6716c3c3f3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Write",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/commands/memory-health.md",
+      "content": "Run a health check on the memory system (WORKING.md task files and docs/learnings/).\n\nExecute: `uv run .claude/hooks/utils/memory_health.py`\n\nReport findings to me and suggest fixes for any issues found.\n\nIf there are [UNINDEXED] files, offer to update docs/learnings/README.md.\nIf there are [STALE] tasks, ask if I want to review and update them.\nIf there are [MISSING] files, offer to run with --fix flag.\n"
+    },
+    "tool_use_id": "toolu_01QHKSBRGVD1w3qA81i9Crcq"
+  },
+  {
+    "session_id": "0869f7f3-b0b5-4487-8df8-2e6716c3c3f3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/0869f7f3-b0b5-4487-8df8-2e6716c3c3f3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "uv run .claude/hooks/utils/memory_health.py",
+      "description": "Test memory health check"
+    },
+    "tool_use_id": "toolu_01TAWrJybaH8ULa54WtGpUi7"
+  },
+  {
+    "session_id": "0869f7f3-b0b5-4487-8df8-2e6716c3c3f3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/0869f7f3-b0b5-4487-8df8-2e6716c3c3f3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Write",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/hooks/utils/memory_health.py",
+      "content": "#!/usr/bin/env -S uv run --script\n# /// script\n# requires-python = \">=3.11\"\n# ///\n\"\"\"\nPROMAN_OS Health Check\n======================\n\nValidates the Working Memory system is correctly configured and healthy.\n\nUsage:\n    uv run .claude/hooks/utils/memory_health.py           # check only\n    uv run .claude/hooks/utils/memory_health.py --fix     # auto-repair missing files\n\nOr via slash command:\n    /memory-health\n\"\"\"\n\nimport os\nimport sys\nimport json\nimport subprocess\nfrom pathlib import Path\nfrom datetime import datetime\n\n\nclass HealthCheck:\n    def __init__(self, project_path: Path, fix_mode: bool = False):\n        self.project_path = project_path\n        self.fix_mode = fix_mode\n        self.passed = 0\n        self.failed = 0\n        self.warnings = 0\n\n    def check(self, condition: bool, description: str, is_warning: bool = False) -> bool:\n        if condition:\n            print(f\"  \u2705 {description}\")\n            self.passed += 1\n            return True\n        elif is_warning:\n            print(f\"  \u26a0\ufe0f  {description}\")\n            self.warnings += 1\n            return False\n        else:\n            print(f\"  \u274c {description}\")\n            self.failed += 1\n            return False\n\n    def run_all(self):\n        print(f\"\\n{'='*60}\")\n        print(f\"  PROMAN_OS Health Check\")\n        print(f\"  Path: {self.project_path}\")\n        if self.fix_mode:\n            print(f\"  Mode: --fix enabled\")\n        print('='*60)\n\n        self.check_working_md_files()\n        self.check_stale_tasks()\n        self.check_hook_file()\n        self.check_settings_json()\n        self.check_learnings_structure()\n        self.check_index_sync()\n        self.check_hook_execution()\n        self.check_claude_md()\n\n        self.print_summary()\n\n    def check_working_md_files(self):\n        print(\"\\n\ud83d\udccb WORKING.md Files:\")\n\n        required_sections = [\"## in progress\", \"## blocked\", \"## recently completed\"]\n\n        working_files = {\n            \"Root\": self.project_path / \"WORKING.md\",\n            \"COO\": self.project_path / \"COO\" / \"WORKING.md\",\n            \"CMO\": self.project_path / \"CMO\" / \"WORKING.md\",\n        }\n\n        for domain, filepath in working_files.items():\n            if filepath.exists():\n                self.check(True, f\"{domain}/WORKING.md exists\")\n\n                # Check structure\n                content = filepath.read_text().lower()\n                missing = [s for s in required_sections if s not in content]\n                if missing:\n                    self.check(False, f\"{domain}/WORKING.md has all sections\", is_warning=True)\n            else:\n                result = self.check(False, f\"{domain}/WORKING.md exists\")\n                if self.fix_mode:\n                    self._create_working_md(filepath, domain)\n                    print(f\"       \u2192 Fixed: Created {domain}/WORKING.md\")\n\n    def _create_working_md(self, filepath: Path, domain: str):\n        \"\"\"Create a WORKING.md template.\"\"\"\n        filepath.parent.mkdir(parents=True, exist_ok=True)\n\n        if domain == \"Root\":\n            template = f\"\"\"# Cross-Domain Active Work\n> Last updated: {datetime.now().strftime('%Y-%m-%d')}\n\n## Active Flywheel Items\n<!-- Work that spans COO <-> CMO -->\n\n## Strategic Priorities This Week\n1.\n2.\n3.\n\n## In Progress\n<!-- Cross-domain or system-level tasks -->\n\n## Blocked\n<!-- Format: - **Task Name** (started: YYYY-MM-DD) -->\n\n## Recently Completed\n<!-- Format: - ~~Task Name~~ (completed: YYYY-MM-DD) -->\n\"\"\"\n        else:\n            template = f\"\"\"# {domain} Active Work\n> Last updated: {datetime.now().strftime('%Y-%m-%d')}\n\n## In Progress\n<!-- Format: - **Task Name** (started: YYYY-MM-DD) -->\n\n## Blocked\n<!-- Format: - **Task Name** (started: YYYY-MM-DD) -->\n\n## Recently Completed\n<!-- Format: - ~~Task Name~~ (completed: YYYY-MM-DD) -->\n\"\"\"\n        filepath.write_text(template)\n\n    def check_stale_tasks(self):\n        print(\"\\n\u23f0 Stale Tasks (3+ days):\")\n\n        stale_found = []\n        today = datetime.now()\n        days_threshold = 3\n\n        working_files = [\n            (\"Root\", self.project_path / \"WORKING.md\"),\n            (\"COO\", self.project_path / \"COO\" / \"WORKING.md\"),\n            (\"CMO\", self.project_path / \"CMO\" / \"WORKING.md\"),\n        ]\n\n        for domain, filepath in working_files:\n            if not filepath.exists():\n                continue\n\n            content = filepath.read_text()\n            in_progress = False\n\n            for line in content.split(\"\\n\"):\n                if \"## in progress\" in line.lower():\n                    in_progress = True\n                elif line.startswith(\"## \"):\n                    in_progress = False\n                elif in_progress and \"(started:\" in line:\n                    try:\n                        date_str = line.split(\"(started:\")[1].split(\")\")[0].strip()\n                        started = datetime.strptime(date_str, \"%Y-%m-%d\")\n                        age = (today - started).days\n                        if age >= days_threshold:\n                            task_name = line.split(\"**\")[1] if \"**\" in line else line[:40]\n                            stale_found.append((domain, task_name, age))\n                    except (IndexError, ValueError):\n                        pass\n\n        if stale_found:\n            for domain, task, age in stale_found:\n                self.check(False, f\"[{domain}] {task} ({age}d old)\", is_warning=True)\n        else:\n            self.check(True, \"No stale tasks found\")\n\n    def check_hook_file(self):\n        print(\"\\n\ud83e\ude9d SessionStart Hook:\")\n\n        hook_path = self.project_path / \".claude\" / \"hooks\" / \"session_start.py\"\n\n        if not self.check(hook_path.exists(), \"session_start.py exists\"):\n            return\n\n        content = hook_path.read_text(encoding=\"utf-8\")\n\n        # Check for shebang\n        has_shebang = content.startswith(\"#!/\")\n        self.check(has_shebang, \"Has shebang line\")\n\n        # Check for main function\n        has_main = \"def main\" in content or 'if __name__' in content\n        self.check(has_main, \"Has main entry point\")\n\n    def check_settings_json(self):\n        print(\"\\n\u2699\ufe0f  Settings Configuration:\")\n\n        settings_files = [\n            (\"Root\", self.project_path / \".claude\" / \"settings.json\"),\n            (\"CMO\", self.project_path / \"CMO\" / \".claude\" / \"settings.json\"),\n            (\"COO\", self.project_path / \"COO\" / \".claude\" / \"settings.json\"),\n        ]\n\n        for domain, settings_path in settings_files:\n            if not settings_path.exists():\n                self.check(False, f\"{domain} settings.json exists\", is_warning=True)\n                continue\n\n            # Check valid JSON\n            try:\n                content = settings_path.read_text(encoding=\"utf-8\")\n                settings = json.loads(content)\n            except json.JSONDecodeError as e:\n                self.check(False, f\"{domain} settings.json valid JSON - ERROR: {e}\")\n                continue\n\n            # Check SessionStart hook configured\n            has_session_start = (\n                \"hooks\" in settings and\n                \"SessionStart\" in settings.get(\"hooks\", {})\n            )\n            self.check(has_session_start, f\"{domain} has SessionStart hook\")\n\n            # Check for hardcoded paths\n            content_lower = content.lower()\n            has_hardcoded = \"/users/\" in content_lower or \"/home/\" in content_lower\n            if has_hardcoded:\n                self.check(False, f\"{domain} no hardcoded paths\", is_warning=True)\n\n    def check_learnings_structure(self):\n        print(\"\\n\ud83d\udcda Learnings Structure:\")\n\n        learnings_dir = self.project_path / \"docs\" / \"learnings\"\n\n        if not learnings_dir.exists():\n            self.check(False, \"docs/learnings/ directory exists\")\n            if self.fix_mode:\n                learnings_dir.mkdir(parents=True, exist_ok=True)\n                print(\"       \u2192 Fixed: Created docs/learnings/\")\n        else:\n            self.check(True, \"docs/learnings/ directory exists\")\n\n        # Check subdirectories\n        subdirs = [\"workflows\", \"decisions\", \"gotchas\"]\n        for subdir in subdirs:\n            subdir_path = learnings_dir / subdir\n            if subdir_path.exists():\n                count = len(list(subdir_path.glob(\"*.md\")))\n                self.check(True, f\"{subdir}/ exists ({count} files)\")\n            else:\n                self.check(False, f\"{subdir}/ exists\", is_warning=True)\n                if self.fix_mode:\n                    subdir_path.mkdir(parents=True, exist_ok=True)\n                    print(f\"       \u2192 Fixed: Created {subdir}/\")\n\n        # Check README\n        readme = learnings_dir / \"README.md\"\n        if readme.exists():\n            size = readme.stat().st_size\n            self.check(size > 100, f\"README.md has content ({size} bytes)\")\n        else:\n            self.check(False, \"README.md exists\")\n\n    def check_index_sync(self):\n        print(\"\\n\ud83d\udd17 Index Synchronization:\")\n\n        learnings_dir = self.project_path / \"docs\" / \"learnings\"\n        readme = learnings_dir / \"README.md\"\n\n        if not readme.exists():\n            self.check(False, \"Cannot check - README.md missing\", is_warning=True)\n            return\n\n        index_content = readme.read_text().lower()\n        unindexed = []\n\n        # Check each .md file is referenced in index\n        for md_file in learnings_dir.rglob(\"*.md\"):\n            if md_file.name == \"README.md\":\n                continue\n            relative = md_file.relative_to(learnings_dir)\n            if str(relative).lower() not in index_content:\n                unindexed.append(str(relative))\n\n        if unindexed:\n            for f in unindexed:\n                self.check(False, f\"{f} not in README.md\", is_warning=True)\n        else:\n            self.check(True, \"All files indexed in README.md\")\n\n    def check_hook_execution(self):\n        print(\"\\n\ud83e\uddea Hook Execution Test:\")\n\n        hook_path = self.project_path / \".claude\" / \"hooks\" / \"session_start.py\"\n\n        if not hook_path.exists():\n            self.check(False, \"Cannot test - hook file missing\")\n            return\n\n        try:\n            # Set environment variable\n            env = os.environ.copy()\n            env[\"CLAUDE_PROJECT_DIR\"] = str(self.project_path)\n\n            # Run hook with test input\n            result = subprocess.run(\n                [\"uv\", \"run\", str(hook_path)],\n                input='{\"source\": \"startup\", \"session_id\": \"health-check\", \"cwd\": \"' + str(self.project_path) + '\"}',\n                capture_output=True,\n                text=True,\n                timeout=10,\n                cwd=str(self.project_path),\n                env=env\n            )\n\n            # Check exit code\n            self.check(result.returncode == 0, f\"Hook exits cleanly (code {result.returncode})\")\n\n            # Check for output\n            has_output = len(result.stdout.strip()) > 0\n            self.check(has_output, \"Hook produces output\", is_warning=not has_output)\n\n            if has_output:\n                lines = result.stdout.strip().split(\"\\n\")\n                # Filter out uv metadata lines\n                lines = [l for l in lines if not l.startswith(\"Reading inline\")]\n                print(f\"     \u2139\ufe0f  Output preview ({len(lines)} lines):\")\n                for line in lines[:3]:\n                    print(f\"        {line[:55]}{'...' if len(line) > 55 else ''}\")\n                if len(lines) > 3:\n                    print(f\"        ... and {len(lines) - 3} more lines\")\n\n        except subprocess.TimeoutExpired:\n            self.check(False, \"Hook completes within 10 seconds\")\n        except Exception as e:\n            self.check(False, f\"Hook execution - ERROR: {e}\")\n\n    def check_claude_md(self):\n        print(\"\\n\ud83d\udcdd CLAUDE.md Integration:\")\n\n        claude_md = self.project_path / \"CLAUDE.md\"\n\n        if not claude_md.exists():\n            self.check(False, \"CLAUDE.md exists\", is_warning=True)\n            return\n\n        self.check(True, \"CLAUDE.md exists\")\n\n        content = claude_md.read_text(encoding=\"utf-8\").lower()\n\n        # Check for memory system documentation\n        has_working_ref = \"working.md\" in content\n        has_learnings_ref = \"learnings\" in content\n\n        self.check(has_working_ref, \"References WORKING.md\", is_warning=not has_working_ref)\n        self.check(has_learnings_ref, \"References learnings/\", is_warning=not has_learnings_ref)\n\n    def print_summary(self):\n        print(f\"\\n{'='*60}\")\n        print(\"  SUMMARY\")\n        print('='*60)\n\n        total = self.passed + self.failed + self.warnings\n\n        print(f\"\\n  \u2705 Passed:   {self.passed}/{total}\")\n        print(f\"  \u274c Failed:   {self.failed}/{total}\")\n        print(f\"  \u26a0\ufe0f  Warnings: {self.warnings}/{total}\")\n\n        if self.failed == 0:\n            print(\"\\n  \ud83c\udf89 System is healthy!\")\n            if self.warnings > 0:\n                print(\"     (Some optional improvements suggested above)\")\n        else:\n            print(\"\\n  \ud83d\udd27 Some fixes needed - see failed checks above\")\n            if not self.fix_mode:\n                print(\"     Run with --fix to auto-repair missing files\")\n\n        print()\n        return self.failed == 0\n\n\ndef main():\n    fix_mode = \"--fix\" in sys.argv\n\n    # Get project path\n    args = [a for a in sys.argv[1:] if not a.startswith(\"-\")]\n    if args:\n        project_path = Path(args[0]).resolve()\n    else:\n        project_path = Path.cwd()\n\n    # Try to find PROMAN_OS root\n    if not (project_path / \".claude\").exists():\n        if (project_path.parent / \".claude\").exists():\n            project_path = project_path.parent\n        else:\n            print(f\"\u26a0\ufe0f  Warning: No .claude directory found at {project_path}\")\n            print(\"   Make sure you're running this from your PROMAN_OS root directory\")\n            print()\n\n    # Run health check\n    checker = HealthCheck(project_path, fix_mode)\n    checker.run_all()\n\n    # Exit with appropriate code\n    sys.exit(0 if checker.failed == 0 else 1)\n\n\nif __name__ == \"__main__\":\n    main()\n"
+    },
+    "tool_use_id": "toolu_01Na1xEHP8oGG7xGz1bFxd9d"
+  },
+  {
+    "session_id": "0869f7f3-b0b5-4487-8df8-2e6716c3c3f3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/0869f7f3-b0b5-4487-8df8-2e6716c3c3f3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "uv run .claude/hooks/utils/memory_health.py",
+      "description": "Test merged health check"
+    },
+    "tool_use_id": "toolu_01GqArYQtWcbtWEhWaPLc5mo"
+  }
+]
