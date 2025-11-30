@@ -1,0 +1,83 @@
+[
+  {
+    "session_id": "a726b262-889d-43c0-b15b-3699aa3be91c",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a726b262-889d-43c0-b15b-3699aa3be91c.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Read",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/settings.json"
+    },
+    "tool_response": {
+      "type": "text",
+      "file": {
+        "filePath": "/Users/donovan/PROMAN_OS/.claude/settings.json",
+        "content": "{\n  \"$schema\": \"https://json.schemastore.org/claude-code-settings.json\",\n  \"hooks\": {\n    \"PreToolUse\": [\n      {\n        \"matcher\": \".*\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/pre_tool_use.py\"\n          }\n        ]\n      }\n    ],\n    \"PostToolUse\": [\n      {\n        \"matcher\": \".*\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/post_tool_use.py\"\n          }\n        ]\n      }\n    ],\n    \"UserPromptSubmit\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/user_prompt_submit.py\"\n          }\n        ]\n      }\n    ],\n    \"Stop\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/stop.py\"\n          }\n        ]\n      }\n    ],\n    \"PreCompact\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/pre_compact.py\"\n          }\n        ]\n      }\n    ],\n    \"SessionEnd\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/session_end.py\"\n          }\n        ]\n      }\n    ],\n    \"Notification\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/notification.py\"\n          }\n        ]\n      }\n    ],\n    \"SubagentStop\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/subagent_stop.py\"\n          }\n        ]\n      }\n    ]\n  }\n}\n",
+        "numLines": 94,
+        "startLine": 1,
+        "totalLines": 94
+      }
+    },
+    "tool_use_id": "toolu_01Eu43wWLVx6HGR3C55Sip54"
+  },
+  {
+    "session_id": "a726b262-889d-43c0-b15b-3699aa3be91c",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a726b262-889d-43c0-b15b-3699aa3be91c.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Read",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/hooks/post_tool_use.py"
+    },
+    "tool_response": {
+      "type": "text",
+      "file": {
+        "filePath": "/Users/donovan/PROMAN_OS/.claude/hooks/post_tool_use.py",
+        "content": "#!/usr/bin/env -S uv run --script\n# /// script\n# requires-python = \">=3.8\"\n# ///\n\nimport json\nimport os\nimport sys\nfrom pathlib import Path\nfrom utils.constants import ensure_session_log_dir\n\ndef main():\n    try:\n        # Read JSON input from stdin\n        input_data = json.load(sys.stdin)\n        \n        # Extract session_id\n        session_id = input_data.get('session_id', 'unknown')\n        \n        # Ensure session log directory exists\n        log_dir = ensure_session_log_dir(session_id)\n        log_path = log_dir / 'post_tool_use.json'\n        \n        # Read existing log data or initialize empty list\n        if log_path.exists():\n            with open(log_path, 'r') as f:\n                try:\n                    log_data = json.load(f)\n                except (json.JSONDecodeError, ValueError):\n                    log_data = []\n        else:\n            log_data = []\n        \n        # Append new data\n        log_data.append(input_data)\n        \n        # Write back to file with formatting\n        with open(log_path, 'w') as f:\n            json.dump(log_data, f, indent=2)\n        \n        sys.exit(0)\n        \n    except json.JSONDecodeError:\n        # Handle JSON decode errors gracefully\n        sys.exit(0)\n    except Exception:\n        # Exit cleanly on any other error\n        sys.exit(0)\n\nif __name__ == '__main__':\n    main()",
+        "numLines": 51,
+        "startLine": 1,
+        "totalLines": 51
+      }
+    },
+    "tool_use_id": "toolu_01YVKsbwqvx1LoJKc7buYqAo"
+  },
+  {
+    "session_id": "a726b262-889d-43c0-b15b-3699aa3be91c",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a726b262-889d-43c0-b15b-3699aa3be91c.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Glob",
+    "tool_input": {
+      "pattern": ".claude/hooks/utils/**/*",
+      "path": "/Users/donovan/PROMAN_OS"
+    },
+    "tool_response": {
+      "filenames": [
+        "/Users/donovan/PROMAN_OS/.claude/hooks/utils/llm/__pycache__/anth.cpython-311.pyc",
+        "/Users/donovan/PROMAN_OS/.claude/hooks/utils/llm/__pycache__/anth.cpython-313.pyc",
+        "/Users/donovan/PROMAN_OS/.claude/hooks/utils/llm/oai.py",
+        "/Users/donovan/PROMAN_OS/.claude/hooks/utils/llm/anth.py",
+        "/Users/donovan/PROMAN_OS/.claude/hooks/utils/hitl.py",
+        "/Users/donovan/PROMAN_OS/.claude/hooks/utils/constants.py",
+        "/Users/donovan/PROMAN_OS/.claude/hooks/utils/__pycache__/summarizer.cpython-311.pyc",
+        "/Users/donovan/PROMAN_OS/.claude/hooks/utils/__pycache__/summarizer.cpython-313.pyc",
+        "/Users/donovan/PROMAN_OS/.claude/hooks/utils/__pycache__/constants.cpython-311.pyc",
+        "/Users/donovan/PROMAN_OS/.claude/hooks/utils/__pycache__/model_extractor.cpython-311.pyc",
+        "/Users/donovan/PROMAN_OS/.claude/hooks/utils/__pycache__/model_extractor.cpython-313.pyc",
+        "/Users/donovan/PROMAN_OS/.claude/hooks/utils/tts/pyttsx3_tts.py",
+        "/Users/donovan/PROMAN_OS/.claude/hooks/utils/tts/openai_tts.py",
+        "/Users/donovan/PROMAN_OS/.claude/hooks/utils/tts/elevenlabs_tts.py",
+        "/Users/donovan/PROMAN_OS/.claude/hooks/utils/summarizer.py",
+        "/Users/donovan/PROMAN_OS/.claude/hooks/utils/model_extractor.py",
+        "/Users/donovan/PROMAN_OS/.claude/hooks/utils/__pycache__/constants.cpython-313.pyc"
+      ],
+      "durationMs": 25,
+      "numFiles": 17,
+      "truncated": false
+    },
+    "tool_use_id": "toolu_01Dg5dCZseymMEPQStb3boA6"
+  }
+]

@@ -1,0 +1,10 @@
+[
+  {
+    "session_id": "966a5451-e6e5-4f31-838d-fbe902f73266",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/966a5451-e6e5-4f31-838d-fbe902f73266.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "Stop",
+    "stop_hook_active": false
+  }
+]

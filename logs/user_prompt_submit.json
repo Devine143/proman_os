@@ -1,0 +1,182 @@
+[
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "test all hooks"
+  },
+  {
+    "prompt": "test user prompt",
+    "session_id": "test-session-123"
+  },
+  {
+    "session_id": "3abe6a00-5f9c-439a-a757-44d1d703b08f",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/3abe6a00-5f9c-439a-a757-44d1d703b08f.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "I make changes to the repo folders a lot how can I make sure that my read me are up to date, can we create a claud skill for this?"
+  },
+  {
+    "session_id": "a726b262-889d-43c0-b15b-3699aa3be91c",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a726b262-889d-43c0-b15b-3699aa3be91c.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "m I getting a PostToolUse:Read hook error"
+  },
+  {
+    "session_id": "966a5451-e6e5-4f31-838d-fbe902f73266",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/966a5451-e6e5-4f31-838d-fbe902f73266.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "audit all documenation"
+  },
+  {
+    "session_id": "966a5451-e6e5-4f31-838d-fbe902f73266",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/966a5451-e6e5-4f31-838d-fbe902f73266.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "are you using the '/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor'?"
+  },
+  {
+    "session_id": "9a087c44-d968-481e-a5ef-e64dbd2664a3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/9a087c44-d968-481e-a5ef-e64dbd2664a3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "what skill do you have to audit the repos folders?"
+  },
+  {
+    "session_id": "9a087c44-d968-481e-a5ef-e64dbd2664a3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/9a087c44-d968-481e-a5ef-e64dbd2664a3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "invoke it please"
+  },
+  {
+    "session_id": "9c8f5987-f402-4736-9864-cef9a21c8033",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/9c8f5987-f402-4736-9864-cef9a21c8033.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "plan",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "below is an example About Me\n\nName: Vivek\nRole: Programmer, engineering leader (VP of Eng), YouTuber, writer/blogger.\nTrying to get the AI agent to do everything for me on my computer.\n\nDirectory Structure\n\nThese are the directories in my top-level home directory that I usually work in and care about.\n\n~/ScreenCasts: I often record screencasts of doing stuff on the computer so I remember later. Those go here.\n\n~/dotfiles: as the name says \u2014 my dotfiles and configs.\n\n~/repos: git repos that I\u2019m working on \u2014 this is an important directory!\n\n~/repos/gh: my personal repos from my personal github account.\n\n~/repos/em: my work repos from my employer\u2019s corporate github account.\n\n~/repos/3p: misc public repos that I find interesting.\n\n~/Obsidian_iCloud/notes.md: my Obsidian notes vault. Another very important directory.\n\n~/Desktop: usually not much here, other than misc stuff that landed there.\n\n~/Documents: I don\u2019t keep documents here (those are in other folders). Screenshots get dumped here.\n\n~/Downloads: catch-all kitchen sink where Chrome downloads are saved.\n\n~/Movies: I use OBS to record, and this is where the recordings are stored.\n\n~/Music: my offline cache of music.\n\nWorking Directories\n\n~/AGENT is your directory to use as scratch space, save memories etc.\nIt has the following subdirectories (which you should create if they don\u2019t exist):\n\nMemory: ~/AGENT/memories \u2014 Important information to remember (markdown).\n\nTo dos: ~/AGENT/todos \u2014 Things to do, reminders, etc (markdown).\n\nProjects: ~/AGENT/projects \u2014 Active projects I\u2019m working on (markdown).\n\nMAIN EXECUTION LOOP (CRITICAL \u2014 FOLLOW EVERY TIME)\n\nWhen given ANY task, you MUST follow this loop:\n\nStep 1: STOP AND SEARCH MEMORIES (MANDATORY)\n\nBefore doing ANYTHING else:\n\nSearch ~/AGENT/memories/ for relevant workflows\n\nUse ls ~/AGENT/memories/ to see all available workflows\n\nUse grep -r \"keyword\" ~/AGENT/memories/ for specific topics\n\nREAD any potentially relevant workflow files completely\n\nStep 2: DECISION POINT\n\nIf a workflow exists \u2192 USE IT EXACTLY AS WRITTEN\n\nIf no workflow exists \u2192 Plan your approach and document why no existing workflow applies\n\nStep 3: EXECUTE\n\nFollow the existing workflow step-by-step, OR\n\nExecute your new approach\n\nStep 4: CAPTURE LEARNING\n\nIf you created a new workflow \u2192 Save it to ~/AGENT/memories/\n\nIf you found issues with an existing workflow \u2192 Update it\n\nVIOLATIONS TO AVOID\n\n\u274c NEVER skip memory check because you think you know what to do\n\u274c NEVER create your own approach when a workflow exists\n\u274c NEVER assume a simple task doesn\u2019t have a workflow\n\u274c NEVER proceed without explicitly stating whether you found a relevant workflow\n\nExample Execution\n\nUser: \"normalize audio in video.mp4\"\n\n\u2705 CORRECT:\nCheck memories \u2192 Find audio-normalization-workflow.md \u2192 Follow it\n\n\u274c WRONG:\nJump straight to using ffmpeg with loudnorm\n\nInstructions & Projects\n\nYou should search memories to see if there\u2019s relevant information for my query, especially if you feel like you\u2019re missing context.\n\nFor multi-session work, create or update a markdown file in ~/projects with an appropriate title; skip project files for one-off tasks and just capture quick notes in scratch space.\n\nAs I do work on a project, append important information to that file that you need to remember for the ongoing effort.\n\nAutomatic Workflow Memory Capture\n\nIMPORTANT: After completing ANY multi-step workflow or discovering new system behavior:\n\nAutomatically create a memory in ~/AGENT/memories/[workflow-name].md\n\nUpdate the index at ~/AGENT/memories/README.md\n\nFollow the process documented in ~/AGENT/memories/meta-workflow-capture.md\n\nThis should happen WITHOUT being asked \u2014 recognize when you\u2019ve learned something worth persisting.\n\nEnvironment\n\nYou are working in Mac OS, running on Apple Silicon (M4 Max).\n\nUse the uv tool for all Python project and dependency management, and also for running Python (there is no Python directly installed).\n\nUse uvx to run Python-based CLI tools without installing them (e.g., uvx yt-dlp, uvx ruff, etc.). Never use uv tool install unless explicitly needed.\n\nSince you are on a Mac, you can use AppleScript (osascript) to automate various things in the OS and apps.\n\nUsage Notes\n\nYou are a general purpose assistant, not limited to coding.\n\nCan write code to help with various tasks.\n\nGit Commit Guidelines\n\nWhen making git commits, do NOT include the\n\"\ud83e\udd16 Generated with [Claude Code]\" line or \"Co-Authored-By: Claude\" attribution in commit messages.\n\nWrite commit messages as if they were written directly by me, using a clean, professional format.\n\n[ ] how can I incorpate this into this repo?"
+  },
+  {
+    "session_id": "a3ddae94-e9fd-4c69-b433-d4b95e336bf4",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a3ddae94-e9fd-4c69-b433-d4b95e336bf4.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "use the meta-skill verify that the doc-auditor is correctly configured "
+  },
+  {
+    "session_id": "a3ddae94-e9fd-4c69-b433-d4b95e336bf4",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a3ddae94-e9fd-4c69-b433-d4b95e336bf4.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "yes please"
+  },
+  {
+    "session_id": "9a087c44-d968-481e-a5ef-e64dbd2664a3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/9a087c44-d968-481e-a5ef-e64dbd2664a3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "yes"
+  },
+  {
+    "session_id": "a3ddae94-e9fd-4c69-b433-d4b95e336bf4",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a3ddae94-e9fd-4c69-b433-d4b95e336bf4.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "thanks any other suggestiosn"
+  },
+  {
+    "session_id": "a3ddae94-e9fd-4c69-b433-d4b95e336bf4",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a3ddae94-e9fd-4c69-b433-d4b95e336bf4.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "yes"
+  },
+  {
+    "session_id": "a3ddae94-e9fd-4c69-b433-d4b95e336bf4",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a3ddae94-e9fd-4c69-b433-d4b95e336bf4.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "use the metaskill as refernces go through all the skills in proman_os , cmo and coo folder and check to see if they follow best rtpractivces"
+  },
+  {
+    "session_id": "a3ddae94-e9fd-4c69-b433-d4b95e336bf4",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a3ddae94-e9fd-4c69-b433-d4b95e336bf4.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "remmove teh Loi-managemetn adn buget skills from all repo folders and docs refences "
+  },
+  {
+    "session_id": "f8cf686d-ff43-42c8-a505-ff3f20baeaf1",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/f8cf686d-ff43-42c8-a505-ff3f20baeaf1.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "I have deleted a lot of folders in an attempt to clean the repo up, go through the docs audit it again"
+  },
+  {
+    "session_id": "f8cf686d-ff43-42c8-a505-ff3f20baeaf1",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/f8cf686d-ff43-42c8-a505-ff3f20baeaf1.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "fix all folders, dont add anything jsut fix the naming of the folders remove from refrence if it is not there"
+  },
+  {
+    "session_id": "9c8f5987-f402-4736-9864-cef9a21c8033",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/9c8f5987-f402-4736-9864-cef9a21c8033.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "plan",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "save to MD for future refernce split it up into pahses root, cmo and coo"
+  },
+  {
+    "session_id": "f8cf686d-ff43-42c8-a505-ff3f20baeaf1",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/f8cf686d-ff43-42c8-a505-ff3f20baeaf1.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "I see the COO still ahve the wrong fodler struture why?"
+  },
+  {
+    "session_id": "f8cf686d-ff43-42c8-a505-ff3f20baeaf1",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/f8cf686d-ff43-42c8-a505-ff3f20baeaf1.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "how did you miss this? does the doc auditor not go this deep?"
+  },
+  {
+    "session_id": "f8cf686d-ff43-42c8-a505-ff3f20baeaf1",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/f8cf686d-ff43-42c8-a505-ff3f20baeaf1.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "update the auditor"
+  },
+  {
+    "session_id": "9c8f5987-f402-4736-9864-cef9a21c8033",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/9c8f5987-f402-4736-9864-cef9a21c8033.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "acceptEdits",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "The idea with the memories is to exstablish common workflows that we can turn into agents or skills if it get used often"
+  }
+]

@@ -1,0 +1,40 @@
+[
+  {
+    "session_id": "a726b262-889d-43c0-b15b-3699aa3be91c",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a726b262-889d-43c0-b15b-3699aa3be91c.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Read",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/hooks/post_tool_use.py"
+    },
+    "tool_use_id": "toolu_01YVKsbwqvx1LoJKc7buYqAo"
+  },
+  {
+    "session_id": "a726b262-889d-43c0-b15b-3699aa3be91c",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a726b262-889d-43c0-b15b-3699aa3be91c.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Glob",
+    "tool_input": {
+      "pattern": ".claude/hooks/utils/**/*",
+      "path": "/Users/donovan/PROMAN_OS"
+    },
+    "tool_use_id": "toolu_01Dg5dCZseymMEPQStb3boA6"
+  },
+  {
+    "session_id": "a726b262-889d-43c0-b15b-3699aa3be91c",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a726b262-889d-43c0-b15b-3699aa3be91c.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "cd /Users/donovan/PROMAN_OS/.claude/hooks && uv run --script post_tool_use.py 2>&1 <<< '{\"session_id\": \"test\", \"tool_name\": \"Read\"}' || echo \"Exit code: $?\"",
+      "description": "Test post_tool_use.py hook"
+    },
+    "tool_use_id": "toolu_012aiebWA1Tz1F8piV5cVx8S"
+  }
+]

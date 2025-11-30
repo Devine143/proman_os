@@ -1,0 +1,836 @@
+[
+  {
+    "session_id": "a726b262-889d-43c0-b15b-3699aa3be91c",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a726b262-889d-43c0-b15b-3699aa3be91c.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/.claude/hooks",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "cd /Users/donovan/PROMAN_OS/.claude/hooks && uv run --script post_tool_use.py 2>&1 <<< '{\"session_id\": \"test\", \"tool_name\": \"Read\"}' || echo \"Exit code: $?\"",
+      "description": "Test post_tool_use.py hook"
+    },
+    "tool_response": {
+      "stdout": "Reading inline script metadata from `post_tool_use.py`",
+      "stderr": "",
+      "interrupted": false,
+      "isImage": false
+    },
+    "tool_use_id": "toolu_012aiebWA1Tz1F8piV5cVx8S"
+  },
+  {
+    "session_id": "a726b262-889d-43c0-b15b-3699aa3be91c",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a726b262-889d-43c0-b15b-3699aa3be91c.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/.claude/hooks",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Glob",
+    "tool_input": {
+      "pattern": "**/.claude/settings.json",
+      "path": "/Users/donovan/PROMAN_OS"
+    },
+    "tool_response": {
+      "filenames": [
+        "/Users/donovan/PROMAN_OS/COO/.claude/settings.json",
+        "/Users/donovan/PROMAN_OS/CMO/.claude/settings.json",
+        "/Users/donovan/PROMAN_OS/.claude/settings.json"
+      ],
+      "durationMs": 25,
+      "numFiles": 3,
+      "truncated": false
+    },
+    "tool_use_id": "toolu_01FbNv7XWhyH8FeVeJzUhba6"
+  },
+  {
+    "session_id": "a726b262-889d-43c0-b15b-3699aa3be91c",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a726b262-889d-43c0-b15b-3699aa3be91c.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/.claude/hooks",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Read",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/COO/.claude/settings.json"
+    },
+    "tool_response": {
+      "type": "text",
+      "file": {
+        "filePath": "/Users/donovan/PROMAN_OS/COO/.claude/settings.json",
+        "content": "{\n  \"$schema\": \"https://json.schemastore.org/claude-code-settings.json\",\n  \"hooks\": {\n    \"SessionStart\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"bash ../.claude/hooks/session-start-dashboard.sh\"\n          }\n        ]\n      }\n    ],\n    \"PreCompact\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"bash ../.claude/hooks/pre-compact-save-state.sh\"\n          }\n        ]\n      }\n    ],\n    \"PreToolUse\": [\n      {\n        \"matcher\": \"Write|Edit|MultiEdit\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"bash ../.claude/hooks/pre-tool-backup.sh \\\"$TOOL_INPUT\\\"\"\n          }\n        ]\n      }\n    ],\n    \"PostToolUse\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"bash ../.claude/hooks/post-tool-log.sh \\\"$TOOL_NAME\\\" \\\"$TOOL_INPUT\\\"\"\n          }\n        ]\n      }\n    ],\n    \"Stop\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"bash ../.claude/hooks/session-end-cleanup.sh\"\n          }\n        ]\n      }\n    ]\n  }\n}\n",
+        "numLines": 61,
+        "startLine": 1,
+        "totalLines": 61
+      }
+    },
+    "tool_use_id": "toolu_0118LZ3ica6XCRaHjCAqo8iG"
+  },
+  {
+    "session_id": "a726b262-889d-43c0-b15b-3699aa3be91c",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a726b262-889d-43c0-b15b-3699aa3be91c.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/.claude/hooks",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Read",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/CMO/.claude/settings.json"
+    },
+    "tool_response": {
+      "type": "text",
+      "file": {
+        "filePath": "/Users/donovan/PROMAN_OS/CMO/.claude/settings.json",
+        "content": "{\n  \"$schema\": \"https://json.schemastore.org/claude-code-settings.json\",\n  \"hooks\": {\n    \"SessionStart\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/session_start.py\"\n          }\n        ]\n      }\n    ],\n    \"PreToolUse\": [\n      {\n        \"matcher\": \"Write|Edit|MultiEdit\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/pre_tool_use.py\"\n          }\n        ]\n      }\n    ],\n    \"PostToolUse\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/post_tool_use.py\"\n          }\n        ]\n      }\n    ],\n    \"PreCompact\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/pre_compact.py\"\n          }\n        ]\n      }\n    ],\n    \"Stop\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/session_end.py\"\n          }\n        ]\n      }\n    ]\n  }\n}\n",
+        "numLines": 61,
+        "startLine": 1,
+        "totalLines": 61
+      }
+    },
+    "tool_use_id": "toolu_01P8ptX14r9tcXuQ5xLXfTyV"
+  },
+  {
+    "session_id": "a726b262-889d-43c0-b15b-3699aa3be91c",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a726b262-889d-43c0-b15b-3699aa3be91c.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/.claude/hooks",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Edit",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/settings.json",
+      "old_string": "    \"PostToolUse\": [\n      {\n        \"matcher\": \".*\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/post_tool_use.py\"\n          }\n        ]\n      }\n    ],",
+      "new_string": ""
+    },
+    "tool_response": {
+      "filePath": "/Users/donovan/PROMAN_OS/.claude/settings.json",
+      "oldString": "    \"PostToolUse\": [\n      {\n        \"matcher\": \".*\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/post_tool_use.py\"\n          }\n        ]\n      }\n    ],",
+      "newString": "",
+      "originalFile": "{\n  \"$schema\": \"https://json.schemastore.org/claude-code-settings.json\",\n  \"hooks\": {\n    \"PreToolUse\": [\n      {\n        \"matcher\": \".*\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/pre_tool_use.py\"\n          }\n        ]\n      }\n    ],\n    \"PostToolUse\": [\n      {\n        \"matcher\": \".*\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/post_tool_use.py\"\n          }\n        ]\n      }\n    ],\n    \"UserPromptSubmit\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/user_prompt_submit.py\"\n          }\n        ]\n      }\n    ],\n    \"Stop\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/stop.py\"\n          }\n        ]\n      }\n    ],\n    \"PreCompact\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/pre_compact.py\"\n          }\n        ]\n      }\n    ],\n    \"SessionEnd\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/session_end.py\"\n          }\n        ]\n      }\n    ],\n    \"Notification\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/notification.py\"\n          }\n        ]\n      }\n    ],\n    \"SubagentStop\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/subagent_stop.py\"\n          }\n        ]\n      }\n    ]\n  }\n}\n",
+      "structuredPatch": [
+        {
+          "oldStart": 12,
+          "oldLines": 17,
+          "newStart": 12,
+          "newLines": 6,
+          "lines": [
+            "         ]",
+            "       }",
+            "     ],",
+            "-    \"PostToolUse\": [",
+            "-      {",
+            "-        \"matcher\": \".*\",",
+            "-        \"hooks\": [",
+            "-          {",
+            "-            \"type\": \"command\",",
+            "-            \"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/post_tool_use.py\"",
+            "-          }",
+            "-        ]",
+            "-      }",
+            "-    ],",
+            "     \"UserPromptSubmit\": [",
+            "       {",
+            "         \"matcher\": \"\","
+          ]
+        }
+      ],
+      "userModified": false,
+      "replaceAll": false
+    },
+    "tool_use_id": "toolu_01HGZrM5eJrH5rEYDVXDBTmu"
+  },
+  {
+    "session_id": "a726b262-889d-43c0-b15b-3699aa3be91c",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a726b262-889d-43c0-b15b-3699aa3be91c.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/.claude/hooks",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Edit",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/COO/.claude/settings.json",
+      "old_string": "    \"PostToolUse\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"bash ../.claude/hooks/post-tool-log.sh \\\"$TOOL_NAME\\\" \\\"$TOOL_INPUT\\\"\"\n          }\n        ]\n      }\n    ],",
+      "new_string": ""
+    },
+    "tool_response": {
+      "filePath": "/Users/donovan/PROMAN_OS/COO/.claude/settings.json",
+      "oldString": "    \"PostToolUse\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"bash ../.claude/hooks/post-tool-log.sh \\\"$TOOL_NAME\\\" \\\"$TOOL_INPUT\\\"\"\n          }\n        ]\n      }\n    ],",
+      "newString": "",
+      "originalFile": "{\n  \"$schema\": \"https://json.schemastore.org/claude-code-settings.json\",\n  \"hooks\": {\n    \"SessionStart\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"bash ../.claude/hooks/session-start-dashboard.sh\"\n          }\n        ]\n      }\n    ],\n    \"PreCompact\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"bash ../.claude/hooks/pre-compact-save-state.sh\"\n          }\n        ]\n      }\n    ],\n    \"PreToolUse\": [\n      {\n        \"matcher\": \"Write|Edit|MultiEdit\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"bash ../.claude/hooks/pre-tool-backup.sh \\\"$TOOL_INPUT\\\"\"\n          }\n        ]\n      }\n    ],\n    \"PostToolUse\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"bash ../.claude/hooks/post-tool-log.sh \\\"$TOOL_NAME\\\" \\\"$TOOL_INPUT\\\"\"\n          }\n        ]\n      }\n    ],\n    \"Stop\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"bash ../.claude/hooks/session-end-cleanup.sh\"\n          }\n        ]\n      }\n    ]\n  }\n}\n",
+      "structuredPatch": [
+        {
+          "oldStart": 34,
+          "oldLines": 17,
+          "newStart": 34,
+          "newLines": 6,
+          "lines": [
+            "         ]",
+            "       }",
+            "     ],",
+            "-    \"PostToolUse\": [",
+            "-      {",
+            "-        \"matcher\": \"\",",
+            "-        \"hooks\": [",
+            "-          {",
+            "-            \"type\": \"command\",",
+            "-            \"command\": \"bash ../.claude/hooks/post-tool-log.sh \\\"$TOOL_NAME\\\" \\\"$TOOL_INPUT\\\"\"",
+            "-          }",
+            "-        ]",
+            "-      }",
+            "-    ],",
+            "     \"Stop\": [",
+            "       {",
+            "         \"matcher\": \"\","
+          ]
+        }
+      ],
+      "userModified": false,
+      "replaceAll": false
+    },
+    "tool_use_id": "toolu_01Dz8sRXierYSy4wSTKtozak"
+  },
+  {
+    "session_id": "a726b262-889d-43c0-b15b-3699aa3be91c",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a726b262-889d-43c0-b15b-3699aa3be91c.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/.claude/hooks",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Edit",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/CMO/.claude/settings.json",
+      "old_string": "    \"PostToolUse\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/post_tool_use.py\"\n          }\n        ]\n      }\n    ],",
+      "new_string": ""
+    },
+    "tool_response": {
+      "filePath": "/Users/donovan/PROMAN_OS/CMO/.claude/settings.json",
+      "oldString": "    \"PostToolUse\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/post_tool_use.py\"\n          }\n        ]\n      }\n    ],",
+      "newString": "",
+      "originalFile": "{\n  \"$schema\": \"https://json.schemastore.org/claude-code-settings.json\",\n  \"hooks\": {\n    \"SessionStart\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/session_start.py\"\n          }\n        ]\n      }\n    ],\n    \"PreToolUse\": [\n      {\n        \"matcher\": \"Write|Edit|MultiEdit\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/pre_tool_use.py\"\n          }\n        ]\n      }\n    ],\n    \"PostToolUse\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/post_tool_use.py\"\n          }\n        ]\n      }\n    ],\n    \"PreCompact\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/pre_compact.py\"\n          }\n        ]\n      }\n    ],\n    \"Stop\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/session_end.py\"\n          }\n        ]\n      }\n    ]\n  }\n}\n",
+      "structuredPatch": [
+        {
+          "oldStart": 23,
+          "oldLines": 17,
+          "newStart": 23,
+          "newLines": 6,
+          "lines": [
+            "         ]",
+            "       }",
+            "     ],",
+            "-    \"PostToolUse\": [",
+            "-      {",
+            "-        \"matcher\": \"\",",
+            "-        \"hooks\": [",
+            "-          {",
+            "-            \"type\": \"command\",",
+            "-            \"command\": \"uv run /Users/donovan/PROMAN_OS/.claude/hooks/post_tool_use.py\"",
+            "-          }",
+            "-        ]",
+            "-      }",
+            "-    ],",
+            "     \"PreCompact\": [",
+            "       {",
+            "         \"matcher\": \"\","
+          ]
+        }
+      ],
+      "userModified": false,
+      "replaceAll": false
+    },
+    "tool_use_id": "toolu_01NC9s2RYABBgDr5YhfKQoxg"
+  },
+  {
+    "session_id": "a726b262-889d-43c0-b15b-3699aa3be91c",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a726b262-889d-43c0-b15b-3699aa3be91c.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/.claude/hooks",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Glob",
+    "tool_input": {
+      "pattern": ".claude/skills/docs-auditor/**/*",
+      "path": "/Users/donovan/PROMAN_OS"
+    },
+    "tool_response": {
+      "filenames": [
+        "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/SKILL.md",
+        "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/reference/audit-checklist.md",
+        "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/templates/audit-report.md",
+        "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/examples/sample-audit.md"
+      ],
+      "durationMs": 24,
+      "numFiles": 4,
+      "truncated": false
+    },
+    "tool_use_id": "toolu_011n5UioQBtTLxbwnqYG2b6N"
+  },
+  {
+    "session_id": "a726b262-889d-43c0-b15b-3699aa3be91c",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a726b262-889d-43c0-b15b-3699aa3be91c.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/.claude/hooks",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Read",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/SKILL.md"
+    },
+    "tool_response": {
+      "type": "text",
+      "file": {
+        "filePath": "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/SKILL.md",
+        "content": "---\nname: docs-auditor\ntype: skill\npurpose: Audit CLAUDE.md files against actual system structure, identify discrepancies\ntriggers:\n  - \"audit documentation\"\n  - \"check docs accuracy\"\n  - \"sync documentation\"\n  - \"documentation drift\"\n  - \"verify CLAUDE.md\"\n  - \"docs out of date\"\ntools:\n  - Glob\n  - Grep\n  - Read\n  - Write\n  - Bash\nreferences:\n  - reference/audit-checklist.md\n  - templates/audit-report.md\n  - examples/sample-audit.md\nlast_updated: 2025-11-30\n---\n\n# Documentation Auditor Skill\n\nCompares CLAUDE.md documentation against actual repository structure to identify drift.\n\n---\n\n## Quick Start\n\n```\nUser: \"Audit the documentation\"\nClaude: Runs audit \u2192 Reports discrepancies \u2192 Offers fixes\n```\n\n---\n\n## What Gets Audited\n\n| Component | Source of Truth | Documented In |\n|-----------|-----------------|---------------|\n| Agents | `.claude/agents/`, `*/agents/` | CLAUDE.md files |\n| Commands | `.claude/commands/`, `*/commands/` | CLAUDE.md files |\n| Skills | `.claude/skills/`, `*/skills/` | CLAUDE.md files |\n| Hooks | `.claude/hooks/*.py` | .claude/CLAUDE.md |\n| SOPs | `*/sops/` | Domain CLAUDE.md |\n| Directory structure | Actual folders | docs/architecture/ |\n\n---\n\n## Workflow\n\n### 1. Inventory Phase\n```bash\n# Count actual components\nls .claude/agents/*.md | wc -l\nls COO/.claude/agents/*.md | wc -l\nls CMO/.claude/agents/*.md | wc -l\n# Repeat for commands, skills, hooks, SOPs\n```\n\n### 2. Documentation Phase\n```bash\n# Extract documented counts from CLAUDE.md files\ngrep -E \"agents|commands|skills\" */CLAUDE.md\n```\n\n### 3. Compare Phase\nGenerate discrepancy report using [audit-report template](templates/audit-report.md).\n\n### 4. Fix Phase (Optional)\nUpdate CLAUDE.md files with accurate counts and component lists.\n\n---\n\n## Audit Commands\n\n| Command | Purpose |\n|---------|---------|\n| Full audit | Check all components across all domains |\n| Domain audit | Check single domain (COO, CMO, or root) |\n| Component audit | Check single type (agents, commands, etc.) |\n\n---\n\n## Output\n\nSee [templates/audit-report.md](templates/audit-report.md) for report format.\n\n**Quick summary format:**\n```\n## Audit Results: [timestamp]\n\n| Area | Documented | Actual | Status |\n|------|------------|--------|--------|\n| Agents (root) | 5 | 6 | DRIFT |\n| Agents (COO) | 10 | 11 | DRIFT |\n| Commands (CMO) | 7 | 29 | DRIFT |\n\n### Fixes Required:\n1. [file]: Update X from Y to Z\n```\n\n---\n\n## Integration\n\n**When to run:**\n- After adding/removing agents, commands, skills\n- Before major releases\n- Monthly maintenance\n- When documentation \"feels wrong\"\n\n**Auto-trigger phrases:**\n- \"audit documentation\"\n- \"check docs accuracy\"\n- \"is documentation up to date\"\n- \"sync docs with reality\"\n\n---\n\n## References\n\n- [Audit Checklist](reference/audit-checklist.md) - What to check\n- [Report Template](templates/audit-report.md) - Output format\n- [Sample Audit](examples/sample-audit.md) - Example output\n\n---\n\n**Version:** 1.0\n**Last Updated:** 2025-11-30\n",
+        "numLines": 134,
+        "startLine": 1,
+        "totalLines": 134
+      }
+    },
+    "tool_use_id": "toolu_01K2VBhyQTcCx7Br9KFykUKf"
+  },
+  {
+    "session_id": "a726b262-889d-43c0-b15b-3699aa3be91c",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a726b262-889d-43c0-b15b-3699aa3be91c.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/.claude/hooks",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Edit",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/SKILL.md",
+      "old_string": "purpose: Audit CLAUDE.md files against actual system structure, identify discrepancies",
+      "new_string": "purpose: Audit CLAUDE.md and README.md files against actual system structure, identify discrepancies"
+    },
+    "tool_response": {
+      "filePath": "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/SKILL.md",
+      "oldString": "purpose: Audit CLAUDE.md files against actual system structure, identify discrepancies",
+      "newString": "purpose: Audit CLAUDE.md and README.md files against actual system structure, identify discrepancies",
+      "originalFile": "---\nname: docs-auditor\ntype: skill\npurpose: Audit CLAUDE.md files against actual system structure, identify discrepancies\ntriggers:\n  - \"audit documentation\"\n  - \"check docs accuracy\"\n  - \"sync documentation\"\n  - \"documentation drift\"\n  - \"verify CLAUDE.md\"\n  - \"docs out of date\"\ntools:\n  - Glob\n  - Grep\n  - Read\n  - Write\n  - Bash\nreferences:\n  - reference/audit-checklist.md\n  - templates/audit-report.md\n  - examples/sample-audit.md\nlast_updated: 2025-11-30\n---\n\n# Documentation Auditor Skill\n\nCompares CLAUDE.md documentation against actual repository structure to identify drift.\n\n---\n\n## Quick Start\n\n```\nUser: \"Audit the documentation\"\nClaude: Runs audit \u2192 Reports discrepancies \u2192 Offers fixes\n```\n\n---\n\n## What Gets Audited\n\n| Component | Source of Truth | Documented In |\n|-----------|-----------------|---------------|\n| Agents | `.claude/agents/`, `*/agents/` | CLAUDE.md files |\n| Commands | `.claude/commands/`, `*/commands/` | CLAUDE.md files |\n| Skills | `.claude/skills/`, `*/skills/` | CLAUDE.md files |\n| Hooks | `.claude/hooks/*.py` | .claude/CLAUDE.md |\n| SOPs | `*/sops/` | Domain CLAUDE.md |\n| Directory structure | Actual folders | docs/architecture/ |\n\n---\n\n## Workflow\n\n### 1. Inventory Phase\n```bash\n# Count actual components\nls .claude/agents/*.md | wc -l\nls COO/.claude/agents/*.md | wc -l\nls CMO/.claude/agents/*.md | wc -l\n# Repeat for commands, skills, hooks, SOPs\n```\n\n### 2. Documentation Phase\n```bash\n# Extract documented counts from CLAUDE.md files\ngrep -E \"agents|commands|skills\" */CLAUDE.md\n```\n\n### 3. Compare Phase\nGenerate discrepancy report using [audit-report template](templates/audit-report.md).\n\n### 4. Fix Phase (Optional)\nUpdate CLAUDE.md files with accurate counts and component lists.\n\n---\n\n## Audit Commands\n\n| Command | Purpose |\n|---------|---------|\n| Full audit | Check all components across all domains |\n| Domain audit | Check single domain (COO, CMO, or root) |\n| Component audit | Check single type (agents, commands, etc.) |\n\n---\n\n## Output\n\nSee [templates/audit-report.md](templates/audit-report.md) for report format.\n\n**Quick summary format:**\n```\n## Audit Results: [timestamp]\n\n| Area | Documented | Actual | Status |\n|------|------------|--------|--------|\n| Agents (root) | 5 | 6 | DRIFT |\n| Agents (COO) | 10 | 11 | DRIFT |\n| Commands (CMO) | 7 | 29 | DRIFT |\n\n### Fixes Required:\n1. [file]: Update X from Y to Z\n```\n\n---\n\n## Integration\n\n**When to run:**\n- After adding/removing agents, commands, skills\n- Before major releases\n- Monthly maintenance\n- When documentation \"feels wrong\"\n\n**Auto-trigger phrases:**\n- \"audit documentation\"\n- \"check docs accuracy\"\n- \"is documentation up to date\"\n- \"sync docs with reality\"\n\n---\n\n## References\n\n- [Audit Checklist](reference/audit-checklist.md) - What to check\n- [Report Template](templates/audit-report.md) - Output format\n- [Sample Audit](examples/sample-audit.md) - Example output\n\n---\n\n**Version:** 1.0\n**Last Updated:** 2025-11-30\n",
+      "structuredPatch": [
+        {
+          "oldStart": 1,
+          "oldLines": 7,
+          "newStart": 1,
+          "newLines": 7,
+          "lines": [
+            " ---",
+            " name: docs-auditor",
+            " type: skill",
+            "-purpose: Audit CLAUDE.md files against actual system structure, identify discrepancies",
+            "+purpose: Audit CLAUDE.md and README.md files against actual system structure, identify discrepancies",
+            " triggers:",
+            "   - \"audit documentation\"",
+            "   - \"check docs accuracy\""
+          ]
+        }
+      ],
+      "userModified": false,
+      "replaceAll": false
+    },
+    "tool_use_id": "toolu_013TSPdnvpX9EebyAf9YTxxP"
+  },
+  {
+    "session_id": "a726b262-889d-43c0-b15b-3699aa3be91c",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a726b262-889d-43c0-b15b-3699aa3be91c.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/.claude/hooks",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Edit",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/SKILL.md",
+      "old_string": "# Documentation Auditor Skill\n\nCompares CLAUDE.md documentation against actual repository structure to identify drift.",
+      "new_string": "# Documentation Auditor Skill\n\nCompares CLAUDE.md and README.md documentation against actual repository structure to identify drift."
+    },
+    "tool_response": {
+      "filePath": "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/SKILL.md",
+      "oldString": "# Documentation Auditor Skill\n\nCompares CLAUDE.md documentation against actual repository structure to identify drift.",
+      "newString": "# Documentation Auditor Skill\n\nCompares CLAUDE.md and README.md documentation against actual repository structure to identify drift.",
+      "originalFile": "---\nname: docs-auditor\ntype: skill\npurpose: Audit CLAUDE.md and README.md files against actual system structure, identify discrepancies\ntriggers:\n  - \"audit documentation\"\n  - \"check docs accuracy\"\n  - \"sync documentation\"\n  - \"documentation drift\"\n  - \"verify CLAUDE.md\"\n  - \"docs out of date\"\ntools:\n  - Glob\n  - Grep\n  - Read\n  - Write\n  - Bash\nreferences:\n  - reference/audit-checklist.md\n  - templates/audit-report.md\n  - examples/sample-audit.md\nlast_updated: 2025-11-30\n---\n\n# Documentation Auditor Skill\n\nCompares CLAUDE.md documentation against actual repository structure to identify drift.\n\n---\n\n## Quick Start\n\n```\nUser: \"Audit the documentation\"\nClaude: Runs audit \u2192 Reports discrepancies \u2192 Offers fixes\n```\n\n---\n\n## What Gets Audited\n\n| Component | Source of Truth | Documented In |\n|-----------|-----------------|---------------|\n| Agents | `.claude/agents/`, `*/agents/` | CLAUDE.md files |\n| Commands | `.claude/commands/`, `*/commands/` | CLAUDE.md files |\n| Skills | `.claude/skills/`, `*/skills/` | CLAUDE.md files |\n| Hooks | `.claude/hooks/*.py` | .claude/CLAUDE.md |\n| SOPs | `*/sops/` | Domain CLAUDE.md |\n| Directory structure | Actual folders | docs/architecture/ |\n\n---\n\n## Workflow\n\n### 1. Inventory Phase\n```bash\n# Count actual components\nls .claude/agents/*.md | wc -l\nls COO/.claude/agents/*.md | wc -l\nls CMO/.claude/agents/*.md | wc -l\n# Repeat for commands, skills, hooks, SOPs\n```\n\n### 2. Documentation Phase\n```bash\n# Extract documented counts from CLAUDE.md files\ngrep -E \"agents|commands|skills\" */CLAUDE.md\n```\n\n### 3. Compare Phase\nGenerate discrepancy report using [audit-report template](templates/audit-report.md).\n\n### 4. Fix Phase (Optional)\nUpdate CLAUDE.md files with accurate counts and component lists.\n\n---\n\n## Audit Commands\n\n| Command | Purpose |\n|---------|---------|\n| Full audit | Check all components across all domains |\n| Domain audit | Check single domain (COO, CMO, or root) |\n| Component audit | Check single type (agents, commands, etc.) |\n\n---\n\n## Output\n\nSee [templates/audit-report.md](templates/audit-report.md) for report format.\n\n**Quick summary format:**\n```\n## Audit Results: [timestamp]\n\n| Area | Documented | Actual | Status |\n|------|------------|--------|--------|\n| Agents (root) | 5 | 6 | DRIFT |\n| Agents (COO) | 10 | 11 | DRIFT |\n| Commands (CMO) | 7 | 29 | DRIFT |\n\n### Fixes Required:\n1. [file]: Update X from Y to Z\n```\n\n---\n\n## Integration\n\n**When to run:**\n- After adding/removing agents, commands, skills\n- Before major releases\n- Monthly maintenance\n- When documentation \"feels wrong\"\n\n**Auto-trigger phrases:**\n- \"audit documentation\"\n- \"check docs accuracy\"\n- \"is documentation up to date\"\n- \"sync docs with reality\"\n\n---\n\n## References\n\n- [Audit Checklist](reference/audit-checklist.md) - What to check\n- [Report Template](templates/audit-report.md) - Output format\n- [Sample Audit](examples/sample-audit.md) - Example output\n\n---\n\n**Version:** 1.0\n**Last Updated:** 2025-11-30\n",
+      "structuredPatch": [
+        {
+          "oldStart": 24,
+          "oldLines": 7,
+          "newStart": 24,
+          "newLines": 7,
+          "lines": [
+            " ",
+            " # Documentation Auditor Skill",
+            " ",
+            "-Compares CLAUDE.md documentation against actual repository structure to identify drift.",
+            "+Compares CLAUDE.md and README.md documentation against actual repository structure to identify drift.",
+            " ",
+            " ---",
+            " "
+          ]
+        }
+      ],
+      "userModified": false,
+      "replaceAll": false
+    },
+    "tool_use_id": "toolu_01NT9kt9KkwHk8aJR9dTQ16j"
+  },
+  {
+    "session_id": "a726b262-889d-43c0-b15b-3699aa3be91c",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a726b262-889d-43c0-b15b-3699aa3be91c.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/.claude/hooks",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Edit",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/SKILL.md",
+      "old_string": "| Component | Source of Truth | Documented In |\n|-----------|-----------------|---------------|\n| Agents | `.claude/agents/`, `*/agents/` | CLAUDE.md files |\n| Commands | `.claude/commands/`, `*/commands/` | CLAUDE.md files |\n| Skills | `.claude/skills/`, `*/skills/` | CLAUDE.md files |\n| Hooks | `.claude/hooks/*.py` | .claude/CLAUDE.md |\n| SOPs | `*/sops/` | Domain CLAUDE.md |\n| Directory structure | Actual folders | docs/architecture/ |",
+      "new_string": "| Component | Source of Truth | Documented In |\n|-----------|-----------------|---------------|\n| Agents | `.claude/agents/`, `*/agents/` | CLAUDE.md, README.md |\n| Commands | `.claude/commands/`, `*/commands/` | CLAUDE.md, README.md |\n| Skills | `.claude/skills/`, `*/skills/` | CLAUDE.md, README.md |\n| Hooks | `.claude/hooks/*.py` | .claude/CLAUDE.md, README.md |\n| SOPs | `*/sops/` | Domain CLAUDE.md, README.md |\n| Directory structure | Actual folders | docs/architecture/, README.md |"
+    },
+    "tool_response": {
+      "filePath": "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/SKILL.md",
+      "oldString": "| Component | Source of Truth | Documented In |\n|-----------|-----------------|---------------|\n| Agents | `.claude/agents/`, `*/agents/` | CLAUDE.md files |\n| Commands | `.claude/commands/`, `*/commands/` | CLAUDE.md files |\n| Skills | `.claude/skills/`, `*/skills/` | CLAUDE.md files |\n| Hooks | `.claude/hooks/*.py` | .claude/CLAUDE.md |\n| SOPs | `*/sops/` | Domain CLAUDE.md |\n| Directory structure | Actual folders | docs/architecture/ |",
+      "newString": "| Component | Source of Truth | Documented In |\n|-----------|-----------------|---------------|\n| Agents | `.claude/agents/`, `*/agents/` | CLAUDE.md, README.md |\n| Commands | `.claude/commands/`, `*/commands/` | CLAUDE.md, README.md |\n| Skills | `.claude/skills/`, `*/skills/` | CLAUDE.md, README.md |\n| Hooks | `.claude/hooks/*.py` | .claude/CLAUDE.md, README.md |\n| SOPs | `*/sops/` | Domain CLAUDE.md, README.md |\n| Directory structure | Actual folders | docs/architecture/, README.md |",
+      "originalFile": "---\nname: docs-auditor\ntype: skill\npurpose: Audit CLAUDE.md and README.md files against actual system structure, identify discrepancies\ntriggers:\n  - \"audit documentation\"\n  - \"check docs accuracy\"\n  - \"sync documentation\"\n  - \"documentation drift\"\n  - \"verify CLAUDE.md\"\n  - \"docs out of date\"\ntools:\n  - Glob\n  - Grep\n  - Read\n  - Write\n  - Bash\nreferences:\n  - reference/audit-checklist.md\n  - templates/audit-report.md\n  - examples/sample-audit.md\nlast_updated: 2025-11-30\n---\n\n# Documentation Auditor Skill\n\nCompares CLAUDE.md and README.md documentation against actual repository structure to identify drift.\n\n---\n\n## Quick Start\n\n```\nUser: \"Audit the documentation\"\nClaude: Runs audit \u2192 Reports discrepancies \u2192 Offers fixes\n```\n\n---\n\n## What Gets Audited\n\n| Component | Source of Truth | Documented In |\n|-----------|-----------------|---------------|\n| Agents | `.claude/agents/`, `*/agents/` | CLAUDE.md files |\n| Commands | `.claude/commands/`, `*/commands/` | CLAUDE.md files |\n| Skills | `.claude/skills/`, `*/skills/` | CLAUDE.md files |\n| Hooks | `.claude/hooks/*.py` | .claude/CLAUDE.md |\n| SOPs | `*/sops/` | Domain CLAUDE.md |\n| Directory structure | Actual folders | docs/architecture/ |\n\n---\n\n## Workflow\n\n### 1. Inventory Phase\n```bash\n# Count actual components\nls .claude/agents/*.md | wc -l\nls COO/.claude/agents/*.md | wc -l\nls CMO/.claude/agents/*.md | wc -l\n# Repeat for commands, skills, hooks, SOPs\n```\n\n### 2. Documentation Phase\n```bash\n# Extract documented counts from CLAUDE.md files\ngrep -E \"agents|commands|skills\" */CLAUDE.md\n```\n\n### 3. Compare Phase\nGenerate discrepancy report using [audit-report template](templates/audit-report.md).\n\n### 4. Fix Phase (Optional)\nUpdate CLAUDE.md files with accurate counts and component lists.\n\n---\n\n## Audit Commands\n\n| Command | Purpose |\n|---------|---------|\n| Full audit | Check all components across all domains |\n| Domain audit | Check single domain (COO, CMO, or root) |\n| Component audit | Check single type (agents, commands, etc.) |\n\n---\n\n## Output\n\nSee [templates/audit-report.md](templates/audit-report.md) for report format.\n\n**Quick summary format:**\n```\n## Audit Results: [timestamp]\n\n| Area | Documented | Actual | Status |\n|------|------------|--------|--------|\n| Agents (root) | 5 | 6 | DRIFT |\n| Agents (COO) | 10 | 11 | DRIFT |\n| Commands (CMO) | 7 | 29 | DRIFT |\n\n### Fixes Required:\n1. [file]: Update X from Y to Z\n```\n\n---\n\n## Integration\n\n**When to run:**\n- After adding/removing agents, commands, skills\n- Before major releases\n- Monthly maintenance\n- When documentation \"feels wrong\"\n\n**Auto-trigger phrases:**\n- \"audit documentation\"\n- \"check docs accuracy\"\n- \"is documentation up to date\"\n- \"sync docs with reality\"\n\n---\n\n## References\n\n- [Audit Checklist](reference/audit-checklist.md) - What to check\n- [Report Template](templates/audit-report.md) - Output format\n- [Sample Audit](examples/sample-audit.md) - Example output\n\n---\n\n**Version:** 1.0\n**Last Updated:** 2025-11-30\n",
+      "structuredPatch": [
+        {
+          "oldStart": 41,
+          "oldLines": 12,
+          "newStart": 41,
+          "newLines": 12,
+          "lines": [
+            " ",
+            " | Component | Source of Truth | Documented In |",
+            " |-----------|-----------------|---------------|",
+            "-| Agents | `.claude/agents/`, `*/agents/` | CLAUDE.md files |",
+            "-| Commands | `.claude/commands/`, `*/commands/` | CLAUDE.md files |",
+            "-| Skills | `.claude/skills/`, `*/skills/` | CLAUDE.md files |",
+            "-| Hooks | `.claude/hooks/*.py` | .claude/CLAUDE.md |",
+            "-| SOPs | `*/sops/` | Domain CLAUDE.md |",
+            "-| Directory structure | Actual folders | docs/architecture/ |",
+            "+| Agents | `.claude/agents/`, `*/agents/` | CLAUDE.md, README.md |",
+            "+| Commands | `.claude/commands/`, `*/commands/` | CLAUDE.md, README.md |",
+            "+| Skills | `.claude/skills/`, `*/skills/` | CLAUDE.md, README.md |",
+            "+| Hooks | `.claude/hooks/*.py` | .claude/CLAUDE.md, README.md |",
+            "+| SOPs | `*/sops/` | Domain CLAUDE.md, README.md |",
+            "+| Directory structure | Actual folders | docs/architecture/, README.md |",
+            " ",
+            " ---",
+            " "
+          ]
+        }
+      ],
+      "userModified": false,
+      "replaceAll": false
+    },
+    "tool_use_id": "toolu_015hPxrE7Zg4wRLLPujBHZGj"
+  },
+  {
+    "session_id": "a726b262-889d-43c0-b15b-3699aa3be91c",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a726b262-889d-43c0-b15b-3699aa3be91c.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/.claude/hooks",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Edit",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/SKILL.md",
+      "old_string": "### 2. Documentation Phase\n```bash\n# Extract documented counts from CLAUDE.md files\ngrep -E \"agents|commands|skills\" */CLAUDE.md\n```",
+      "new_string": "### 2. Documentation Phase\n```bash\n# Extract documented counts from CLAUDE.md and README.md files\ngrep -E \"agents|commands|skills\" */CLAUDE.md */README.md README.md\n```"
+    },
+    "tool_response": {
+      "filePath": "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/SKILL.md",
+      "oldString": "### 2. Documentation Phase\n```bash\n# Extract documented counts from CLAUDE.md files\ngrep -E \"agents|commands|skills\" */CLAUDE.md\n```",
+      "newString": "### 2. Documentation Phase\n```bash\n# Extract documented counts from CLAUDE.md and README.md files\ngrep -E \"agents|commands|skills\" */CLAUDE.md */README.md README.md\n```",
+      "originalFile": "---\nname: docs-auditor\ntype: skill\npurpose: Audit CLAUDE.md and README.md files against actual system structure, identify discrepancies\ntriggers:\n  - \"audit documentation\"\n  - \"check docs accuracy\"\n  - \"sync documentation\"\n  - \"documentation drift\"\n  - \"verify CLAUDE.md\"\n  - \"docs out of date\"\ntools:\n  - Glob\n  - Grep\n  - Read\n  - Write\n  - Bash\nreferences:\n  - reference/audit-checklist.md\n  - templates/audit-report.md\n  - examples/sample-audit.md\nlast_updated: 2025-11-30\n---\n\n# Documentation Auditor Skill\n\nCompares CLAUDE.md and README.md documentation against actual repository structure to identify drift.\n\n---\n\n## Quick Start\n\n```\nUser: \"Audit the documentation\"\nClaude: Runs audit \u2192 Reports discrepancies \u2192 Offers fixes\n```\n\n---\n\n## What Gets Audited\n\n| Component | Source of Truth | Documented In |\n|-----------|-----------------|---------------|\n| Agents | `.claude/agents/`, `*/agents/` | CLAUDE.md, README.md |\n| Commands | `.claude/commands/`, `*/commands/` | CLAUDE.md, README.md |\n| Skills | `.claude/skills/`, `*/skills/` | CLAUDE.md, README.md |\n| Hooks | `.claude/hooks/*.py` | .claude/CLAUDE.md, README.md |\n| SOPs | `*/sops/` | Domain CLAUDE.md, README.md |\n| Directory structure | Actual folders | docs/architecture/, README.md |\n\n---\n\n## Workflow\n\n### 1. Inventory Phase\n```bash\n# Count actual components\nls .claude/agents/*.md | wc -l\nls COO/.claude/agents/*.md | wc -l\nls CMO/.claude/agents/*.md | wc -l\n# Repeat for commands, skills, hooks, SOPs\n```\n\n### 2. Documentation Phase\n```bash\n# Extract documented counts from CLAUDE.md files\ngrep -E \"agents|commands|skills\" */CLAUDE.md\n```\n\n### 3. Compare Phase\nGenerate discrepancy report using [audit-report template](templates/audit-report.md).\n\n### 4. Fix Phase (Optional)\nUpdate CLAUDE.md files with accurate counts and component lists.\n\n---\n\n## Audit Commands\n\n| Command | Purpose |\n|---------|---------|\n| Full audit | Check all components across all domains |\n| Domain audit | Check single domain (COO, CMO, or root) |\n| Component audit | Check single type (agents, commands, etc.) |\n\n---\n\n## Output\n\nSee [templates/audit-report.md](templates/audit-report.md) for report format.\n\n**Quick summary format:**\n```\n## Audit Results: [timestamp]\n\n| Area | Documented | Actual | Status |\n|------|------------|--------|--------|\n| Agents (root) | 5 | 6 | DRIFT |\n| Agents (COO) | 10 | 11 | DRIFT |\n| Commands (CMO) | 7 | 29 | DRIFT |\n\n### Fixes Required:\n1. [file]: Update X from Y to Z\n```\n\n---\n\n## Integration\n\n**When to run:**\n- After adding/removing agents, commands, skills\n- Before major releases\n- Monthly maintenance\n- When documentation \"feels wrong\"\n\n**Auto-trigger phrases:**\n- \"audit documentation\"\n- \"check docs accuracy\"\n- \"is documentation up to date\"\n- \"sync docs with reality\"\n\n---\n\n## References\n\n- [Audit Checklist](reference/audit-checklist.md) - What to check\n- [Report Template](templates/audit-report.md) - Output format\n- [Sample Audit](examples/sample-audit.md) - Example output\n\n---\n\n**Version:** 1.0\n**Last Updated:** 2025-11-30\n",
+      "structuredPatch": [
+        {
+          "oldStart": 63,
+          "oldLines": 8,
+          "newStart": 63,
+          "newLines": 8,
+          "lines": [
+            " ",
+            " ### 2. Documentation Phase",
+            " ```bash",
+            "-# Extract documented counts from CLAUDE.md files",
+            "-grep -E \"agents|commands|skills\" */CLAUDE.md",
+            "+# Extract documented counts from CLAUDE.md and README.md files",
+            "+grep -E \"agents|commands|skills\" */CLAUDE.md */README.md README.md",
+            " ```",
+            " ",
+            " ### 3. Compare Phase"
+          ]
+        }
+      ],
+      "userModified": false,
+      "replaceAll": false
+    },
+    "tool_use_id": "toolu_01C7vjoY7zXaM2MRDCAAiLCs"
+  },
+  {
+    "session_id": "a726b262-889d-43c0-b15b-3699aa3be91c",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a726b262-889d-43c0-b15b-3699aa3be91c.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/.claude/hooks",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Edit",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/SKILL.md",
+      "old_string": "### 4. Fix Phase (Optional)\nUpdate CLAUDE.md files with accurate counts and component lists.",
+      "new_string": "### 4. Fix Phase (Optional)\nUpdate CLAUDE.md and README.md files with accurate counts and component lists."
+    },
+    "tool_response": {
+      "filePath": "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/SKILL.md",
+      "oldString": "### 4. Fix Phase (Optional)\nUpdate CLAUDE.md files with accurate counts and component lists.",
+      "newString": "### 4. Fix Phase (Optional)\nUpdate CLAUDE.md and README.md files with accurate counts and component lists.",
+      "originalFile": "---\nname: docs-auditor\ntype: skill\npurpose: Audit CLAUDE.md and README.md files against actual system structure, identify discrepancies\ntriggers:\n  - \"audit documentation\"\n  - \"check docs accuracy\"\n  - \"sync documentation\"\n  - \"documentation drift\"\n  - \"verify CLAUDE.md\"\n  - \"docs out of date\"\ntools:\n  - Glob\n  - Grep\n  - Read\n  - Write\n  - Bash\nreferences:\n  - reference/audit-checklist.md\n  - templates/audit-report.md\n  - examples/sample-audit.md\nlast_updated: 2025-11-30\n---\n\n# Documentation Auditor Skill\n\nCompares CLAUDE.md and README.md documentation against actual repository structure to identify drift.\n\n---\n\n## Quick Start\n\n```\nUser: \"Audit the documentation\"\nClaude: Runs audit \u2192 Reports discrepancies \u2192 Offers fixes\n```\n\n---\n\n## What Gets Audited\n\n| Component | Source of Truth | Documented In |\n|-----------|-----------------|---------------|\n| Agents | `.claude/agents/`, `*/agents/` | CLAUDE.md, README.md |\n| Commands | `.claude/commands/`, `*/commands/` | CLAUDE.md, README.md |\n| Skills | `.claude/skills/`, `*/skills/` | CLAUDE.md, README.md |\n| Hooks | `.claude/hooks/*.py` | .claude/CLAUDE.md, README.md |\n| SOPs | `*/sops/` | Domain CLAUDE.md, README.md |\n| Directory structure | Actual folders | docs/architecture/, README.md |\n\n---\n\n## Workflow\n\n### 1. Inventory Phase\n```bash\n# Count actual components\nls .claude/agents/*.md | wc -l\nls COO/.claude/agents/*.md | wc -l\nls CMO/.claude/agents/*.md | wc -l\n# Repeat for commands, skills, hooks, SOPs\n```\n\n### 2. Documentation Phase\n```bash\n# Extract documented counts from CLAUDE.md and README.md files\ngrep -E \"agents|commands|skills\" */CLAUDE.md */README.md README.md\n```\n\n### 3. Compare Phase\nGenerate discrepancy report using [audit-report template](templates/audit-report.md).\n\n### 4. Fix Phase (Optional)\nUpdate CLAUDE.md files with accurate counts and component lists.\n\n---\n\n## Audit Commands\n\n| Command | Purpose |\n|---------|---------|\n| Full audit | Check all components across all domains |\n| Domain audit | Check single domain (COO, CMO, or root) |\n| Component audit | Check single type (agents, commands, etc.) |\n\n---\n\n## Output\n\nSee [templates/audit-report.md](templates/audit-report.md) for report format.\n\n**Quick summary format:**\n```\n## Audit Results: [timestamp]\n\n| Area | Documented | Actual | Status |\n|------|------------|--------|--------|\n| Agents (root) | 5 | 6 | DRIFT |\n| Agents (COO) | 10 | 11 | DRIFT |\n| Commands (CMO) | 7 | 29 | DRIFT |\n\n### Fixes Required:\n1. [file]: Update X from Y to Z\n```\n\n---\n\n## Integration\n\n**When to run:**\n- After adding/removing agents, commands, skills\n- Before major releases\n- Monthly maintenance\n- When documentation \"feels wrong\"\n\n**Auto-trigger phrases:**\n- \"audit documentation\"\n- \"check docs accuracy\"\n- \"is documentation up to date\"\n- \"sync docs with reality\"\n\n---\n\n## References\n\n- [Audit Checklist](reference/audit-checklist.md) - What to check\n- [Report Template](templates/audit-report.md) - Output format\n- [Sample Audit](examples/sample-audit.md) - Example output\n\n---\n\n**Version:** 1.0\n**Last Updated:** 2025-11-30\n",
+      "structuredPatch": [
+        {
+          "oldStart": 71,
+          "oldLines": 7,
+          "newStart": 71,
+          "newLines": 7,
+          "lines": [
+            " Generate discrepancy report using [audit-report template](templates/audit-report.md).",
+            " ",
+            " ### 4. Fix Phase (Optional)",
+            "-Update CLAUDE.md files with accurate counts and component lists.",
+            "+Update CLAUDE.md and README.md files with accurate counts and component lists.",
+            " ",
+            " ---",
+            " "
+          ]
+        }
+      ],
+      "userModified": false,
+      "replaceAll": false
+    },
+    "tool_use_id": "toolu_013judTXAp3LYBcoNwPrDYMw"
+  },
+  {
+    "session_id": "a726b262-889d-43c0-b15b-3699aa3be91c",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a726b262-889d-43c0-b15b-3699aa3be91c.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/.claude/hooks",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Edit",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/SKILL.md",
+      "old_string": "triggers:\n  - \"audit documentation\"\n  - \"check docs accuracy\"\n  - \"sync documentation\"\n  - \"documentation drift\"\n  - \"verify CLAUDE.md\"\n  - \"docs out of date\"",
+      "new_string": "triggers:\n  - \"audit documentation\"\n  - \"check docs accuracy\"\n  - \"sync documentation\"\n  - \"documentation drift\"\n  - \"verify CLAUDE.md\"\n  - \"verify README\"\n  - \"docs out of date\""
+    },
+    "tool_response": {
+      "filePath": "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/SKILL.md",
+      "oldString": "triggers:\n  - \"audit documentation\"\n  - \"check docs accuracy\"\n  - \"sync documentation\"\n  - \"documentation drift\"\n  - \"verify CLAUDE.md\"\n  - \"docs out of date\"",
+      "newString": "triggers:\n  - \"audit documentation\"\n  - \"check docs accuracy\"\n  - \"sync documentation\"\n  - \"documentation drift\"\n  - \"verify CLAUDE.md\"\n  - \"verify README\"\n  - \"docs out of date\"",
+      "originalFile": "---\nname: docs-auditor\ntype: skill\npurpose: Audit CLAUDE.md and README.md files against actual system structure, identify discrepancies\ntriggers:\n  - \"audit documentation\"\n  - \"check docs accuracy\"\n  - \"sync documentation\"\n  - \"documentation drift\"\n  - \"verify CLAUDE.md\"\n  - \"docs out of date\"\ntools:\n  - Glob\n  - Grep\n  - Read\n  - Write\n  - Bash\nreferences:\n  - reference/audit-checklist.md\n  - templates/audit-report.md\n  - examples/sample-audit.md\nlast_updated: 2025-11-30\n---\n\n# Documentation Auditor Skill\n\nCompares CLAUDE.md and README.md documentation against actual repository structure to identify drift.\n\n---\n\n## Quick Start\n\n```\nUser: \"Audit the documentation\"\nClaude: Runs audit \u2192 Reports discrepancies \u2192 Offers fixes\n```\n\n---\n\n## What Gets Audited\n\n| Component | Source of Truth | Documented In |\n|-----------|-----------------|---------------|\n| Agents | `.claude/agents/`, `*/agents/` | CLAUDE.md, README.md |\n| Commands | `.claude/commands/`, `*/commands/` | CLAUDE.md, README.md |\n| Skills | `.claude/skills/`, `*/skills/` | CLAUDE.md, README.md |\n| Hooks | `.claude/hooks/*.py` | .claude/CLAUDE.md, README.md |\n| SOPs | `*/sops/` | Domain CLAUDE.md, README.md |\n| Directory structure | Actual folders | docs/architecture/, README.md |\n\n---\n\n## Workflow\n\n### 1. Inventory Phase\n```bash\n# Count actual components\nls .claude/agents/*.md | wc -l\nls COO/.claude/agents/*.md | wc -l\nls CMO/.claude/agents/*.md | wc -l\n# Repeat for commands, skills, hooks, SOPs\n```\n\n### 2. Documentation Phase\n```bash\n# Extract documented counts from CLAUDE.md and README.md files\ngrep -E \"agents|commands|skills\" */CLAUDE.md */README.md README.md\n```\n\n### 3. Compare Phase\nGenerate discrepancy report using [audit-report template](templates/audit-report.md).\n\n### 4. Fix Phase (Optional)\nUpdate CLAUDE.md and README.md files with accurate counts and component lists.\n\n---\n\n## Audit Commands\n\n| Command | Purpose |\n|---------|---------|\n| Full audit | Check all components across all domains |\n| Domain audit | Check single domain (COO, CMO, or root) |\n| Component audit | Check single type (agents, commands, etc.) |\n\n---\n\n## Output\n\nSee [templates/audit-report.md](templates/audit-report.md) for report format.\n\n**Quick summary format:**\n```\n## Audit Results: [timestamp]\n\n| Area | Documented | Actual | Status |\n|------|------------|--------|--------|\n| Agents (root) | 5 | 6 | DRIFT |\n| Agents (COO) | 10 | 11 | DRIFT |\n| Commands (CMO) | 7 | 29 | DRIFT |\n\n### Fixes Required:\n1. [file]: Update X from Y to Z\n```\n\n---\n\n## Integration\n\n**When to run:**\n- After adding/removing agents, commands, skills\n- Before major releases\n- Monthly maintenance\n- When documentation \"feels wrong\"\n\n**Auto-trigger phrases:**\n- \"audit documentation\"\n- \"check docs accuracy\"\n- \"is documentation up to date\"\n- \"sync docs with reality\"\n\n---\n\n## References\n\n- [Audit Checklist](reference/audit-checklist.md) - What to check\n- [Report Template](templates/audit-report.md) - Output format\n- [Sample Audit](examples/sample-audit.md) - Example output\n\n---\n\n**Version:** 1.0\n**Last Updated:** 2025-11-30\n",
+      "structuredPatch": [
+        {
+          "oldStart": 8,
+          "oldLines": 6,
+          "newStart": 8,
+          "newLines": 7,
+          "lines": [
+            "   - \"sync documentation\"",
+            "   - \"documentation drift\"",
+            "   - \"verify CLAUDE.md\"",
+            "+  - \"verify README\"",
+            "   - \"docs out of date\"",
+            " tools:",
+            "   - Glob"
+          ]
+        }
+      ],
+      "userModified": false,
+      "replaceAll": false
+    },
+    "tool_use_id": "toolu_01FvuetR8zUqAPspdEpi6uqe"
+  },
+  {
+    "session_id": "a726b262-889d-43c0-b15b-3699aa3be91c",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a726b262-889d-43c0-b15b-3699aa3be91c.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/.claude/hooks",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Edit",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/SKILL.md",
+      "old_string": "**Auto-trigger phrases:**\n- \"audit documentation\"\n- \"check docs accuracy\"\n- \"is documentation up to date\"\n- \"sync docs with reality\"",
+      "new_string": "**Auto-trigger phrases:**\n- \"audit documentation\"\n- \"check docs accuracy\"\n- \"is documentation up to date\"\n- \"sync docs with reality\"\n- \"verify README\""
+    },
+    "tool_response": {
+      "filePath": "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/SKILL.md",
+      "oldString": "**Auto-trigger phrases:**\n- \"audit documentation\"\n- \"check docs accuracy\"\n- \"is documentation up to date\"\n- \"sync docs with reality\"",
+      "newString": "**Auto-trigger phrases:**\n- \"audit documentation\"\n- \"check docs accuracy\"\n- \"is documentation up to date\"\n- \"sync docs with reality\"\n- \"verify README\"",
+      "originalFile": "---\nname: docs-auditor\ntype: skill\npurpose: Audit CLAUDE.md and README.md files against actual system structure, identify discrepancies\ntriggers:\n  - \"audit documentation\"\n  - \"check docs accuracy\"\n  - \"sync documentation\"\n  - \"documentation drift\"\n  - \"verify CLAUDE.md\"\n  - \"verify README\"\n  - \"docs out of date\"\ntools:\n  - Glob\n  - Grep\n  - Read\n  - Write\n  - Bash\nreferences:\n  - reference/audit-checklist.md\n  - templates/audit-report.md\n  - examples/sample-audit.md\nlast_updated: 2025-11-30\n---\n\n# Documentation Auditor Skill\n\nCompares CLAUDE.md and README.md documentation against actual repository structure to identify drift.\n\n---\n\n## Quick Start\n\n```\nUser: \"Audit the documentation\"\nClaude: Runs audit \u2192 Reports discrepancies \u2192 Offers fixes\n```\n\n---\n\n## What Gets Audited\n\n| Component | Source of Truth | Documented In |\n|-----------|-----------------|---------------|\n| Agents | `.claude/agents/`, `*/agents/` | CLAUDE.md, README.md |\n| Commands | `.claude/commands/`, `*/commands/` | CLAUDE.md, README.md |\n| Skills | `.claude/skills/`, `*/skills/` | CLAUDE.md, README.md |\n| Hooks | `.claude/hooks/*.py` | .claude/CLAUDE.md, README.md |\n| SOPs | `*/sops/` | Domain CLAUDE.md, README.md |\n| Directory structure | Actual folders | docs/architecture/, README.md |\n\n---\n\n## Workflow\n\n### 1. Inventory Phase\n```bash\n# Count actual components\nls .claude/agents/*.md | wc -l\nls COO/.claude/agents/*.md | wc -l\nls CMO/.claude/agents/*.md | wc -l\n# Repeat for commands, skills, hooks, SOPs\n```\n\n### 2. Documentation Phase\n```bash\n# Extract documented counts from CLAUDE.md and README.md files\ngrep -E \"agents|commands|skills\" */CLAUDE.md */README.md README.md\n```\n\n### 3. Compare Phase\nGenerate discrepancy report using [audit-report template](templates/audit-report.md).\n\n### 4. Fix Phase (Optional)\nUpdate CLAUDE.md and README.md files with accurate counts and component lists.\n\n---\n\n## Audit Commands\n\n| Command | Purpose |\n|---------|---------|\n| Full audit | Check all components across all domains |\n| Domain audit | Check single domain (COO, CMO, or root) |\n| Component audit | Check single type (agents, commands, etc.) |\n\n---\n\n## Output\n\nSee [templates/audit-report.md](templates/audit-report.md) for report format.\n\n**Quick summary format:**\n```\n## Audit Results: [timestamp]\n\n| Area | Documented | Actual | Status |\n|------|------------|--------|--------|\n| Agents (root) | 5 | 6 | DRIFT |\n| Agents (COO) | 10 | 11 | DRIFT |\n| Commands (CMO) | 7 | 29 | DRIFT |\n\n### Fixes Required:\n1. [file]: Update X from Y to Z\n```\n\n---\n\n## Integration\n\n**When to run:**\n- After adding/removing agents, commands, skills\n- Before major releases\n- Monthly maintenance\n- When documentation \"feels wrong\"\n\n**Auto-trigger phrases:**\n- \"audit documentation\"\n- \"check docs accuracy\"\n- \"is documentation up to date\"\n- \"sync docs with reality\"\n\n---\n\n## References\n\n- [Audit Checklist](reference/audit-checklist.md) - What to check\n- [Report Template](templates/audit-report.md) - Output format\n- [Sample Audit](examples/sample-audit.md) - Example output\n\n---\n\n**Version:** 1.0\n**Last Updated:** 2025-11-30\n",
+      "structuredPatch": [
+        {
+          "oldStart": 119,
+          "oldLines": 6,
+          "newStart": 119,
+          "newLines": 7,
+          "lines": [
+            " - \"check docs accuracy\"",
+            " - \"is documentation up to date\"",
+            " - \"sync docs with reality\"",
+            "+- \"verify README\"",
+            " ",
+            " ---",
+            " "
+          ]
+        }
+      ],
+      "userModified": false,
+      "replaceAll": false
+    },
+    "tool_use_id": "toolu_01KNebbWmPGPK6gerJZ8ZvDn"
+  },
+  {
+    "session_id": "a726b262-889d-43c0-b15b-3699aa3be91c",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a726b262-889d-43c0-b15b-3699aa3be91c.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/.claude/hooks",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Read",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/reference/audit-checklist.md"
+    },
+    "tool_response": {
+      "type": "text",
+      "file": {
+        "filePath": "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/reference/audit-checklist.md",
+        "content": "---\ntype: reference\npurpose: Detailed checklist of what to audit and how\nlast_updated: 2025-11-30\n---\n\n# Audit Checklist\n\n## 1. Agent Inventory\n\n### Locations to Check\n```\n.claude/agents/           # Cross-domain agents\nCOO/.claude/agents/       # COO-specific agents\nCMO/.claude/agents/       # CMO-specific agents\n```\n\n### Documentation Sources\n| File | Section to Check |\n|------|------------------|\n| `/CLAUDE.md` | \"Departments\" section, agent counts |\n| `/.claude/CLAUDE.md` | \"Agents\" table |\n| `/COO/CLAUDE.md` | \"Agents\" or key agents list |\n| `/CMO/CLAUDE.md` | \"Agents\" or key agents list |\n\n### Verification Commands\n```bash\n# Count cross-domain agents\nls -1 .claude/agents/*.md 2>/dev/null | wc -l\nls -1 .claude/agents/*/*.md 2>/dev/null | grep -v \"procedures\\|examples\\|output\" | wc -l\n\n# Count COO agents\nls -1 COO/.claude/agents/*.md 2>/dev/null | wc -l\n\n# Count CMO agents\nls -1 CMO/.claude/agents/*.md 2>/dev/null | wc -l\n\n# List all agent names\nfind . -path \"*/.claude/agents/*.md\" -type f | xargs -I{} basename {} .md | sort\n```\n\n---\n\n## 2. Command Inventory\n\n### Locations to Check\n```\n.claude/commands/         # Cross-domain commands\nCOO/.claude/commands/     # COO-specific commands\nCMO/.claude/commands/     # CMO-specific commands\n```\n\n### Documentation Sources\n| File | Section to Check |\n|------|------------------|\n| `/CLAUDE.md` | \"Mode Commands\" table |\n| `/.claude/CLAUDE.md` | \"Commands\" table |\n| `/COO/CLAUDE.md` | \"Key Commands\" section |\n| `/CMO/CLAUDE.md` | \"Key Commands\" section |\n\n### Verification Commands\n```bash\n# Count commands per location\nls -1 .claude/commands/*.md 2>/dev/null | wc -l\nls -1 COO/.claude/commands/*.md 2>/dev/null | wc -l\nls -1 CMO/.claude/commands/*.md 2>/dev/null | wc -l\n\n# List all command names (without extension)\nfind . -path \"*/.claude/commands/*.md\" -type f | xargs -I{} basename {} .md | sort\n```\n\n---\n\n## 3. Skill Inventory\n\n### Locations to Check\n```\n.claude/skills/           # Cross-domain skills\nCOO/.claude/skills/       # COO-specific skills\nCMO/.claude/skills/       # CMO-specific skills\n```\n\n### Documentation Sources\nSkills are often underdocumented. Check:\n- Any \"Skills\" sections in CLAUDE.md files\n- `docs/architecture/components.md` if exists\n\n### Verification Commands\n```bash\n# Count skill folders (skills are typically folders)\nls -d .claude/skills/*/ 2>/dev/null | wc -l\nls -d COO/.claude/skills/*/ 2>/dev/null | wc -l\nls -d CMO/.claude/skills/*/ 2>/dev/null | wc -l\n\n# List all skill names\nfind . -path \"*/.claude/skills/*/SKILL.md\" -type f | xargs -I{} dirname {} | xargs -I{} basename {}\n```\n\n---\n\n## 4. Hook Inventory\n\n### Location\n```\n.claude/hooks/            # All hooks (Python files)\n```\n\n### Documentation Source\n`/.claude/CLAUDE.md` - \"Hooks\" table\n\n### Verification Commands\n```bash\n# Count Python hook files\nls -1 .claude/hooks/*.py 2>/dev/null | wc -l\n\n# List hook names\nls -1 .claude/hooks/*.py 2>/dev/null | xargs -I{} basename {} .py | sort\n```\n\n### Common Discrepancy\nDocumentation often uses conceptual names (e.g., \"pre-tool-backup\") while actual files use Python naming (e.g., \"pre_tool_use.py\"). Map both.\n\n---\n\n## 5. SOP Inventory\n\n### Locations to Check\n```\nCOO/sops/                 # COO Standard Operating Procedures\nCMO/sops/                 # CMO SOPs (if any)\n```\n\n### Documentation Source\n- `/COO/CLAUDE.md` - \"SOPs\" section\n- `/CMO/CLAUDE.md` - \"SOPs\" section (if applicable)\n\n### Verification Commands\n```bash\n# Count SOPs\nls -1 COO/sops/*.md 2>/dev/null | wc -l\nls -1 CMO/sops/*.md 2>/dev/null | wc -l\n\n# List SOP names\nls -1 COO/sops/sop-*.md 2>/dev/null | xargs -I{} basename {} .md | sed 's/sop-//'\n```\n\n---\n\n## 6. Architecture Documentation\n\n### Files to Verify\n```\ndocs/architecture/\n\u251c\u2500\u2500 index.md              # Should match actual structure\n\u251c\u2500\u2500 structure.md          # Directory layout claims\n\u251c\u2500\u2500 components.md         # Agent/skill/command lists\n\u251c\u2500\u2500 hooks.md              # Hook documentation\n\u2514\u2500\u2500 flows.md              # Data flow diagrams\n```\n\n### Common Issues\n- References to removed files (WORKING.md, DOMAIN-STATUS.md)\n- Outdated directory trees\n- Wrong component counts\n\n---\n\n## 7. Cross-Reference Checks\n\n### Internal Links\nVerify all `[text](path)` links in CLAUDE.md files point to existing files.\n\n```bash\n# Extract markdown links and check existence\ngrep -oE '\\[.*\\]\\([^)]+\\)' CLAUDE.md | grep -oE '\\([^)]+\\)' | tr -d '()'\n```\n\n### Trigger Phrases\nEnsure triggers documented in YAML headers match actual routing.\n\n---\n\n## 8. Version Consistency\n\nCheck all CLAUDE.md files have:\n- Matching \"Last Updated\" dates if batch-updated\n- Consistent version numbering scheme\n- Accurate \"Removed X\" notes\n\n---\n\n## Audit Frequency Recommendations\n\n| Trigger | Scope |\n|---------|-------|\n| After adding/removing component | Affected domain only |\n| Weekly maintenance | Quick count check |\n| Monthly review | Full audit |\n| Before documentation release | Full audit + link check |\n",
+        "numLines": 200,
+        "startLine": 1,
+        "totalLines": 200
+      }
+    },
+    "tool_use_id": "toolu_01VuHk4HCdqZzKLyTEWqKhwJ"
+  },
+  {
+    "session_id": "a726b262-889d-43c0-b15b-3699aa3be91c",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a726b262-889d-43c0-b15b-3699aa3be91c.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/.claude/hooks",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Edit",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/reference/audit-checklist.md",
+      "old_string": "### Documentation Sources\n| File | Section to Check |\n|------|------------------|\n| `/CLAUDE.md` | \"Departments\" section, agent counts |\n| `/.claude/CLAUDE.md` | \"Agents\" table |\n| `/COO/CLAUDE.md` | \"Agents\" or key agents list |\n| `/CMO/CLAUDE.md` | \"Agents\" or key agents list |",
+      "new_string": "### Documentation Sources\n| File | Section to Check |\n|------|------------------|\n| `/CLAUDE.md` | \"Departments\" section, agent counts |\n| `/README.md` | Project overview, component mentions |\n| `/.claude/CLAUDE.md` | \"Agents\" table |\n| `/COO/CLAUDE.md` | \"Agents\" or key agents list |\n| `/CMO/CLAUDE.md` | \"Agents\" or key agents list |"
+    },
+    "tool_response": {
+      "filePath": "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/reference/audit-checklist.md",
+      "oldString": "### Documentation Sources\n| File | Section to Check |\n|------|------------------|\n| `/CLAUDE.md` | \"Departments\" section, agent counts |\n| `/.claude/CLAUDE.md` | \"Agents\" table |\n| `/COO/CLAUDE.md` | \"Agents\" or key agents list |\n| `/CMO/CLAUDE.md` | \"Agents\" or key agents list |",
+      "newString": "### Documentation Sources\n| File | Section to Check |\n|------|------------------|\n| `/CLAUDE.md` | \"Departments\" section, agent counts |\n| `/README.md` | Project overview, component mentions |\n| `/.claude/CLAUDE.md` | \"Agents\" table |\n| `/COO/CLAUDE.md` | \"Agents\" or key agents list |\n| `/CMO/CLAUDE.md` | \"Agents\" or key agents list |",
+      "originalFile": "---\ntype: reference\npurpose: Detailed checklist of what to audit and how\nlast_updated: 2025-11-30\n---\n\n# Audit Checklist\n\n## 1. Agent Inventory\n\n### Locations to Check\n```\n.claude/agents/           # Cross-domain agents\nCOO/.claude/agents/       # COO-specific agents\nCMO/.claude/agents/       # CMO-specific agents\n```\n\n### Documentation Sources\n| File | Section to Check |\n|------|------------------|\n| `/CLAUDE.md` | \"Departments\" section, agent counts |\n| `/.claude/CLAUDE.md` | \"Agents\" table |\n| `/COO/CLAUDE.md` | \"Agents\" or key agents list |\n| `/CMO/CLAUDE.md` | \"Agents\" or key agents list |\n\n### Verification Commands\n```bash\n# Count cross-domain agents\nls -1 .claude/agents/*.md 2>/dev/null | wc -l\nls -1 .claude/agents/*/*.md 2>/dev/null | grep -v \"procedures\\|examples\\|output\" | wc -l\n\n# Count COO agents\nls -1 COO/.claude/agents/*.md 2>/dev/null | wc -l\n\n# Count CMO agents\nls -1 CMO/.claude/agents/*.md 2>/dev/null | wc -l\n\n# List all agent names\nfind . -path \"*/.claude/agents/*.md\" -type f | xargs -I{} basename {} .md | sort\n```\n\n---\n\n## 2. Command Inventory\n\n### Locations to Check\n```\n.claude/commands/         # Cross-domain commands\nCOO/.claude/commands/     # COO-specific commands\nCMO/.claude/commands/     # CMO-specific commands\n```\n\n### Documentation Sources\n| File | Section to Check |\n|------|------------------|\n| `/CLAUDE.md` | \"Mode Commands\" table |\n| `/.claude/CLAUDE.md` | \"Commands\" table |\n| `/COO/CLAUDE.md` | \"Key Commands\" section |\n| `/CMO/CLAUDE.md` | \"Key Commands\" section |\n\n### Verification Commands\n```bash\n# Count commands per location\nls -1 .claude/commands/*.md 2>/dev/null | wc -l\nls -1 COO/.claude/commands/*.md 2>/dev/null | wc -l\nls -1 CMO/.claude/commands/*.md 2>/dev/null | wc -l\n\n# List all command names (without extension)\nfind . -path \"*/.claude/commands/*.md\" -type f | xargs -I{} basename {} .md | sort\n```\n\n---\n\n## 3. Skill Inventory\n\n### Locations to Check\n```\n.claude/skills/           # Cross-domain skills\nCOO/.claude/skills/       # COO-specific skills\nCMO/.claude/skills/       # CMO-specific skills\n```\n\n### Documentation Sources\nSkills are often underdocumented. Check:\n- Any \"Skills\" sections in CLAUDE.md files\n- `docs/architecture/components.md` if exists\n\n### Verification Commands\n```bash\n# Count skill folders (skills are typically folders)\nls -d .claude/skills/*/ 2>/dev/null | wc -l\nls -d COO/.claude/skills/*/ 2>/dev/null | wc -l\nls -d CMO/.claude/skills/*/ 2>/dev/null | wc -l\n\n# List all skill names\nfind . -path \"*/.claude/skills/*/SKILL.md\" -type f | xargs -I{} dirname {} | xargs -I{} basename {}\n```\n\n---\n\n## 4. Hook Inventory\n\n### Location\n```\n.claude/hooks/            # All hooks (Python files)\n```\n\n### Documentation Source\n`/.claude/CLAUDE.md` - \"Hooks\" table\n\n### Verification Commands\n```bash\n# Count Python hook files\nls -1 .claude/hooks/*.py 2>/dev/null | wc -l\n\n# List hook names\nls -1 .claude/hooks/*.py 2>/dev/null | xargs -I{} basename {} .py | sort\n```\n\n### Common Discrepancy\nDocumentation often uses conceptual names (e.g., \"pre-tool-backup\") while actual files use Python naming (e.g., \"pre_tool_use.py\"). Map both.\n\n---\n\n## 5. SOP Inventory\n\n### Locations to Check\n```\nCOO/sops/                 # COO Standard Operating Procedures\nCMO/sops/                 # CMO SOPs (if any)\n```\n\n### Documentation Source\n- `/COO/CLAUDE.md` - \"SOPs\" section\n- `/CMO/CLAUDE.md` - \"SOPs\" section (if applicable)\n\n### Verification Commands\n```bash\n# Count SOPs\nls -1 COO/sops/*.md 2>/dev/null | wc -l\nls -1 CMO/sops/*.md 2>/dev/null | wc -l\n\n# List SOP names\nls -1 COO/sops/sop-*.md 2>/dev/null | xargs -I{} basename {} .md | sed 's/sop-//'\n```\n\n---\n\n## 6. Architecture Documentation\n\n### Files to Verify\n```\ndocs/architecture/\n\u251c\u2500\u2500 index.md              # Should match actual structure\n\u251c\u2500\u2500 structure.md          # Directory layout claims\n\u251c\u2500\u2500 components.md         # Agent/skill/command lists\n\u251c\u2500\u2500 hooks.md              # Hook documentation\n\u2514\u2500\u2500 flows.md              # Data flow diagrams\n```\n\n### Common Issues\n- References to removed files (WORKING.md, DOMAIN-STATUS.md)\n- Outdated directory trees\n- Wrong component counts\n\n---\n\n## 7. Cross-Reference Checks\n\n### Internal Links\nVerify all `[text](path)` links in CLAUDE.md files point to existing files.\n\n```bash\n# Extract markdown links and check existence\ngrep -oE '\\[.*\\]\\([^)]+\\)' CLAUDE.md | grep -oE '\\([^)]+\\)' | tr -d '()'\n```\n\n### Trigger Phrases\nEnsure triggers documented in YAML headers match actual routing.\n\n---\n\n## 8. Version Consistency\n\nCheck all CLAUDE.md files have:\n- Matching \"Last Updated\" dates if batch-updated\n- Consistent version numbering scheme\n- Accurate \"Removed X\" notes\n\n---\n\n## Audit Frequency Recommendations\n\n| Trigger | Scope |\n|---------|-------|\n| After adding/removing component | Affected domain only |\n| Weekly maintenance | Quick count check |\n| Monthly review | Full audit |\n| Before documentation release | Full audit + link check |\n",
+      "structuredPatch": [
+        {
+          "oldStart": 19,
+          "oldLines": 6,
+          "newStart": 19,
+          "newLines": 7,
+          "lines": [
+            " | File | Section to Check |",
+            " |------|------------------|",
+            " | `/CLAUDE.md` | \"Departments\" section, agent counts |",
+            "+| `/README.md` | Project overview, component mentions |",
+            " | `/.claude/CLAUDE.md` | \"Agents\" table |",
+            " | `/COO/CLAUDE.md` | \"Agents\" or key agents list |",
+            " | `/CMO/CLAUDE.md` | \"Agents\" or key agents list |"
+          ]
+        }
+      ],
+      "userModified": false,
+      "replaceAll": false
+    },
+    "tool_use_id": "toolu_01ErjyC1xZBTt4HKzK4aV1nd"
+  },
+  {
+    "session_id": "a726b262-889d-43c0-b15b-3699aa3be91c",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a726b262-889d-43c0-b15b-3699aa3be91c.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/.claude/hooks",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Edit",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/reference/audit-checklist.md",
+      "old_string": "### Documentation Sources\n| File | Section to Check |\n|------|------------------|\n| `/CLAUDE.md` | \"Mode Commands\" table |\n| `/.claude/CLAUDE.md` | \"Commands\" table |\n| `/COO/CLAUDE.md` | \"Key Commands\" section |\n| `/CMO/CLAUDE.md` | \"Key Commands\" section |",
+      "new_string": "### Documentation Sources\n| File | Section to Check |\n|------|------------------|\n| `/CLAUDE.md` | \"Mode Commands\" table |\n| `/README.md` | Usage section, command examples |\n| `/.claude/CLAUDE.md` | \"Commands\" table |\n| `/COO/CLAUDE.md` | \"Key Commands\" section |\n| `/CMO/CLAUDE.md` | \"Key Commands\" section |"
+    },
+    "tool_response": {
+      "filePath": "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/reference/audit-checklist.md",
+      "oldString": "### Documentation Sources\n| File | Section to Check |\n|------|------------------|\n| `/CLAUDE.md` | \"Mode Commands\" table |\n| `/.claude/CLAUDE.md` | \"Commands\" table |\n| `/COO/CLAUDE.md` | \"Key Commands\" section |\n| `/CMO/CLAUDE.md` | \"Key Commands\" section |",
+      "newString": "### Documentation Sources\n| File | Section to Check |\n|------|------------------|\n| `/CLAUDE.md` | \"Mode Commands\" table |\n| `/README.md` | Usage section, command examples |\n| `/.claude/CLAUDE.md` | \"Commands\" table |\n| `/COO/CLAUDE.md` | \"Key Commands\" section |\n| `/CMO/CLAUDE.md` | \"Key Commands\" section |",
+      "originalFile": "---\ntype: reference\npurpose: Detailed checklist of what to audit and how\nlast_updated: 2025-11-30\n---\n\n# Audit Checklist\n\n## 1. Agent Inventory\n\n### Locations to Check\n```\n.claude/agents/           # Cross-domain agents\nCOO/.claude/agents/       # COO-specific agents\nCMO/.claude/agents/       # CMO-specific agents\n```\n\n### Documentation Sources\n| File | Section to Check |\n|------|------------------|\n| `/CLAUDE.md` | \"Departments\" section, agent counts |\n| `/README.md` | Project overview, component mentions |\n| `/.claude/CLAUDE.md` | \"Agents\" table |\n| `/COO/CLAUDE.md` | \"Agents\" or key agents list |\n| `/CMO/CLAUDE.md` | \"Agents\" or key agents list |\n\n### Verification Commands\n```bash\n# Count cross-domain agents\nls -1 .claude/agents/*.md 2>/dev/null | wc -l\nls -1 .claude/agents/*/*.md 2>/dev/null | grep -v \"procedures\\|examples\\|output\" | wc -l\n\n# Count COO agents\nls -1 COO/.claude/agents/*.md 2>/dev/null | wc -l\n\n# Count CMO agents\nls -1 CMO/.claude/agents/*.md 2>/dev/null | wc -l\n\n# List all agent names\nfind . -path \"*/.claude/agents/*.md\" -type f | xargs -I{} basename {} .md | sort\n```\n\n---\n\n## 2. Command Inventory\n\n### Locations to Check\n```\n.claude/commands/         # Cross-domain commands\nCOO/.claude/commands/     # COO-specific commands\nCMO/.claude/commands/     # CMO-specific commands\n```\n\n### Documentation Sources\n| File | Section to Check |\n|------|------------------|\n| `/CLAUDE.md` | \"Mode Commands\" table |\n| `/.claude/CLAUDE.md` | \"Commands\" table |\n| `/COO/CLAUDE.md` | \"Key Commands\" section |\n| `/CMO/CLAUDE.md` | \"Key Commands\" section |\n\n### Verification Commands\n```bash\n# Count commands per location\nls -1 .claude/commands/*.md 2>/dev/null | wc -l\nls -1 COO/.claude/commands/*.md 2>/dev/null | wc -l\nls -1 CMO/.claude/commands/*.md 2>/dev/null | wc -l\n\n# List all command names (without extension)\nfind . -path \"*/.claude/commands/*.md\" -type f | xargs -I{} basename {} .md | sort\n```\n\n---\n\n## 3. Skill Inventory\n\n### Locations to Check\n```\n.claude/skills/           # Cross-domain skills\nCOO/.claude/skills/       # COO-specific skills\nCMO/.claude/skills/       # CMO-specific skills\n```\n\n### Documentation Sources\nSkills are often underdocumented. Check:\n- Any \"Skills\" sections in CLAUDE.md files\n- `docs/architecture/components.md` if exists\n\n### Verification Commands\n```bash\n# Count skill folders (skills are typically folders)\nls -d .claude/skills/*/ 2>/dev/null | wc -l\nls -d COO/.claude/skills/*/ 2>/dev/null | wc -l\nls -d CMO/.claude/skills/*/ 2>/dev/null | wc -l\n\n# List all skill names\nfind . -path \"*/.claude/skills/*/SKILL.md\" -type f | xargs -I{} dirname {} | xargs -I{} basename {}\n```\n\n---\n\n## 4. Hook Inventory\n\n### Location\n```\n.claude/hooks/            # All hooks (Python files)\n```\n\n### Documentation Source\n`/.claude/CLAUDE.md` - \"Hooks\" table\n\n### Verification Commands\n```bash\n# Count Python hook files\nls -1 .claude/hooks/*.py 2>/dev/null | wc -l\n\n# List hook names\nls -1 .claude/hooks/*.py 2>/dev/null | xargs -I{} basename {} .py | sort\n```\n\n### Common Discrepancy\nDocumentation often uses conceptual names (e.g., \"pre-tool-backup\") while actual files use Python naming (e.g., \"pre_tool_use.py\"). Map both.\n\n---\n\n## 5. SOP Inventory\n\n### Locations to Check\n```\nCOO/sops/                 # COO Standard Operating Procedures\nCMO/sops/                 # CMO SOPs (if any)\n```\n\n### Documentation Source\n- `/COO/CLAUDE.md` - \"SOPs\" section\n- `/CMO/CLAUDE.md` - \"SOPs\" section (if applicable)\n\n### Verification Commands\n```bash\n# Count SOPs\nls -1 COO/sops/*.md 2>/dev/null | wc -l\nls -1 CMO/sops/*.md 2>/dev/null | wc -l\n\n# List SOP names\nls -1 COO/sops/sop-*.md 2>/dev/null | xargs -I{} basename {} .md | sed 's/sop-//'\n```\n\n---\n\n## 6. Architecture Documentation\n\n### Files to Verify\n```\ndocs/architecture/\n\u251c\u2500\u2500 index.md              # Should match actual structure\n\u251c\u2500\u2500 structure.md          # Directory layout claims\n\u251c\u2500\u2500 components.md         # Agent/skill/command lists\n\u251c\u2500\u2500 hooks.md              # Hook documentation\n\u2514\u2500\u2500 flows.md              # Data flow diagrams\n```\n\n### Common Issues\n- References to removed files (WORKING.md, DOMAIN-STATUS.md)\n- Outdated directory trees\n- Wrong component counts\n\n---\n\n## 7. Cross-Reference Checks\n\n### Internal Links\nVerify all `[text](path)` links in CLAUDE.md files point to existing files.\n\n```bash\n# Extract markdown links and check existence\ngrep -oE '\\[.*\\]\\([^)]+\\)' CLAUDE.md | grep -oE '\\([^)]+\\)' | tr -d '()'\n```\n\n### Trigger Phrases\nEnsure triggers documented in YAML headers match actual routing.\n\n---\n\n## 8. Version Consistency\n\nCheck all CLAUDE.md files have:\n- Matching \"Last Updated\" dates if batch-updated\n- Consistent version numbering scheme\n- Accurate \"Removed X\" notes\n\n---\n\n## Audit Frequency Recommendations\n\n| Trigger | Scope |\n|---------|-------|\n| After adding/removing component | Affected domain only |\n| Weekly maintenance | Quick count check |\n| Monthly review | Full audit |\n| Before documentation release | Full audit + link check |\n",
+      "structuredPatch": [
+        {
+          "oldStart": 55,
+          "oldLines": 6,
+          "newStart": 55,
+          "newLines": 7,
+          "lines": [
+            " | File | Section to Check |",
+            " |------|------------------|",
+            " | `/CLAUDE.md` | \"Mode Commands\" table |",
+            "+| `/README.md` | Usage section, command examples |",
+            " | `/.claude/CLAUDE.md` | \"Commands\" table |",
+            " | `/COO/CLAUDE.md` | \"Key Commands\" section |",
+            " | `/CMO/CLAUDE.md` | \"Key Commands\" section |"
+          ]
+        }
+      ],
+      "userModified": false,
+      "replaceAll": false
+    },
+    "tool_use_id": "toolu_01Kj9guwGurCf3KCKJJKGcWu"
+  },
+  {
+    "session_id": "a726b262-889d-43c0-b15b-3699aa3be91c",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a726b262-889d-43c0-b15b-3699aa3be91c.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/.claude/hooks",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Edit",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/reference/audit-checklist.md",
+      "old_string": "### Documentation Sources\nSkills are often underdocumented. Check:\n- Any \"Skills\" sections in CLAUDE.md files\n- `docs/architecture/components.md` if exists",
+      "new_string": "### Documentation Sources\nSkills are often underdocumented. Check:\n- Any \"Skills\" sections in CLAUDE.md files\n- Any \"Skills\" sections in README.md files\n- `docs/architecture/components.md` if exists"
+    },
+    "tool_response": {
+      "filePath": "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/reference/audit-checklist.md",
+      "oldString": "### Documentation Sources\nSkills are often underdocumented. Check:\n- Any \"Skills\" sections in CLAUDE.md files\n- `docs/architecture/components.md` if exists",
+      "newString": "### Documentation Sources\nSkills are often underdocumented. Check:\n- Any \"Skills\" sections in CLAUDE.md files\n- Any \"Skills\" sections in README.md files\n- `docs/architecture/components.md` if exists",
+      "originalFile": "---\ntype: reference\npurpose: Detailed checklist of what to audit and how\nlast_updated: 2025-11-30\n---\n\n# Audit Checklist\n\n## 1. Agent Inventory\n\n### Locations to Check\n```\n.claude/agents/           # Cross-domain agents\nCOO/.claude/agents/       # COO-specific agents\nCMO/.claude/agents/       # CMO-specific agents\n```\n\n### Documentation Sources\n| File | Section to Check |\n|------|------------------|\n| `/CLAUDE.md` | \"Departments\" section, agent counts |\n| `/README.md` | Project overview, component mentions |\n| `/.claude/CLAUDE.md` | \"Agents\" table |\n| `/COO/CLAUDE.md` | \"Agents\" or key agents list |\n| `/CMO/CLAUDE.md` | \"Agents\" or key agents list |\n\n### Verification Commands\n```bash\n# Count cross-domain agents\nls -1 .claude/agents/*.md 2>/dev/null | wc -l\nls -1 .claude/agents/*/*.md 2>/dev/null | grep -v \"procedures\\|examples\\|output\" | wc -l\n\n# Count COO agents\nls -1 COO/.claude/agents/*.md 2>/dev/null | wc -l\n\n# Count CMO agents\nls -1 CMO/.claude/agents/*.md 2>/dev/null | wc -l\n\n# List all agent names\nfind . -path \"*/.claude/agents/*.md\" -type f | xargs -I{} basename {} .md | sort\n```\n\n---\n\n## 2. Command Inventory\n\n### Locations to Check\n```\n.claude/commands/         # Cross-domain commands\nCOO/.claude/commands/     # COO-specific commands\nCMO/.claude/commands/     # CMO-specific commands\n```\n\n### Documentation Sources\n| File | Section to Check |\n|------|------------------|\n| `/CLAUDE.md` | \"Mode Commands\" table |\n| `/README.md` | Usage section, command examples |\n| `/.claude/CLAUDE.md` | \"Commands\" table |\n| `/COO/CLAUDE.md` | \"Key Commands\" section |\n| `/CMO/CLAUDE.md` | \"Key Commands\" section |\n\n### Verification Commands\n```bash\n# Count commands per location\nls -1 .claude/commands/*.md 2>/dev/null | wc -l\nls -1 COO/.claude/commands/*.md 2>/dev/null | wc -l\nls -1 CMO/.claude/commands/*.md 2>/dev/null | wc -l\n\n# List all command names (without extension)\nfind . -path \"*/.claude/commands/*.md\" -type f | xargs -I{} basename {} .md | sort\n```\n\n---\n\n## 3. Skill Inventory\n\n### Locations to Check\n```\n.claude/skills/           # Cross-domain skills\nCOO/.claude/skills/       # COO-specific skills\nCMO/.claude/skills/       # CMO-specific skills\n```\n\n### Documentation Sources\nSkills are often underdocumented. Check:\n- Any \"Skills\" sections in CLAUDE.md files\n- `docs/architecture/components.md` if exists\n\n### Verification Commands\n```bash\n# Count skill folders (skills are typically folders)\nls -d .claude/skills/*/ 2>/dev/null | wc -l\nls -d COO/.claude/skills/*/ 2>/dev/null | wc -l\nls -d CMO/.claude/skills/*/ 2>/dev/null | wc -l\n\n# List all skill names\nfind . -path \"*/.claude/skills/*/SKILL.md\" -type f | xargs -I{} dirname {} | xargs -I{} basename {}\n```\n\n---\n\n## 4. Hook Inventory\n\n### Location\n```\n.claude/hooks/            # All hooks (Python files)\n```\n\n### Documentation Source\n`/.claude/CLAUDE.md` - \"Hooks\" table\n\n### Verification Commands\n```bash\n# Count Python hook files\nls -1 .claude/hooks/*.py 2>/dev/null | wc -l\n\n# List hook names\nls -1 .claude/hooks/*.py 2>/dev/null | xargs -I{} basename {} .py | sort\n```\n\n### Common Discrepancy\nDocumentation often uses conceptual names (e.g., \"pre-tool-backup\") while actual files use Python naming (e.g., \"pre_tool_use.py\"). Map both.\n\n---\n\n## 5. SOP Inventory\n\n### Locations to Check\n```\nCOO/sops/                 # COO Standard Operating Procedures\nCMO/sops/                 # CMO SOPs (if any)\n```\n\n### Documentation Source\n- `/COO/CLAUDE.md` - \"SOPs\" section\n- `/CMO/CLAUDE.md` - \"SOPs\" section (if applicable)\n\n### Verification Commands\n```bash\n# Count SOPs\nls -1 COO/sops/*.md 2>/dev/null | wc -l\nls -1 CMO/sops/*.md 2>/dev/null | wc -l\n\n# List SOP names\nls -1 COO/sops/sop-*.md 2>/dev/null | xargs -I{} basename {} .md | sed 's/sop-//'\n```\n\n---\n\n## 6. Architecture Documentation\n\n### Files to Verify\n```\ndocs/architecture/\n\u251c\u2500\u2500 index.md              # Should match actual structure\n\u251c\u2500\u2500 structure.md          # Directory layout claims\n\u251c\u2500\u2500 components.md         # Agent/skill/command lists\n\u251c\u2500\u2500 hooks.md              # Hook documentation\n\u2514\u2500\u2500 flows.md              # Data flow diagrams\n```\n\n### Common Issues\n- References to removed files (WORKING.md, DOMAIN-STATUS.md)\n- Outdated directory trees\n- Wrong component counts\n\n---\n\n## 7. Cross-Reference Checks\n\n### Internal Links\nVerify all `[text](path)` links in CLAUDE.md files point to existing files.\n\n```bash\n# Extract markdown links and check existence\ngrep -oE '\\[.*\\]\\([^)]+\\)' CLAUDE.md | grep -oE '\\([^)]+\\)' | tr -d '()'\n```\n\n### Trigger Phrases\nEnsure triggers documented in YAML headers match actual routing.\n\n---\n\n## 8. Version Consistency\n\nCheck all CLAUDE.md files have:\n- Matching \"Last Updated\" dates if batch-updated\n- Consistent version numbering scheme\n- Accurate \"Removed X\" notes\n\n---\n\n## Audit Frequency Recommendations\n\n| Trigger | Scope |\n|---------|-------|\n| After adding/removing component | Affected domain only |\n| Weekly maintenance | Quick count check |\n| Monthly review | Full audit |\n| Before documentation release | Full audit + link check |\n",
+      "structuredPatch": [
+        {
+          "oldStart": 85,
+          "oldLines": 6,
+          "newStart": 85,
+          "newLines": 7,
+          "lines": [
+            " ### Documentation Sources",
+            " Skills are often underdocumented. Check:",
+            " - Any \"Skills\" sections in CLAUDE.md files",
+            "+- Any \"Skills\" sections in README.md files",
+            " - `docs/architecture/components.md` if exists",
+            " ",
+            " ### Verification Commands"
+          ]
+        }
+      ],
+      "userModified": false,
+      "replaceAll": false
+    },
+    "tool_use_id": "toolu_01Esd6UZ1VrY7ubjXMSPhBLE"
+  },
+  {
+    "session_id": "a726b262-889d-43c0-b15b-3699aa3be91c",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a726b262-889d-43c0-b15b-3699aa3be91c.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/.claude/hooks",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Edit",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/reference/audit-checklist.md",
+      "old_string": "### Documentation Source\n`/.claude/CLAUDE.md` - \"Hooks\" table",
+      "new_string": "### Documentation Source\n- `/.claude/CLAUDE.md` - \"Hooks\" table\n- `/README.md` - Setup/installation sections"
+    },
+    "tool_response": {
+      "filePath": "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/reference/audit-checklist.md",
+      "oldString": "### Documentation Source\n`/.claude/CLAUDE.md` - \"Hooks\" table",
+      "newString": "### Documentation Source\n- `/.claude/CLAUDE.md` - \"Hooks\" table\n- `/README.md` - Setup/installation sections",
+      "originalFile": "---\ntype: reference\npurpose: Detailed checklist of what to audit and how\nlast_updated: 2025-11-30\n---\n\n# Audit Checklist\n\n## 1. Agent Inventory\n\n### Locations to Check\n```\n.claude/agents/           # Cross-domain agents\nCOO/.claude/agents/       # COO-specific agents\nCMO/.claude/agents/       # CMO-specific agents\n```\n\n### Documentation Sources\n| File | Section to Check |\n|------|------------------|\n| `/CLAUDE.md` | \"Departments\" section, agent counts |\n| `/README.md` | Project overview, component mentions |\n| `/.claude/CLAUDE.md` | \"Agents\" table |\n| `/COO/CLAUDE.md` | \"Agents\" or key agents list |\n| `/CMO/CLAUDE.md` | \"Agents\" or key agents list |\n\n### Verification Commands\n```bash\n# Count cross-domain agents\nls -1 .claude/agents/*.md 2>/dev/null | wc -l\nls -1 .claude/agents/*/*.md 2>/dev/null | grep -v \"procedures\\|examples\\|output\" | wc -l\n\n# Count COO agents\nls -1 COO/.claude/agents/*.md 2>/dev/null | wc -l\n\n# Count CMO agents\nls -1 CMO/.claude/agents/*.md 2>/dev/null | wc -l\n\n# List all agent names\nfind . -path \"*/.claude/agents/*.md\" -type f | xargs -I{} basename {} .md | sort\n```\n\n---\n\n## 2. Command Inventory\n\n### Locations to Check\n```\n.claude/commands/         # Cross-domain commands\nCOO/.claude/commands/     # COO-specific commands\nCMO/.claude/commands/     # CMO-specific commands\n```\n\n### Documentation Sources\n| File | Section to Check |\n|------|------------------|\n| `/CLAUDE.md` | \"Mode Commands\" table |\n| `/README.md` | Usage section, command examples |\n| `/.claude/CLAUDE.md` | \"Commands\" table |\n| `/COO/CLAUDE.md` | \"Key Commands\" section |\n| `/CMO/CLAUDE.md` | \"Key Commands\" section |\n\n### Verification Commands\n```bash\n# Count commands per location\nls -1 .claude/commands/*.md 2>/dev/null | wc -l\nls -1 COO/.claude/commands/*.md 2>/dev/null | wc -l\nls -1 CMO/.claude/commands/*.md 2>/dev/null | wc -l\n\n# List all command names (without extension)\nfind . -path \"*/.claude/commands/*.md\" -type f | xargs -I{} basename {} .md | sort\n```\n\n---\n\n## 3. Skill Inventory\n\n### Locations to Check\n```\n.claude/skills/           # Cross-domain skills\nCOO/.claude/skills/       # COO-specific skills\nCMO/.claude/skills/       # CMO-specific skills\n```\n\n### Documentation Sources\nSkills are often underdocumented. Check:\n- Any \"Skills\" sections in CLAUDE.md files\n- Any \"Skills\" sections in README.md files\n- `docs/architecture/components.md` if exists\n\n### Verification Commands\n```bash\n# Count skill folders (skills are typically folders)\nls -d .claude/skills/*/ 2>/dev/null | wc -l\nls -d COO/.claude/skills/*/ 2>/dev/null | wc -l\nls -d CMO/.claude/skills/*/ 2>/dev/null | wc -l\n\n# List all skill names\nfind . -path \"*/.claude/skills/*/SKILL.md\" -type f | xargs -I{} dirname {} | xargs -I{} basename {}\n```\n\n---\n\n## 4. Hook Inventory\n\n### Location\n```\n.claude/hooks/            # All hooks (Python files)\n```\n\n### Documentation Source\n`/.claude/CLAUDE.md` - \"Hooks\" table\n\n### Verification Commands\n```bash\n# Count Python hook files\nls -1 .claude/hooks/*.py 2>/dev/null | wc -l\n\n# List hook names\nls -1 .claude/hooks/*.py 2>/dev/null | xargs -I{} basename {} .py | sort\n```\n\n### Common Discrepancy\nDocumentation often uses conceptual names (e.g., \"pre-tool-backup\") while actual files use Python naming (e.g., \"pre_tool_use.py\"). Map both.\n\n---\n\n## 5. SOP Inventory\n\n### Locations to Check\n```\nCOO/sops/                 # COO Standard Operating Procedures\nCMO/sops/                 # CMO SOPs (if any)\n```\n\n### Documentation Source\n- `/COO/CLAUDE.md` - \"SOPs\" section\n- `/CMO/CLAUDE.md` - \"SOPs\" section (if applicable)\n\n### Verification Commands\n```bash\n# Count SOPs\nls -1 COO/sops/*.md 2>/dev/null | wc -l\nls -1 CMO/sops/*.md 2>/dev/null | wc -l\n\n# List SOP names\nls -1 COO/sops/sop-*.md 2>/dev/null | xargs -I{} basename {} .md | sed 's/sop-//'\n```\n\n---\n\n## 6. Architecture Documentation\n\n### Files to Verify\n```\ndocs/architecture/\n\u251c\u2500\u2500 index.md              # Should match actual structure\n\u251c\u2500\u2500 structure.md          # Directory layout claims\n\u251c\u2500\u2500 components.md         # Agent/skill/command lists\n\u251c\u2500\u2500 hooks.md              # Hook documentation\n\u2514\u2500\u2500 flows.md              # Data flow diagrams\n```\n\n### Common Issues\n- References to removed files (WORKING.md, DOMAIN-STATUS.md)\n- Outdated directory trees\n- Wrong component counts\n\n---\n\n## 7. Cross-Reference Checks\n\n### Internal Links\nVerify all `[text](path)` links in CLAUDE.md files point to existing files.\n\n```bash\n# Extract markdown links and check existence\ngrep -oE '\\[.*\\]\\([^)]+\\)' CLAUDE.md | grep -oE '\\([^)]+\\)' | tr -d '()'\n```\n\n### Trigger Phrases\nEnsure triggers documented in YAML headers match actual routing.\n\n---\n\n## 8. Version Consistency\n\nCheck all CLAUDE.md files have:\n- Matching \"Last Updated\" dates if batch-updated\n- Consistent version numbering scheme\n- Accurate \"Removed X\" notes\n\n---\n\n## Audit Frequency Recommendations\n\n| Trigger | Scope |\n|---------|-------|\n| After adding/removing component | Affected domain only |\n| Weekly maintenance | Quick count check |\n| Monthly review | Full audit |\n| Before documentation release | Full audit + link check |\n",
+      "structuredPatch": [
+        {
+          "oldStart": 109,
+          "oldLines": 7,
+          "newStart": 109,
+          "newLines": 8,
+          "lines": [
+            " ```",
+            " ",
+            " ### Documentation Source",
+            "-`/.claude/CLAUDE.md` - \"Hooks\" table",
+            "+- `/.claude/CLAUDE.md` - \"Hooks\" table",
+            "+- `/README.md` - Setup/installation sections",
+            " ",
+            " ### Verification Commands",
+            " ```bash"
+          ]
+        }
+      ],
+      "userModified": false,
+      "replaceAll": false
+    },
+    "tool_use_id": "toolu_01SQpqFLhS2iEB1acwXaxf4x"
+  },
+  {
+    "session_id": "a726b262-889d-43c0-b15b-3699aa3be91c",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a726b262-889d-43c0-b15b-3699aa3be91c.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/.claude/hooks",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Edit",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/reference/audit-checklist.md",
+      "old_string": "### Internal Links\nVerify all `[text](path)` links in CLAUDE.md files point to existing files.\n\n```bash\n# Extract markdown links and check existence\ngrep -oE '\\[.*\\]\\([^)]+\\)' CLAUDE.md | grep -oE '\\([^)]+\\)' | tr -d '()'\n```",
+      "new_string": "### Internal Links\nVerify all `[text](path)` links in CLAUDE.md and README.md files point to existing files.\n\n```bash\n# Extract markdown links and check existence\ngrep -oE '\\[.*\\]\\([^)]+\\)' CLAUDE.md README.md | grep -oE '\\([^)]+\\)' | tr -d '()'\n```"
+    },
+    "tool_response": {
+      "filePath": "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/reference/audit-checklist.md",
+      "oldString": "### Internal Links\nVerify all `[text](path)` links in CLAUDE.md files point to existing files.\n\n```bash\n# Extract markdown links and check existence\ngrep -oE '\\[.*\\]\\([^)]+\\)' CLAUDE.md | grep -oE '\\([^)]+\\)' | tr -d '()'\n```",
+      "newString": "### Internal Links\nVerify all `[text](path)` links in CLAUDE.md and README.md files point to existing files.\n\n```bash\n# Extract markdown links and check existence\ngrep -oE '\\[.*\\]\\([^)]+\\)' CLAUDE.md README.md | grep -oE '\\([^)]+\\)' | tr -d '()'\n```",
+      "originalFile": "---\ntype: reference\npurpose: Detailed checklist of what to audit and how\nlast_updated: 2025-11-30\n---\n\n# Audit Checklist\n\n## 1. Agent Inventory\n\n### Locations to Check\n```\n.claude/agents/           # Cross-domain agents\nCOO/.claude/agents/       # COO-specific agents\nCMO/.claude/agents/       # CMO-specific agents\n```\n\n### Documentation Sources\n| File | Section to Check |\n|------|------------------|\n| `/CLAUDE.md` | \"Departments\" section, agent counts |\n| `/README.md` | Project overview, component mentions |\n| `/.claude/CLAUDE.md` | \"Agents\" table |\n| `/COO/CLAUDE.md` | \"Agents\" or key agents list |\n| `/CMO/CLAUDE.md` | \"Agents\" or key agents list |\n\n### Verification Commands\n```bash\n# Count cross-domain agents\nls -1 .claude/agents/*.md 2>/dev/null | wc -l\nls -1 .claude/agents/*/*.md 2>/dev/null | grep -v \"procedures\\|examples\\|output\" | wc -l\n\n# Count COO agents\nls -1 COO/.claude/agents/*.md 2>/dev/null | wc -l\n\n# Count CMO agents\nls -1 CMO/.claude/agents/*.md 2>/dev/null | wc -l\n\n# List all agent names\nfind . -path \"*/.claude/agents/*.md\" -type f | xargs -I{} basename {} .md | sort\n```\n\n---\n\n## 2. Command Inventory\n\n### Locations to Check\n```\n.claude/commands/         # Cross-domain commands\nCOO/.claude/commands/     # COO-specific commands\nCMO/.claude/commands/     # CMO-specific commands\n```\n\n### Documentation Sources\n| File | Section to Check |\n|------|------------------|\n| `/CLAUDE.md` | \"Mode Commands\" table |\n| `/README.md` | Usage section, command examples |\n| `/.claude/CLAUDE.md` | \"Commands\" table |\n| `/COO/CLAUDE.md` | \"Key Commands\" section |\n| `/CMO/CLAUDE.md` | \"Key Commands\" section |\n\n### Verification Commands\n```bash\n# Count commands per location\nls -1 .claude/commands/*.md 2>/dev/null | wc -l\nls -1 COO/.claude/commands/*.md 2>/dev/null | wc -l\nls -1 CMO/.claude/commands/*.md 2>/dev/null | wc -l\n\n# List all command names (without extension)\nfind . -path \"*/.claude/commands/*.md\" -type f | xargs -I{} basename {} .md | sort\n```\n\n---\n\n## 3. Skill Inventory\n\n### Locations to Check\n```\n.claude/skills/           # Cross-domain skills\nCOO/.claude/skills/       # COO-specific skills\nCMO/.claude/skills/       # CMO-specific skills\n```\n\n### Documentation Sources\nSkills are often underdocumented. Check:\n- Any \"Skills\" sections in CLAUDE.md files\n- Any \"Skills\" sections in README.md files\n- `docs/architecture/components.md` if exists\n\n### Verification Commands\n```bash\n# Count skill folders (skills are typically folders)\nls -d .claude/skills/*/ 2>/dev/null | wc -l\nls -d COO/.claude/skills/*/ 2>/dev/null | wc -l\nls -d CMO/.claude/skills/*/ 2>/dev/null | wc -l\n\n# List all skill names\nfind . -path \"*/.claude/skills/*/SKILL.md\" -type f | xargs -I{} dirname {} | xargs -I{} basename {}\n```\n\n---\n\n## 4. Hook Inventory\n\n### Location\n```\n.claude/hooks/            # All hooks (Python files)\n```\n\n### Documentation Source\n- `/.claude/CLAUDE.md` - \"Hooks\" table\n- `/README.md` - Setup/installation sections\n\n### Verification Commands\n```bash\n# Count Python hook files\nls -1 .claude/hooks/*.py 2>/dev/null | wc -l\n\n# List hook names\nls -1 .claude/hooks/*.py 2>/dev/null | xargs -I{} basename {} .py | sort\n```\n\n### Common Discrepancy\nDocumentation often uses conceptual names (e.g., \"pre-tool-backup\") while actual files use Python naming (e.g., \"pre_tool_use.py\"). Map both.\n\n---\n\n## 5. SOP Inventory\n\n### Locations to Check\n```\nCOO/sops/                 # COO Standard Operating Procedures\nCMO/sops/                 # CMO SOPs (if any)\n```\n\n### Documentation Source\n- `/COO/CLAUDE.md` - \"SOPs\" section\n- `/CMO/CLAUDE.md` - \"SOPs\" section (if applicable)\n\n### Verification Commands\n```bash\n# Count SOPs\nls -1 COO/sops/*.md 2>/dev/null | wc -l\nls -1 CMO/sops/*.md 2>/dev/null | wc -l\n\n# List SOP names\nls -1 COO/sops/sop-*.md 2>/dev/null | xargs -I{} basename {} .md | sed 's/sop-//'\n```\n\n---\n\n## 6. Architecture Documentation\n\n### Files to Verify\n```\ndocs/architecture/\n\u251c\u2500\u2500 index.md              # Should match actual structure\n\u251c\u2500\u2500 structure.md          # Directory layout claims\n\u251c\u2500\u2500 components.md         # Agent/skill/command lists\n\u251c\u2500\u2500 hooks.md              # Hook documentation\n\u2514\u2500\u2500 flows.md              # Data flow diagrams\n```\n\n### Common Issues\n- References to removed files (WORKING.md, DOMAIN-STATUS.md)\n- Outdated directory trees\n- Wrong component counts\n\n---\n\n## 7. Cross-Reference Checks\n\n### Internal Links\nVerify all `[text](path)` links in CLAUDE.md files point to existing files.\n\n```bash\n# Extract markdown links and check existence\ngrep -oE '\\[.*\\]\\([^)]+\\)' CLAUDE.md | grep -oE '\\([^)]+\\)' | tr -d '()'\n```\n\n### Trigger Phrases\nEnsure triggers documented in YAML headers match actual routing.\n\n---\n\n## 8. Version Consistency\n\nCheck all CLAUDE.md files have:\n- Matching \"Last Updated\" dates if batch-updated\n- Consistent version numbering scheme\n- Accurate \"Removed X\" notes\n\n---\n\n## Audit Frequency Recommendations\n\n| Trigger | Scope |\n|---------|-------|\n| After adding/removing component | Affected domain only |\n| Weekly maintenance | Quick count check |\n| Monthly review | Full audit |\n| Before documentation release | Full audit + link check |\n",
+      "structuredPatch": [
+        {
+          "oldStart": 172,
+          "oldLines": 11,
+          "newStart": 172,
+          "newLines": 11,
+          "lines": [
+            " ## 7. Cross-Reference Checks",
+            " ",
+            " ### Internal Links",
+            "-Verify all `[text](path)` links in CLAUDE.md files point to existing files.",
+            "+Verify all `[text](path)` links in CLAUDE.md and README.md files point to existing files.",
+            " ",
+            " ```bash",
+            " # Extract markdown links and check existence",
+            "-grep -oE '\\[.*\\]\\([^)]+\\)' CLAUDE.md | grep -oE '\\([^)]+\\)' | tr -d '()'",
+            "+grep -oE '\\[.*\\]\\([^)]+\\)' CLAUDE.md README.md | grep -oE '\\([^)]+\\)' | tr -d '()'",
+            " ```",
+            " ",
+            " ### Trigger Phrases"
+          ]
+        }
+      ],
+      "userModified": false,
+      "replaceAll": false
+    },
+    "tool_use_id": "toolu_01G4ZgjKi5atwHVumb25T3Zb"
+  },
+  {
+    "session_id": "a726b262-889d-43c0-b15b-3699aa3be91c",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/a726b262-889d-43c0-b15b-3699aa3be91c.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS/.claude/hooks",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Edit",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/reference/audit-checklist.md",
+      "old_string": "## 8. Version Consistency\n\nCheck all CLAUDE.md files have:",
+      "new_string": "## 8. Version Consistency\n\nCheck all CLAUDE.md and README.md files have:"
+    },
+    "tool_response": {
+      "filePath": "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/reference/audit-checklist.md",
+      "oldString": "## 8. Version Consistency\n\nCheck all CLAUDE.md files have:",
+      "newString": "## 8. Version Consistency\n\nCheck all CLAUDE.md and README.md files have:",
+      "originalFile": "---\ntype: reference\npurpose: Detailed checklist of what to audit and how\nlast_updated: 2025-11-30\n---\n\n# Audit Checklist\n\n## 1. Agent Inventory\n\n### Locations to Check\n```\n.claude/agents/           # Cross-domain agents\nCOO/.claude/agents/       # COO-specific agents\nCMO/.claude/agents/       # CMO-specific agents\n```\n\n### Documentation Sources\n| File | Section to Check |\n|------|------------------|\n| `/CLAUDE.md` | \"Departments\" section, agent counts |\n| `/README.md` | Project overview, component mentions |\n| `/.claude/CLAUDE.md` | \"Agents\" table |\n| `/COO/CLAUDE.md` | \"Agents\" or key agents list |\n| `/CMO/CLAUDE.md` | \"Agents\" or key agents list |\n\n### Verification Commands\n```bash\n# Count cross-domain agents\nls -1 .claude/agents/*.md 2>/dev/null | wc -l\nls -1 .claude/agents/*/*.md 2>/dev/null | grep -v \"procedures\\|examples\\|output\" | wc -l\n\n# Count COO agents\nls -1 COO/.claude/agents/*.md 2>/dev/null | wc -l\n\n# Count CMO agents\nls -1 CMO/.claude/agents/*.md 2>/dev/null | wc -l\n\n# List all agent names\nfind . -path \"*/.claude/agents/*.md\" -type f | xargs -I{} basename {} .md | sort\n```\n\n---\n\n## 2. Command Inventory\n\n### Locations to Check\n```\n.claude/commands/         # Cross-domain commands\nCOO/.claude/commands/     # COO-specific commands\nCMO/.claude/commands/     # CMO-specific commands\n```\n\n### Documentation Sources\n| File | Section to Check |\n|------|------------------|\n| `/CLAUDE.md` | \"Mode Commands\" table |\n| `/README.md` | Usage section, command examples |\n| `/.claude/CLAUDE.md` | \"Commands\" table |\n| `/COO/CLAUDE.md` | \"Key Commands\" section |\n| `/CMO/CLAUDE.md` | \"Key Commands\" section |\n\n### Verification Commands\n```bash\n# Count commands per location\nls -1 .claude/commands/*.md 2>/dev/null | wc -l\nls -1 COO/.claude/commands/*.md 2>/dev/null | wc -l\nls -1 CMO/.claude/commands/*.md 2>/dev/null | wc -l\n\n# List all command names (without extension)\nfind . -path \"*/.claude/commands/*.md\" -type f | xargs -I{} basename {} .md | sort\n```\n\n---\n\n## 3. Skill Inventory\n\n### Locations to Check\n```\n.claude/skills/           # Cross-domain skills\nCOO/.claude/skills/       # COO-specific skills\nCMO/.claude/skills/       # CMO-specific skills\n```\n\n### Documentation Sources\nSkills are often underdocumented. Check:\n- Any \"Skills\" sections in CLAUDE.md files\n- Any \"Skills\" sections in README.md files\n- `docs/architecture/components.md` if exists\n\n### Verification Commands\n```bash\n# Count skill folders (skills are typically folders)\nls -d .claude/skills/*/ 2>/dev/null | wc -l\nls -d COO/.claude/skills/*/ 2>/dev/null | wc -l\nls -d CMO/.claude/skills/*/ 2>/dev/null | wc -l\n\n# List all skill names\nfind . -path \"*/.claude/skills/*/SKILL.md\" -type f | xargs -I{} dirname {} | xargs -I{} basename {}\n```\n\n---\n\n## 4. Hook Inventory\n\n### Location\n```\n.claude/hooks/            # All hooks (Python files)\n```\n\n### Documentation Source\n- `/.claude/CLAUDE.md` - \"Hooks\" table\n- `/README.md` - Setup/installation sections\n\n### Verification Commands\n```bash\n# Count Python hook files\nls -1 .claude/hooks/*.py 2>/dev/null | wc -l\n\n# List hook names\nls -1 .claude/hooks/*.py 2>/dev/null | xargs -I{} basename {} .py | sort\n```\n\n### Common Discrepancy\nDocumentation often uses conceptual names (e.g., \"pre-tool-backup\") while actual files use Python naming (e.g., \"pre_tool_use.py\"). Map both.\n\n---\n\n## 5. SOP Inventory\n\n### Locations to Check\n```\nCOO/sops/                 # COO Standard Operating Procedures\nCMO/sops/                 # CMO SOPs (if any)\n```\n\n### Documentation Source\n- `/COO/CLAUDE.md` - \"SOPs\" section\n- `/CMO/CLAUDE.md` - \"SOPs\" section (if applicable)\n\n### Verification Commands\n```bash\n# Count SOPs\nls -1 COO/sops/*.md 2>/dev/null | wc -l\nls -1 CMO/sops/*.md 2>/dev/null | wc -l\n\n# List SOP names\nls -1 COO/sops/sop-*.md 2>/dev/null | xargs -I{} basename {} .md | sed 's/sop-//'\n```\n\n---\n\n## 6. Architecture Documentation\n\n### Files to Verify\n```\ndocs/architecture/\n\u251c\u2500\u2500 index.md              # Should match actual structure\n\u251c\u2500\u2500 structure.md          # Directory layout claims\n\u251c\u2500\u2500 components.md         # Agent/skill/command lists\n\u251c\u2500\u2500 hooks.md              # Hook documentation\n\u2514\u2500\u2500 flows.md              # Data flow diagrams\n```\n\n### Common Issues\n- References to removed files (WORKING.md, DOMAIN-STATUS.md)\n- Outdated directory trees\n- Wrong component counts\n\n---\n\n## 7. Cross-Reference Checks\n\n### Internal Links\nVerify all `[text](path)` links in CLAUDE.md and README.md files point to existing files.\n\n```bash\n# Extract markdown links and check existence\ngrep -oE '\\[.*\\]\\([^)]+\\)' CLAUDE.md README.md | grep -oE '\\([^)]+\\)' | tr -d '()'\n```\n\n### Trigger Phrases\nEnsure triggers documented in YAML headers match actual routing.\n\n---\n\n## 8. Version Consistency\n\nCheck all CLAUDE.md files have:\n- Matching \"Last Updated\" dates if batch-updated\n- Consistent version numbering scheme\n- Accurate \"Removed X\" notes\n\n---\n\n## Audit Frequency Recommendations\n\n| Trigger | Scope |\n|---------|-------|\n| After adding/removing component | Affected domain only |\n| Weekly maintenance | Quick count check |\n| Monthly review | Full audit |\n| Before documentation release | Full audit + link check |\n",
+      "structuredPatch": [
+        {
+          "oldStart": 186,
+          "oldLines": 7,
+          "newStart": 186,
+          "newLines": 7,
+          "lines": [
+            " ",
+            " ## 8. Version Consistency",
+            " ",
+            "-Check all CLAUDE.md files have:",
+            "+Check all CLAUDE.md and README.md files have:",
+            " - Matching \"Last Updated\" dates if batch-updated",
+            " - Consistent version numbering scheme",
+            " - Accurate \"Removed X\" notes"
+          ]
+        }
+      ],
+      "userModified": false,
+      "replaceAll": false
+    },
+    "tool_use_id": "toolu_0177EA9PNER5YvzDUNfZLoXL"
+  }
+]

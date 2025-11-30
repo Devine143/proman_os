@@ -1,0 +1,446 @@
+[
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Read",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/hooks/session_end.py"
+    },
+    "tool_use_id": "toolu_01Fj9JHaS1P49KdARxQrieMa"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Read",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/hooks/notification.py"
+    },
+    "tool_use_id": "toolu_0162RAifDhTgeW3d31KKxpyn"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Read",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/hooks/subagent_stop.py"
+    },
+    "tool_use_id": "toolu_018t9GnDZugPGoMWsjZSEHDe"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "TodoWrite",
+    "tool_input": {
+      "todos": [
+        {
+          "content": "Verify PreToolUse hook (logs + rm -rf blocking)",
+          "status": "in_progress",
+          "activeForm": "Verifying PreToolUse hook"
+        },
+        {
+          "content": "Verify PostToolUse hook (logging)",
+          "status": "pending",
+          "activeForm": "Verifying PostToolUse hook"
+        },
+        {
+          "content": "Verify UserPromptSubmit hook (logging)",
+          "status": "pending",
+          "activeForm": "Verifying UserPromptSubmit hook"
+        },
+        {
+          "content": "Test rm -rf blocking (security feature)",
+          "status": "pending",
+          "activeForm": "Testing rm -rf blocking"
+        },
+        {
+          "content": "Verify Stop hook (logging)",
+          "status": "pending",
+          "activeForm": "Verifying Stop hook"
+        },
+        {
+          "content": "Verify Notification hook (logging)",
+          "status": "pending",
+          "activeForm": "Verifying Notification hook"
+        },
+        {
+          "content": "Verify SubagentStop hook (via Task tool)",
+          "status": "pending",
+          "activeForm": "Verifying SubagentStop hook"
+        },
+        {
+          "content": "Check PreCompact and SessionEnd hooks (require specific events)",
+          "status": "pending",
+          "activeForm": "Checking PreCompact and SessionEnd hooks"
+        }
+      ]
+    },
+    "tool_use_id": "toolu_016DTfkNUTYFPexonSPSYazd"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Read",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/hooks/utils/constants.py"
+    },
+    "tool_use_id": "toolu_016DRk8XnnGQ4NtWMNjdswNg"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "ls -la /Users/donovan/PROMAN_OS/.claude/data/sessions/ 2>/dev/null | head -10",
+      "description": "List session data directory"
+    },
+    "tool_use_id": "toolu_014Rti6gFQYY2EUKRy24kCKS"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Read",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/logs/user_prompt_submit.json"
+    },
+    "tool_use_id": "toolu_01EyssUxfez7LrsezivQ8qnp"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "TodoWrite",
+    "tool_input": {
+      "todos": [
+        {
+          "content": "Verify PreToolUse hook (logs + rm -rf blocking)",
+          "status": "completed",
+          "activeForm": "Verifying PreToolUse hook"
+        },
+        {
+          "content": "Verify PostToolUse hook (logging)",
+          "status": "completed",
+          "activeForm": "Verifying PostToolUse hook"
+        },
+        {
+          "content": "Verify UserPromptSubmit hook (logging)",
+          "status": "completed",
+          "activeForm": "Verifying UserPromptSubmit hook"
+        },
+        {
+          "content": "Test rm -rf blocking (security feature)",
+          "status": "in_progress",
+          "activeForm": "Testing rm -rf blocking"
+        },
+        {
+          "content": "Verify Stop hook (logging)",
+          "status": "pending",
+          "activeForm": "Verifying Stop hook"
+        },
+        {
+          "content": "Verify Notification hook (logging)",
+          "status": "pending",
+          "activeForm": "Verifying Notification hook"
+        },
+        {
+          "content": "Verify SubagentStop hook (via Task tool)",
+          "status": "completed",
+          "activeForm": "Verifying SubagentStop hook"
+        },
+        {
+          "content": "Check PreCompact and SessionEnd hooks (require specific events)",
+          "status": "pending",
+          "activeForm": "Checking PreCompact and SessionEnd hooks"
+        }
+      ]
+    },
+    "tool_use_id": "toolu_016xHKQY5vm2UpLbyG6ycYbg"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Task",
+    "tool_input": {
+      "description": "Test SubagentStop hook",
+      "prompt": "Simply return \"SubagentStop hook test completed\" - this is a quick test to verify the SubagentStop hook fires when a subagent completes.",
+      "subagent_type": "Explore",
+      "model": "haiku"
+    },
+    "tool_use_id": "toolu_016nLmuczLymDvczj56dccqG"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "ls -la /Users/donovan/PROMAN_OS/logs/ddbaf413-7128-416f-a857-23ef037de61e/",
+      "description": "Check for subagent_stop log update"
+    },
+    "tool_use_id": "toolu_018odaPhk2xr83vG2eqrXJDV"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Read",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/logs/ddbaf413-7128-416f-a857-23ef037de61e/subagent_stop.json"
+    },
+    "tool_use_id": "toolu_01VjPwUbgHBBkcRp3U4dq11y"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "TodoWrite",
+    "tool_input": {
+      "todos": [
+        {
+          "content": "Verify PreToolUse hook (logs + rm -rf blocking)",
+          "status": "completed",
+          "activeForm": "Verifying PreToolUse hook"
+        },
+        {
+          "content": "Verify PostToolUse hook (logging)",
+          "status": "completed",
+          "activeForm": "Verifying PostToolUse hook"
+        },
+        {
+          "content": "Verify UserPromptSubmit hook (logging)",
+          "status": "completed",
+          "activeForm": "Verifying UserPromptSubmit hook"
+        },
+        {
+          "content": "Test rm -rf blocking (security feature)",
+          "status": "completed",
+          "activeForm": "Testing rm -rf blocking"
+        },
+        {
+          "content": "Verify Stop hook (logging)",
+          "status": "pending",
+          "activeForm": "Verifying Stop hook"
+        },
+        {
+          "content": "Verify Notification hook (via AskUserQuestion)",
+          "status": "in_progress",
+          "activeForm": "Verifying Notification hook"
+        },
+        {
+          "content": "Verify SubagentStop hook (via Task tool)",
+          "status": "completed",
+          "activeForm": "Verifying SubagentStop hook"
+        },
+        {
+          "content": "Check PreCompact and SessionEnd hooks (require specific events)",
+          "status": "pending",
+          "activeForm": "Checking PreCompact and SessionEnd hooks"
+        }
+      ]
+    },
+    "tool_use_id": "toolu_01MeF4vvyWCCP7CgB3vKdNCm"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "AskUserQuestion",
+    "tool_input": {
+      "questions": [
+        {
+          "question": "Testing Notification hook - does this trigger the notification.json log?",
+          "header": "Hook Test",
+          "options": [
+            {
+              "label": "Yes",
+              "description": "Continue with hook verification"
+            },
+            {
+              "label": "No",
+              "description": "Investigate notification hook issue"
+            }
+          ],
+          "multiSelect": false
+        }
+      ]
+    },
+    "tool_use_id": "toolu_01BXUMBxL2QYEStHagUeszCh"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "ls -la /Users/donovan/PROMAN_OS/logs/ddbaf413-7128-416f-a857-23ef037de61e/",
+      "description": "Check for notification.json log"
+    },
+    "tool_use_id": "toolu_019B1GW8sQCFTxeGU9M9WQdx"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Read",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/logs/ddbaf413-7128-416f-a857-23ef037de61e/notification.json"
+    },
+    "tool_use_id": "toolu_01FxKBxLbMpEc56rN3ZPchCT"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "TodoWrite",
+    "tool_input": {
+      "todos": [
+        {
+          "content": "Verify PreToolUse hook (logs + rm -rf blocking)",
+          "status": "completed",
+          "activeForm": "Verifying PreToolUse hook"
+        },
+        {
+          "content": "Verify PostToolUse hook (logging)",
+          "status": "completed",
+          "activeForm": "Verifying PostToolUse hook"
+        },
+        {
+          "content": "Verify UserPromptSubmit hook (logging)",
+          "status": "completed",
+          "activeForm": "Verifying UserPromptSubmit hook"
+        },
+        {
+          "content": "Test rm -rf blocking (security feature)",
+          "status": "completed",
+          "activeForm": "Testing rm -rf blocking"
+        },
+        {
+          "content": "Verify Stop hook (triggers at end of response)",
+          "status": "pending",
+          "activeForm": "Verifying Stop hook"
+        },
+        {
+          "content": "Verify Notification hook (via AskUserQuestion)",
+          "status": "completed",
+          "activeForm": "Verifying Notification hook"
+        },
+        {
+          "content": "Verify SubagentStop hook (via Task tool)",
+          "status": "completed",
+          "activeForm": "Verifying SubagentStop hook"
+        },
+        {
+          "content": "Check PreCompact and SessionEnd hooks (require specific events)",
+          "status": "in_progress",
+          "activeForm": "Checking PreCompact and SessionEnd hooks"
+        }
+      ]
+    },
+    "tool_use_id": "toolu_01PhgSGsnokur66ipaPUUEpR"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Read",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/logs/ddbaf413-7128-416f-a857-23ef037de61e/pre_tool_use.json",
+      "limit": 30
+    },
+    "tool_use_id": "toolu_01YSGE6xoY4ddmHLxmiaAjDY"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "TodoWrite",
+    "tool_input": {
+      "todos": [
+        {
+          "content": "Verify PreToolUse hook (logs + rm -rf blocking)",
+          "status": "completed",
+          "activeForm": "Verifying PreToolUse hook"
+        },
+        {
+          "content": "Verify PostToolUse hook (logging)",
+          "status": "completed",
+          "activeForm": "Verifying PostToolUse hook"
+        },
+        {
+          "content": "Verify UserPromptSubmit hook (logging)",
+          "status": "completed",
+          "activeForm": "Verifying UserPromptSubmit hook"
+        },
+        {
+          "content": "Test rm -rf blocking (security feature)",
+          "status": "completed",
+          "activeForm": "Testing rm -rf blocking"
+        },
+        {
+          "content": "Verify Stop hook (triggers at end of response)",
+          "status": "completed",
+          "activeForm": "Verifying Stop hook"
+        },
+        {
+          "content": "Verify Notification hook (via AskUserQuestion)",
+          "status": "completed",
+          "activeForm": "Verifying Notification hook"
+        },
+        {
+          "content": "Verify SubagentStop hook (via Task tool)",
+          "status": "completed",
+          "activeForm": "Verifying SubagentStop hook"
+        },
+        {
+          "content": "Check PreCompact and SessionEnd hooks (require specific events)",
+          "status": "completed",
+          "activeForm": "Checking PreCompact and SessionEnd hooks"
+        }
+      ]
+    },
+    "tool_use_id": "toolu_01BktMnd649Lj4YSFg3GSWmd"
+  }
+]

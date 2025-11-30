@@ -1,0 +1,40 @@
+[
+  {
+    "session_id": "966a5451-e6e5-4f31-838d-fbe902f73266",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/966a5451-e6e5-4f31-838d-fbe902f73266.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "ls .claude/backups/ 2>/dev/null || echo \"Directory not found\"",
+      "description": "Check backups directory"
+    },
+    "tool_use_id": "toolu_01DeJm5ey3trP5xcRh6wNKYz"
+  },
+  {
+    "session_id": "966a5451-e6e5-4f31-838d-fbe902f73266",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/966a5451-e6e5-4f31-838d-fbe902f73266.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "ls -la .claude/skills/docs-auditor/",
+      "description": "List docs-auditor skill contents"
+    },
+    "tool_use_id": "toolu_01DUW5JTE65iFoPiRHGxjju9"
+  },
+  {
+    "session_id": "966a5451-e6e5-4f31-838d-fbe902f73266",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/966a5451-e6e5-4f31-838d-fbe902f73266.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Read",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/skills/docs-auditor/SKILL.md"
+    },
+    "tool_use_id": "toolu_015rfVsZuDsHjpzQugnL6wtW"
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "session_id": "9a087c44-d968-481e-a5ef-e64dbd2664a3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/9a087c44-d968-481e-a5ef-e64dbd2664a3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "default",
+    "hook_event_name": "SubagentStop",
+    "stop_hook_active": false,
+    "agent_id": "73f5df20",
+    "agent_transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/agent-73f5df20.jsonl"
+  },
+  {
+    "session_id": "9a087c44-d968-481e-a5ef-e64dbd2664a3",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/9a087c44-d968-481e-a5ef-e64dbd2664a3.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "default",
+    "hook_event_name": "SubagentStop",
+    "stop_hook_active": false,
+    "agent_id": "e7c0be44",
+    "agent_transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/agent-e7c0be44.jsonl"
+  }
+]

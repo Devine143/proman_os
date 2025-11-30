@@ -1,0 +1,1106 @@
+[
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Read",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/hooks/stop.py"
+    },
+    "tool_response": {
+      "type": "text",
+      "file": {
+        "filePath": "/Users/donovan/PROMAN_OS/.claude/hooks/stop.py",
+        "content": "#!/usr/bin/env -S uv run --script\n# /// script\n# requires-python = \">=3.11\"\n# dependencies = [\n#     \"python-dotenv\",\n# ]\n# ///\n\nimport argparse\nimport json\nimport os\nimport sys\nimport random\nimport subprocess\nfrom pathlib import Path\nfrom datetime import datetime\nfrom utils.constants import ensure_session_log_dir\n\ntry:\n    from dotenv import load_dotenv\n\n    load_dotenv()\nexcept ImportError:\n    pass  # dotenv is optional\n\n\ndef get_completion_messages():\n    \"\"\"Return list of friendly completion messages.\"\"\"\n    return [\n        \"Work complete!\",\n        \"All done!\",\n        \"Task finished!\",\n        \"Job complete!\",\n        \"Ready for next task!\",\n    ]\n\n\ndef get_tts_script_path():\n    \"\"\"\n    Determine which TTS script to use based on available API keys.\n    Priority order: ElevenLabs > OpenAI > pyttsx3\n    \"\"\"\n    # Get current script directory and construct utils/tts path\n    script_dir = Path(__file__).parent\n    tts_dir = script_dir / \"utils\" / \"tts\"\n\n    # Check for ElevenLabs API key (highest priority)\n    if os.getenv(\"ELEVENLABS_API_KEY\"):\n        elevenlabs_script = tts_dir / \"elevenlabs_tts.py\"\n        if elevenlabs_script.exists():\n            return str(elevenlabs_script)\n\n    # Check for OpenAI API key (second priority)\n    if os.getenv(\"OPENAI_API_KEY\"):\n        openai_script = tts_dir / \"openai_tts.py\"\n        if openai_script.exists():\n            return str(openai_script)\n\n    # Fall back to pyttsx3 (no API key required)\n    pyttsx3_script = tts_dir / \"pyttsx3_tts.py\"\n    if pyttsx3_script.exists():\n        return str(pyttsx3_script)\n\n    return None\n\n\ndef get_llm_completion_message():\n    \"\"\"\n    Generate completion message using available LLM services.\n    Priority order: OpenAI > Anthropic > fallback to random message\n\n    Returns:\n        str: Generated or fallback completion message\n    \"\"\"\n    # Get current script directory and construct utils/llm path\n    script_dir = Path(__file__).parent\n    llm_dir = script_dir / \"utils\" / \"llm\"\n\n    # Try Anthropic second\n    if os.getenv(\"ANTHROPIC_API_KEY\"):\n        anth_script = llm_dir / \"anth.py\"\n        if anth_script.exists():\n            try:\n                result = subprocess.run(\n                    [\"uv\", \"run\", str(anth_script), \"--completion\"],\n                    capture_output=True,\n                    text=True,\n                    timeout=10,\n                )\n                if result.returncode == 0 and result.stdout.strip():\n                    return result.stdout.strip()\n            except (subprocess.TimeoutExpired, subprocess.SubprocessError):\n                pass\n\n    # Try OpenAI first (highest priority)\n    if os.getenv(\"OPENAI_API_KEY\"):\n        oai_script = llm_dir / \"oai.py\"\n        if oai_script.exists():\n            try:\n                result = subprocess.run(\n                    [\"uv\", \"run\", str(oai_script), \"--completion\"],\n                    capture_output=True,\n                    text=True,\n                    timeout=10,\n                )\n                if result.returncode == 0 and result.stdout.strip():\n                    return result.stdout.strip()\n            except (subprocess.TimeoutExpired, subprocess.SubprocessError):\n                pass\n\n    # Fallback to random predefined message\n    messages = get_completion_messages()\n    return random.choice(messages)\n\n\ndef announce_completion():\n    \"\"\"Announce completion using the best available TTS service.\"\"\"\n    try:\n        tts_script = get_tts_script_path()\n        if not tts_script:\n            return  # No TTS scripts available\n\n        # Get completion message (LLM-generated or fallback)\n        completion_message = get_llm_completion_message()\n\n        # Call the TTS script with the completion message\n        subprocess.run(\n            [\"uv\", \"run\", tts_script, completion_message],\n            capture_output=True,  # Suppress output\n            timeout=10,  # 10-second timeout\n        )\n\n    except (subprocess.TimeoutExpired, subprocess.SubprocessError, FileNotFoundError):\n        # Fail silently if TTS encounters issues\n        pass\n    except Exception:\n        # Fail silently for any other errors\n        pass\n\n\ndef main():\n    try:\n        # Parse command line arguments\n        parser = argparse.ArgumentParser()\n        parser.add_argument(\n            \"--chat\", action=\"store_true\", help=\"Copy transcript to chat.json\"\n        )\n        parser.add_argument(\n            \"--notify\", action=\"store_true\", help=\"Announce completion via TTS\"\n        )\n        args = parser.parse_args()\n\n        # Read JSON input from stdin\n        input_data = json.load(sys.stdin)\n\n        # Extract required fields\n        session_id = input_data.get(\"session_id\", \"\")\n        stop_hook_active = input_data.get(\"stop_hook_active\", False)\n\n        # Ensure session log directory exists\n        log_dir = ensure_session_log_dir(session_id)\n        log_path = log_dir / \"stop.json\"\n\n        # Read existing log data or initialize empty list\n        if log_path.exists():\n            with open(log_path, \"r\") as f:\n                try:\n                    log_data = json.load(f)\n                except (json.JSONDecodeError, ValueError):\n                    log_data = []\n        else:\n            log_data = []\n\n        # Append new data\n        log_data.append(input_data)\n\n        # Write back to file with formatting\n        with open(log_path, \"w\") as f:\n            json.dump(log_data, f, indent=2)\n\n        # Handle --chat switch\n        if args.chat and \"transcript_path\" in input_data:\n            transcript_path = input_data[\"transcript_path\"]\n            if os.path.exists(transcript_path):\n                # Read .jsonl file and convert to JSON array\n                chat_data = []\n                try:\n                    with open(transcript_path, \"r\") as f:\n                        for line in f:\n                            line = line.strip()\n                            if line:\n                                try:\n                                    chat_data.append(json.loads(line))\n                                except json.JSONDecodeError:\n                                    pass  # Skip invalid lines\n\n                    # Write to logs/chat.json\n                    chat_file = os.path.join(log_dir, \"chat.json\")\n                    with open(chat_file, \"w\") as f:\n                        json.dump(chat_data, f, indent=2)\n                except Exception:\n                    pass  # Fail silently\n\n        if args.notify:\n            # Announce completion via TTS\n            announce_completion()\n\n        sys.exit(0)\n\n    except json.JSONDecodeError:\n        # Handle JSON decode errors gracefully\n        sys.exit(0)\n    except Exception:\n        # Handle any other errors gracefully\n        sys.exit(0)\n\n\nif __name__ == \"__main__\":\n    main()\n",
+        "numLines": 220,
+        "startLine": 1,
+        "totalLines": 220
+      }
+    },
+    "tool_use_id": "toolu_01G81praDBD54Ytj6vKEoUa2"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Read",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/hooks/pre_tool_use.py"
+    },
+    "tool_response": {
+      "type": "text",
+      "file": {
+        "filePath": "/Users/donovan/PROMAN_OS/.claude/hooks/pre_tool_use.py",
+        "content": "#!/usr/bin/env -S uv run --script\n# /// script\n# requires-python = \">=3.8\"\n# ///\n\nimport json\nimport sys\nimport re\nfrom pathlib import Path\nfrom utils.constants import ensure_session_log_dir\n\n# Allowed directories where rm -rf is permitted\nALLOWED_RM_DIRECTORIES = [\n    'trees/',\n]\n\ndef is_path_in_allowed_directory(command, allowed_dirs):\n    \"\"\"\n    Check if the rm command targets paths exclusively within allowed directories.\n    Returns True if all paths in the command are within allowed directories.\n    \"\"\"\n    # Extract the path portion after rm and its flags\n    # Pattern: rm [flags] path1 path2 ...\n    path_pattern = r'rm\\s+(?:-[\\w]+\\s+|--[\\w-]+\\s+)*(.+)$'\n    match = re.search(path_pattern, command, re.IGNORECASE)\n\n    if not match:\n        return False\n\n    path_str = match.group(1).strip()\n\n    # Split by spaces to get individual paths (simple approach)\n    # This might not handle all edge cases but works for common usage\n    paths = path_str.split()\n\n    if not paths:\n        return False\n\n    # Check if all paths are within allowed directories\n    for path in paths:\n        # Remove quotes\n        path = path.strip('\\'\"')\n\n        # Skip if empty\n        if not path:\n            continue\n\n        # Check if this path is within any allowed directory\n        is_allowed = False\n        for allowed_dir in allowed_dirs:\n            # Check various formats:\n            # - trees/something\n            # - ./trees/something\n            if path.startswith(allowed_dir) or path.startswith('./' + allowed_dir):\n                is_allowed = True\n                break\n\n        # If any path is not in allowed directories, return False\n        if not is_allowed:\n            return False\n\n    # All paths are within allowed directories\n    return True\n\ndef is_dangerous_rm_command(command, allowed_dirs=None):\n    \"\"\"\n    Comprehensive detection of dangerous rm commands.\n    Matches various forms of rm -rf and similar destructive patterns.\n    Returns False if the command targets only allowed directories.\n\n    Args:\n        command: The bash command to check\n        allowed_dirs: List of directory paths where rm -rf is permitted\n\n    Returns:\n        True if the command is dangerous and should be blocked, False otherwise\n    \"\"\"\n    if allowed_dirs is None:\n        allowed_dirs = []\n\n    # Normalize command by removing extra spaces and converting to lowercase\n    normalized = ' '.join(command.lower().split())\n\n    # Pattern 1: Standard rm -rf variations\n    patterns = [\n        r'\\brm\\s+.*-[a-z]*r[a-z]*f',  # rm -rf, rm -fr, rm -Rf, etc.\n        r'\\brm\\s+.*-[a-z]*f[a-z]*r',  # rm -fr variations\n        r'\\brm\\s+--recursive\\s+--force',  # rm --recursive --force\n        r'\\brm\\s+--force\\s+--recursive',  # rm --force --recursive\n        r'\\brm\\s+-r\\s+.*-f',  # rm -r ... -f\n        r'\\brm\\s+-f\\s+.*-r',  # rm -f ... -r\n    ]\n\n    # Check for dangerous patterns\n    is_potentially_dangerous = False\n    for pattern in patterns:\n        if re.search(pattern, normalized):\n            is_potentially_dangerous = True\n            break\n\n    # If not found in Pattern 1, check Pattern 2\n    if not is_potentially_dangerous:\n        # Pattern 2: Check for rm with recursive flag targeting dangerous paths\n        dangerous_paths = [\n            r'/',           # Root directory\n            r'/\\*',         # Root with wildcard\n            r'~',           # Home directory\n            r'~/',          # Home directory path\n            r'\\$HOME',      # Home environment variable\n            r'\\.\\.',        # Parent directory references\n            r'\\*',          # Wildcards in general rm -rf context\n            r'\\.',          # Current directory\n            r'\\.\\s*$',      # Current directory at end of command\n        ]\n\n        if re.search(r'\\brm\\s+.*-[a-z]*r', normalized):  # If rm has recursive flag\n            for path in dangerous_paths:\n                if re.search(path, normalized):\n                    is_potentially_dangerous = True\n                    break\n\n    # If not potentially dangerous at all, it's safe\n    if not is_potentially_dangerous:\n        return False\n\n    # It's potentially dangerous - check if targeting only allowed directories\n    if allowed_dirs and is_path_in_allowed_directory(command, allowed_dirs):\n        return False  # Allowed directory, so not dangerous\n\n    # Dangerous and not in allowed directories\n    return True\n\ndef is_env_file_access(tool_name, tool_input):\n    \"\"\"\n    Check if any tool is trying to access .env files containing sensitive data.\n    \"\"\"\n    if tool_name in ['Read', 'Edit', 'MultiEdit', 'Write', 'Bash']:\n        # Check file paths for file-based tools\n        if tool_name in ['Read', 'Edit', 'MultiEdit', 'Write']:\n            file_path = tool_input.get('file_path', '')\n            if '.env' in file_path and not file_path.endswith('.env.sample'):\n                return True\n        \n        # Check bash commands for .env file access\n        elif tool_name == 'Bash':\n            command = tool_input.get('command', '')\n            # Pattern to detect .env file access (but allow .env.sample)\n            env_patterns = [\n                r'\\b\\.env\\b(?!\\.sample)',  # .env but not .env.sample\n                r'cat\\s+.*\\.env\\b(?!\\.sample)',  # cat .env\n                r'echo\\s+.*>\\s*\\.env\\b(?!\\.sample)',  # echo > .env\n                r'touch\\s+.*\\.env\\b(?!\\.sample)',  # touch .env\n                r'cp\\s+.*\\.env\\b(?!\\.sample)',  # cp .env\n                r'mv\\s+.*\\.env\\b(?!\\.sample)',  # mv .env\n            ]\n            \n            for pattern in env_patterns:\n                if re.search(pattern, command):\n                    return True\n    \n    return False\n\ndef main():\n    try:\n        # Read JSON input from stdin\n        input_data = json.load(sys.stdin)\n        \n        tool_name = input_data.get('tool_name', '')\n        tool_input = input_data.get('tool_input', {})\n\n        # Check for .env file access (blocks access to sensitive environment files)\n        # COMMENTED OUT: Allows worktree command to create .env files automatically\n        # if is_env_file_access(tool_name, tool_input):\n        #     print(\"BLOCKED: Access to .env files containing sensitive data is prohibited\", file=sys.stderr)\n        #     print(\"Use .env.sample for template files instead\", file=sys.stderr)\n        #     sys.exit(2)  # Exit code 2 blocks tool call and shows error to Claude\n\n        # Check for dangerous rm -rf commands\n        if tool_name == 'Bash':\n            command = tool_input.get('command', '')\n\n            # Block rm -rf commands unless they target allowed directories\n            if is_dangerous_rm_command(command, ALLOWED_RM_DIRECTORIES):\n                print(\"BLOCKED: Dangerous rm command detected and prevented\", file=sys.stderr)\n                print(f\"Tip: rm -rf is only allowed in these directories: {', '.join(ALLOWED_RM_DIRECTORIES)}\", file=sys.stderr)\n                sys.exit(2)  # Exit code 2 blocks tool call and shows error to Claude\n        \n        # Extract session_id\n        session_id = input_data.get('session_id', 'unknown')\n        \n        # Ensure session log directory exists\n        log_dir = ensure_session_log_dir(session_id)\n        log_path = log_dir / 'pre_tool_use.json'\n        \n        # Read existing log data or initialize empty list\n        if log_path.exists():\n            with open(log_path, 'r') as f:\n                try:\n                    log_data = json.load(f)\n                except (json.JSONDecodeError, ValueError):\n                    log_data = []\n        else:\n            log_data = []\n        \n        # Append new data\n        log_data.append(input_data)\n        \n        # Write back to file with formatting\n        with open(log_path, 'w') as f:\n            json.dump(log_data, f, indent=2)\n        \n        sys.exit(0)\n        \n    except json.JSONDecodeError:\n        # Gracefully handle JSON decode errors\n        sys.exit(0)\n    except Exception:\n        # Handle any other errors gracefully\n        sys.exit(0)\n\nif __name__ == '__main__':\n    main()",
+        "numLines": 222,
+        "startLine": 1,
+        "totalLines": 222
+      }
+    },
+    "tool_use_id": "toolu_01Rhj9DnzHjmZuQqygQp4JFZ"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Read",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/hooks/subagent_stop.py"
+    },
+    "tool_response": {
+      "type": "text",
+      "file": {
+        "filePath": "/Users/donovan/PROMAN_OS/.claude/hooks/subagent_stop.py",
+        "content": "#!/usr/bin/env -S uv run --script\n# /// script\n# requires-python = \">=3.11\"\n# dependencies = [\n#     \"python-dotenv\",\n# ]\n# ///\n\nimport argparse\nimport json\nimport os\nimport sys\nimport subprocess\nfrom pathlib import Path\nfrom datetime import datetime\nfrom utils.constants import ensure_session_log_dir\n\ntry:\n    from dotenv import load_dotenv\n\n    load_dotenv()\nexcept ImportError:\n    pass  # dotenv is optional\n\n\ndef get_tts_script_path():\n    \"\"\"\n    Determine which TTS script to use based on available API keys.\n    Priority order: ElevenLabs > OpenAI > pyttsx3\n    \"\"\"\n    # Get current script directory and construct utils/tts path\n    script_dir = Path(__file__).parent\n    tts_dir = script_dir / \"utils\" / \"tts\"\n\n    # Check for ElevenLabs API key (highest priority)\n    if os.getenv(\"ELEVENLABS_API_KEY\"):\n        elevenlabs_script = tts_dir / \"elevenlabs_tts.py\"\n        if elevenlabs_script.exists():\n            return str(elevenlabs_script)\n\n    # Check for OpenAI API key (second priority)\n    if os.getenv(\"OPENAI_API_KEY\"):\n        openai_script = tts_dir / \"openai_tts.py\"\n        if openai_script.exists():\n            return str(openai_script)\n\n    # Fall back to pyttsx3 (no API key required)\n    pyttsx3_script = tts_dir / \"pyttsx3_tts.py\"\n    if pyttsx3_script.exists():\n        return str(pyttsx3_script)\n\n    return None\n\n\ndef announce_subagent_completion():\n    \"\"\"Announce subagent completion using the best available TTS service.\"\"\"\n    try:\n        tts_script = get_tts_script_path()\n        if not tts_script:\n            return  # No TTS scripts available\n\n        # Use fixed message for subagent completion\n        completion_message = \"Subagent Complete\"\n\n        # Call the TTS script with the completion message\n        subprocess.run(\n            [\"uv\", \"run\", tts_script, completion_message],\n            capture_output=True,  # Suppress output\n            timeout=10,  # 10-second timeout\n        )\n\n    except (subprocess.TimeoutExpired, subprocess.SubprocessError, FileNotFoundError):\n        # Fail silently if TTS encounters issues\n        pass\n    except Exception:\n        # Fail silently for any other errors\n        pass\n\n\ndef main():\n    try:\n        # Parse command line arguments\n        parser = argparse.ArgumentParser()\n        parser.add_argument(\n            \"--chat\", action=\"store_true\", help=\"Copy transcript to chat.json\"\n        )\n        parser.add_argument(\n            \"--notify\", action=\"store_true\", help=\"Announce subagent completion via TTS\"\n        )\n        args = parser.parse_args()\n\n        # Read JSON input from stdin\n        input_data = json.load(sys.stdin)\n\n        # Extract required fields\n        session_id = input_data.get(\"session_id\", \"\")\n        stop_hook_active = input_data.get(\"stop_hook_active\", False)\n\n        # Ensure session log directory exists\n        log_dir = ensure_session_log_dir(session_id)\n        log_path = log_dir / \"subagent_stop.json\"\n\n        # Read existing log data or initialize empty list\n        if log_path.exists():\n            with open(log_path, \"r\") as f:\n                try:\n                    log_data = json.load(f)\n                except (json.JSONDecodeError, ValueError):\n                    log_data = []\n        else:\n            log_data = []\n\n        # Append new data\n        log_data.append(input_data)\n\n        # Write back to file with formatting\n        with open(log_path, \"w\") as f:\n            json.dump(log_data, f, indent=2)\n\n        # Handle --chat switch (same as stop.py)\n        if args.chat and \"transcript_path\" in input_data:\n            transcript_path = input_data[\"transcript_path\"]\n            if os.path.exists(transcript_path):\n                # Read .jsonl file and convert to JSON array\n                chat_data = []\n                try:\n                    with open(transcript_path, \"r\") as f:\n                        for line in f:\n                            line = line.strip()\n                            if line:\n                                try:\n                                    chat_data.append(json.loads(line))\n                                except json.JSONDecodeError:\n                                    pass  # Skip invalid lines\n\n                    # Write to logs/chat.json\n                    chat_file = os.path.join(log_dir, \"chat.json\")\n                    with open(chat_file, \"w\") as f:\n                        json.dump(chat_data, f, indent=2)\n                except Exception:\n                    pass  # Fail silently\n\n        if args.notify:\n            # Announce subagent completion via TTS\n            announce_subagent_completion()\n\n        sys.exit(0)\n\n    except json.JSONDecodeError:\n        # Handle JSON decode errors gracefully\n        sys.exit(0)\n    except Exception:\n        # Handle any other errors gracefully\n        sys.exit(0)\n\n\nif __name__ == \"__main__\":\n    main()\n",
+        "numLines": 159,
+        "startLine": 1,
+        "totalLines": 159
+      }
+    },
+    "tool_use_id": "toolu_018t9GnDZugPGoMWsjZSEHDe"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Read",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/hooks/post_tool_use.py"
+    },
+    "tool_response": {
+      "type": "text",
+      "file": {
+        "filePath": "/Users/donovan/PROMAN_OS/.claude/hooks/post_tool_use.py",
+        "content": "#!/usr/bin/env -S uv run --script\n# /// script\n# requires-python = \">=3.8\"\n# ///\n\nimport json\nimport os\nimport sys\nfrom pathlib import Path\nfrom utils.constants import ensure_session_log_dir\n\ndef main():\n    try:\n        # Read JSON input from stdin\n        input_data = json.load(sys.stdin)\n        \n        # Extract session_id\n        session_id = input_data.get('session_id', 'unknown')\n        \n        # Ensure session log directory exists\n        log_dir = ensure_session_log_dir(session_id)\n        log_path = log_dir / 'post_tool_use.json'\n        \n        # Read existing log data or initialize empty list\n        if log_path.exists():\n            with open(log_path, 'r') as f:\n                try:\n                    log_data = json.load(f)\n                except (json.JSONDecodeError, ValueError):\n                    log_data = []\n        else:\n            log_data = []\n        \n        # Append new data\n        log_data.append(input_data)\n        \n        # Write back to file with formatting\n        with open(log_path, 'w') as f:\n            json.dump(log_data, f, indent=2)\n        \n        sys.exit(0)\n        \n    except json.JSONDecodeError:\n        # Handle JSON decode errors gracefully\n        sys.exit(0)\n    except Exception:\n        # Exit cleanly on any other error\n        sys.exit(0)\n\nif __name__ == '__main__':\n    main()",
+        "numLines": 51,
+        "startLine": 1,
+        "totalLines": 51
+      }
+    },
+    "tool_use_id": "toolu_01J4uiCoAW9tXn2hBmC931Gz"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Read",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/hooks/user_prompt_submit.py"
+    },
+    "tool_response": {
+      "type": "text",
+      "file": {
+        "filePath": "/Users/donovan/PROMAN_OS/.claude/hooks/user_prompt_submit.py",
+        "content": "#!/usr/bin/env -S uv run --script\n# /// script\n# requires-python = \">=3.11\"\n# dependencies = [\n#     \"python-dotenv\",\n# ]\n# ///\n\nimport argparse\nimport json\nimport os\nimport sys\nfrom pathlib import Path\nfrom datetime import datetime\n\ntry:\n    from dotenv import load_dotenv\n\n    load_dotenv()\nexcept ImportError:\n    pass  # dotenv is optional\n\n\ndef log_user_prompt(session_id, input_data):\n    \"\"\"Log user prompt to logs directory.\"\"\"\n    # Ensure logs directory exists\n    log_dir = Path(\"logs\")\n    log_dir.mkdir(parents=True, exist_ok=True)\n    log_file = log_dir / \"user_prompt_submit.json\"\n\n    # Read existing log data or initialize empty list\n    if log_file.exists():\n        with open(log_file, \"r\") as f:\n            try:\n                log_data = json.load(f)\n            except (json.JSONDecodeError, ValueError):\n                log_data = []\n    else:\n        log_data = []\n\n    # Append the entire input data\n    log_data.append(input_data)\n\n    # Write back to file with formatting\n    with open(log_file, \"w\") as f:\n        json.dump(log_data, f, indent=2)\n\n\ndef manage_session_data(session_id, prompt, name_agent=False):\n    \"\"\"Manage session data in the new JSON structure.\"\"\"\n    import subprocess\n\n    # Ensure sessions directory exists\n    sessions_dir = Path(\".claude/data/sessions\")\n    sessions_dir.mkdir(parents=True, exist_ok=True)\n\n    # Load or create session file\n    session_file = sessions_dir / f\"{session_id}.json\"\n\n    if session_file.exists():\n        try:\n            with open(session_file, \"r\") as f:\n                session_data = json.load(f)\n        except (json.JSONDecodeError, ValueError):\n            session_data = {\"session_id\": session_id, \"prompts\": []}\n    else:\n        session_data = {\"session_id\": session_id, \"prompts\": []}\n\n    # Add the new prompt\n    session_data[\"prompts\"].append(prompt)\n\n    # Generate agent name if requested and not already present\n    if name_agent and \"agent_name\" not in session_data:\n        # Try Anthropic first (preferred)\n        try:\n            result = subprocess.run(\n                [\"uv\", \"run\", \".claude/hooks/utils/llm/anth.py\", \"--agent-name\"],\n                capture_output=True,\n                text=True,\n                timeout=10,\n            )\n\n            if result.returncode == 0 and result.stdout.strip():\n                agent_name = result.stdout.strip()\n                # Validate the name\n                if len(agent_name.split()) == 1 and agent_name.isalnum():\n                    session_data[\"agent_name\"] = agent_name\n                else:\n                    raise Exception(\"Invalid name from Anthropic\")\n        except Exception:\n            # Fall back to Ollama if Anthropic fails\n            try:\n                result = subprocess.run(\n                    [\"uv\", \"run\", \".claude/hooks/utils/llm/ollama.py\", \"--agent-name\"],\n                    capture_output=True,\n                    text=True,\n                    timeout=10,  # Shorter timeout for local Ollama\n                )\n\n                if result.returncode == 0 and result.stdout.strip():\n                    agent_name = result.stdout.strip()\n                    # Check if it's a valid name (not an error message)\n                    if len(agent_name.split()) == 1 and agent_name.isalnum():\n                        session_data[\"agent_name\"] = agent_name\n            except Exception:\n                # If both fail, don't block the prompt\n                pass\n\n    # Save the updated session data\n    try:\n        with open(session_file, \"w\") as f:\n            json.dump(session_data, f, indent=2)\n    except Exception:\n        # Silently fail if we can't write the file\n        pass\n\n\ndef validate_prompt(prompt):\n    \"\"\"\n    Validate the user prompt for security or policy violations.\n    Returns tuple (is_valid, reason).\n    \"\"\"\n    # Example validation rules (customize as needed)\n    blocked_patterns = [\n        # Add any patterns you want to block\n        # Example: ('rm -rf /', 'Dangerous command detected'),\n    ]\n\n    prompt_lower = prompt.lower()\n\n    for pattern, reason in blocked_patterns:\n        if pattern.lower() in prompt_lower:\n            return False, reason\n\n    return True, None\n\n\ndef main():\n    try:\n        # Parse command line arguments\n        parser = argparse.ArgumentParser()\n        parser.add_argument(\n            \"--validate\", action=\"store_true\", help=\"Enable prompt validation\"\n        )\n        parser.add_argument(\n            \"--log-only\",\n            action=\"store_true\",\n            help=\"Only log prompts, no validation or blocking\",\n        )\n        parser.add_argument(\n            \"--store-last-prompt\",\n            action=\"store_true\",\n            help=\"Store the last prompt for status line display\",\n        )\n        parser.add_argument(\n            \"--name-agent\",\n            action=\"store_true\",\n            help=\"Generate an agent name for the session\",\n        )\n        args = parser.parse_args()\n\n        # Read JSON input from stdin\n        input_data = json.loads(sys.stdin.read())\n\n        # Extract session_id and prompt\n        session_id = input_data.get(\"session_id\", \"unknown\")\n        prompt = input_data.get(\"prompt\", \"\")\n\n        # Log the user prompt\n        log_user_prompt(session_id, input_data)\n\n        # Manage session data with JSON structure\n        if args.store_last_prompt or args.name_agent:\n            manage_session_data(session_id, prompt, name_agent=args.name_agent)\n\n        # Validate prompt if requested and not in log-only mode\n        if args.validate and not args.log_only:\n            is_valid, reason = validate_prompt(prompt)\n            if not is_valid:\n                # Exit code 2 blocks the prompt with error message\n                print(f\"Prompt blocked: {reason}\", file=sys.stderr)\n                sys.exit(2)\n\n        # Add context information (optional)\n        # You can print additional context that will be added to the prompt\n        # Example: print(f\"Current time: {datetime.now()}\")\n\n        # Success - prompt will be processed\n        sys.exit(0)\n\n    except json.JSONDecodeError:\n        # Handle JSON decode errors gracefully\n        sys.exit(0)\n    except Exception:\n        # Handle any other errors gracefully\n        sys.exit(0)\n\n\nif __name__ == \"__main__\":\n    main()\n",
+        "numLines": 201,
+        "startLine": 1,
+        "totalLines": 201
+      }
+    },
+    "tool_use_id": "toolu_01MGnKUzMRM9CfTaTZGhvyyt"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Read",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/hooks/notification.py"
+    },
+    "tool_response": {
+      "type": "text",
+      "file": {
+        "filePath": "/Users/donovan/PROMAN_OS/.claude/hooks/notification.py",
+        "content": "#!/usr/bin/env -S uv run --script\n# /// script\n# requires-python = \">=3.11\"\n# dependencies = [\n#     \"python-dotenv\",\n# ]\n# ///\n\nimport argparse\nimport json\nimport os\nimport sys\nimport subprocess\nimport random\nfrom pathlib import Path\nfrom utils.constants import ensure_session_log_dir\n\ntry:\n    from dotenv import load_dotenv\n    load_dotenv()\nexcept ImportError:\n    pass  # dotenv is optional\n\n\ndef get_tts_script_path():\n    \"\"\"\n    Determine which TTS script to use based on available API keys.\n    Priority order: ElevenLabs > OpenAI > pyttsx3\n    \"\"\"\n    # Get current script directory and construct utils/tts path\n    script_dir = Path(__file__).parent\n    tts_dir = script_dir / \"utils\" / \"tts\"\n    \n    # Check for ElevenLabs API key (highest priority)\n    if os.getenv('ELEVENLABS_API_KEY'):\n        elevenlabs_script = tts_dir / \"elevenlabs_tts.py\"\n        if elevenlabs_script.exists():\n            return str(elevenlabs_script)\n    \n    # Check for OpenAI API key (second priority)\n    if os.getenv('OPENAI_API_KEY'):\n        openai_script = tts_dir / \"openai_tts.py\"\n        if openai_script.exists():\n            return str(openai_script)\n    \n    # Fall back to pyttsx3 (no API key required)\n    pyttsx3_script = tts_dir / \"pyttsx3_tts.py\"\n    if pyttsx3_script.exists():\n        return str(pyttsx3_script)\n    \n    return None\n\n\ndef announce_notification():\n    \"\"\"Announce that the agent needs user input.\"\"\"\n    try:\n        tts_script = get_tts_script_path()\n        if not tts_script:\n            return  # No TTS scripts available\n        \n        # Get engineer name if available\n        engineer_name = os.getenv('ENGINEER_NAME', '').strip()\n        \n        # Create notification message with 30% chance to include name\n        if engineer_name and random.random() < 0.3:\n            notification_message = f\"{engineer_name}, your agent needs your input\"\n        else:\n            notification_message = \"Your agent needs your input\"\n        \n        # Call the TTS script with the notification message\n        subprocess.run([\n            \"uv\", \"run\", tts_script, notification_message\n        ], \n        capture_output=True,  # Suppress output\n        timeout=10  # 10-second timeout\n        )\n        \n    except (subprocess.TimeoutExpired, subprocess.SubprocessError, FileNotFoundError):\n        # Fail silently if TTS encounters issues\n        pass\n    except Exception:\n        # Fail silently for any other errors\n        pass\n\n\ndef main():\n    try:\n        # Parse command line arguments\n        parser = argparse.ArgumentParser()\n        parser.add_argument('--notify', action='store_true', help='Enable TTS notifications')\n        args = parser.parse_args()\n        \n        # Read JSON input from stdin\n        input_data = json.loads(sys.stdin.read())\n        \n        # Extract session_id\n        session_id = input_data.get('session_id', 'unknown')\n        \n        # Ensure session log directory exists\n        log_dir = ensure_session_log_dir(session_id)\n        log_file = log_dir / 'notification.json'\n        \n        # Read existing log data or initialize empty list\n        if log_file.exists():\n            with open(log_file, 'r') as f:\n                try:\n                    log_data = json.load(f)\n                except (json.JSONDecodeError, ValueError):\n                    log_data = []\n        else:\n            log_data = []\n        \n        # Append new data\n        log_data.append(input_data)\n        \n        # Write back to file with formatting\n        with open(log_file, 'w') as f:\n            json.dump(log_data, f, indent=2)\n        \n        # Announce notification via TTS only if --notify flag is set\n        # Skip TTS for the generic \"Claude is waiting for your input\" message\n        if args.notify and input_data.get('message') != 'Claude is waiting for your input':\n            announce_notification()\n        \n        sys.exit(0)\n        \n    except json.JSONDecodeError:\n        # Handle JSON decode errors gracefully\n        sys.exit(0)\n    except Exception:\n        # Handle any other errors gracefully\n        sys.exit(0)\n\nif __name__ == '__main__':\n    main()",
+        "numLines": 135,
+        "startLine": 1,
+        "totalLines": 135
+      }
+    },
+    "tool_use_id": "toolu_0162RAifDhTgeW3d31KKxpyn"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "TodoWrite",
+    "tool_input": {
+      "todos": [
+        {
+          "content": "Verify PreToolUse hook (logs + rm -rf blocking)",
+          "status": "in_progress",
+          "activeForm": "Verifying PreToolUse hook"
+        },
+        {
+          "content": "Verify PostToolUse hook (logging)",
+          "status": "pending",
+          "activeForm": "Verifying PostToolUse hook"
+        },
+        {
+          "content": "Verify UserPromptSubmit hook (logging)",
+          "status": "pending",
+          "activeForm": "Verifying UserPromptSubmit hook"
+        },
+        {
+          "content": "Test rm -rf blocking (security feature)",
+          "status": "pending",
+          "activeForm": "Testing rm -rf blocking"
+        },
+        {
+          "content": "Verify Stop hook (logging)",
+          "status": "pending",
+          "activeForm": "Verifying Stop hook"
+        },
+        {
+          "content": "Verify Notification hook (logging)",
+          "status": "pending",
+          "activeForm": "Verifying Notification hook"
+        },
+        {
+          "content": "Verify SubagentStop hook (via Task tool)",
+          "status": "pending",
+          "activeForm": "Verifying SubagentStop hook"
+        },
+        {
+          "content": "Check PreCompact and SessionEnd hooks (require specific events)",
+          "status": "pending",
+          "activeForm": "Checking PreCompact and SessionEnd hooks"
+        }
+      ]
+    },
+    "tool_response": {
+      "oldTodos": [],
+      "newTodos": [
+        {
+          "content": "Verify PreToolUse hook (logs + rm -rf blocking)",
+          "status": "in_progress",
+          "activeForm": "Verifying PreToolUse hook"
+        },
+        {
+          "content": "Verify PostToolUse hook (logging)",
+          "status": "pending",
+          "activeForm": "Verifying PostToolUse hook"
+        },
+        {
+          "content": "Verify UserPromptSubmit hook (logging)",
+          "status": "pending",
+          "activeForm": "Verifying UserPromptSubmit hook"
+        },
+        {
+          "content": "Test rm -rf blocking (security feature)",
+          "status": "pending",
+          "activeForm": "Testing rm -rf blocking"
+        },
+        {
+          "content": "Verify Stop hook (logging)",
+          "status": "pending",
+          "activeForm": "Verifying Stop hook"
+        },
+        {
+          "content": "Verify Notification hook (logging)",
+          "status": "pending",
+          "activeForm": "Verifying Notification hook"
+        },
+        {
+          "content": "Verify SubagentStop hook (via Task tool)",
+          "status": "pending",
+          "activeForm": "Verifying SubagentStop hook"
+        },
+        {
+          "content": "Check PreCompact and SessionEnd hooks (require specific events)",
+          "status": "pending",
+          "activeForm": "Checking PreCompact and SessionEnd hooks"
+        }
+      ]
+    },
+    "tool_use_id": "toolu_016DTfkNUTYFPexonSPSYazd"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Read",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/.claude/hooks/utils/constants.py"
+    },
+    "tool_response": {
+      "type": "text",
+      "file": {
+        "filePath": "/Users/donovan/PROMAN_OS/.claude/hooks/utils/constants.py",
+        "content": "#!/usr/bin/env -S uv run --script\n# /// script\n# requires-python = \">=3.8\"\n# ///\n\n\"\"\"\nConstants for Claude Code Hooks.\n\"\"\"\n\nimport os\nfrom pathlib import Path\n\n# Base directory for all logs\n# Default is 'logs' in the current working directory\nLOG_BASE_DIR = os.environ.get(\"CLAUDE_HOOKS_LOG_DIR\", \"logs\")\n\ndef get_session_log_dir(session_id: str) -> Path:\n    \"\"\"\n    Get the log directory for a specific session.\n    \n    Args:\n        session_id: The Claude session ID\n        \n    Returns:\n        Path object for the session's log directory\n    \"\"\"\n    return Path(LOG_BASE_DIR) / session_id\n\ndef ensure_session_log_dir(session_id: str) -> Path:\n    \"\"\"\n    Ensure the log directory for a session exists.\n    \n    Args:\n        session_id: The Claude session ID\n        \n    Returns:\n        Path object for the session's log directory\n    \"\"\"\n    log_dir = get_session_log_dir(session_id)\n    log_dir.mkdir(parents=True, exist_ok=True)\n    return log_dir",
+        "numLines": 41,
+        "startLine": 1,
+        "totalLines": 41
+      }
+    },
+    "tool_use_id": "toolu_016DRk8XnnGQ4NtWMNjdswNg"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "ls -la /Users/donovan/PROMAN_OS/.claude/data/sessions/ 2>/dev/null | head -10",
+      "description": "List session data directory"
+    },
+    "tool_response": {
+      "stdout": "",
+      "stderr": "",
+      "interrupted": false,
+      "isImage": false
+    },
+    "tool_use_id": "toolu_014Rti6gFQYY2EUKRy24kCKS"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "ls -la /Users/donovan/PROMAN_OS/logs/ 2>/dev/null | head -20",
+      "description": "List log directory contents"
+    },
+    "tool_response": {
+      "stdout": "total 8\ndrwxr-xr-x@ 4 donovan  staff  128 Nov 30 08:12 .\ndrwxr-xr-x  9 donovan  staff  288 Nov 30 08:12 ..\ndrwxr-xr-x@ 5 donovan  staff  160 Nov 30 08:12 ddbaf413-7128-416f-a857-23ef037de61e\n-rw-r--r--@ 1 donovan  staff  352 Nov 30 08:12 user_prompt_submit.json",
+      "stderr": "",
+      "interrupted": false,
+      "isImage": false
+    },
+    "tool_use_id": "toolu_01GyUga3qC4doyXTccL1Am33"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Read",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/logs/user_prompt_submit.json"
+    },
+    "tool_response": {
+      "type": "text",
+      "file": {
+        "filePath": "/Users/donovan/PROMAN_OS/logs/user_prompt_submit.json",
+        "content": "[\n  {\n    \"session_id\": \"ddbaf413-7128-416f-a857-23ef037de61e\",\n    \"transcript_path\": \"/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl\",\n    \"cwd\": \"/Users/donovan/PROMAN_OS\",\n    \"permission_mode\": \"bypassPermissions\",\n    \"hook_event_name\": \"UserPromptSubmit\",\n    \"prompt\": \"test all hooks\"\n  }\n]",
+        "numLines": 10,
+        "startLine": 1,
+        "totalLines": 10
+      }
+    },
+    "tool_use_id": "toolu_01EyssUxfez7LrsezivQ8qnp"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "ls -la /Users/donovan/PROMAN_OS/logs/ddbaf413-7128-416f-a857-23ef037de61e/",
+      "description": "List session log files"
+    },
+    "tool_response": {
+      "stdout": "total 112\ndrwxr-xr-x@ 5 donovan  staff    160 Nov 30 08:12 .\ndrwxr-xr-x@ 4 donovan  staff    128 Nov 30 08:12 ..\n-rw-r--r--@ 1 donovan  staff  44079 Nov 30 08:13 post_tool_use.json\n-rw-r--r--@ 1 donovan  staff   4855 Nov 30 08:13 pre_tool_use.json\n-rw-r--r--@ 1 donovan  staff    475 Nov 30 08:12 subagent_stop.json",
+      "stderr": "",
+      "interrupted": false,
+      "isImage": false
+    },
+    "tool_use_id": "toolu_01N2AZWvnLVkX4QC5wuCkqZr"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "TodoWrite",
+    "tool_input": {
+      "todos": [
+        {
+          "content": "Verify PreToolUse hook (logs + rm -rf blocking)",
+          "status": "completed",
+          "activeForm": "Verifying PreToolUse hook"
+        },
+        {
+          "content": "Verify PostToolUse hook (logging)",
+          "status": "completed",
+          "activeForm": "Verifying PostToolUse hook"
+        },
+        {
+          "content": "Verify UserPromptSubmit hook (logging)",
+          "status": "completed",
+          "activeForm": "Verifying UserPromptSubmit hook"
+        },
+        {
+          "content": "Test rm -rf blocking (security feature)",
+          "status": "in_progress",
+          "activeForm": "Testing rm -rf blocking"
+        },
+        {
+          "content": "Verify Stop hook (logging)",
+          "status": "pending",
+          "activeForm": "Verifying Stop hook"
+        },
+        {
+          "content": "Verify Notification hook (logging)",
+          "status": "pending",
+          "activeForm": "Verifying Notification hook"
+        },
+        {
+          "content": "Verify SubagentStop hook (via Task tool)",
+          "status": "completed",
+          "activeForm": "Verifying SubagentStop hook"
+        },
+        {
+          "content": "Check PreCompact and SessionEnd hooks (require specific events)",
+          "status": "pending",
+          "activeForm": "Checking PreCompact and SessionEnd hooks"
+        }
+      ]
+    },
+    "tool_response": {
+      "oldTodos": [
+        {
+          "content": "Verify PreToolUse hook (logs + rm -rf blocking)",
+          "status": "in_progress",
+          "activeForm": "Verifying PreToolUse hook"
+        },
+        {
+          "content": "Verify PostToolUse hook (logging)",
+          "status": "pending",
+          "activeForm": "Verifying PostToolUse hook"
+        },
+        {
+          "content": "Verify UserPromptSubmit hook (logging)",
+          "status": "pending",
+          "activeForm": "Verifying UserPromptSubmit hook"
+        },
+        {
+          "content": "Test rm -rf blocking (security feature)",
+          "status": "pending",
+          "activeForm": "Testing rm -rf blocking"
+        },
+        {
+          "content": "Verify Stop hook (logging)",
+          "status": "pending",
+          "activeForm": "Verifying Stop hook"
+        },
+        {
+          "content": "Verify Notification hook (logging)",
+          "status": "pending",
+          "activeForm": "Verifying Notification hook"
+        },
+        {
+          "content": "Verify SubagentStop hook (via Task tool)",
+          "status": "pending",
+          "activeForm": "Verifying SubagentStop hook"
+        },
+        {
+          "content": "Check PreCompact and SessionEnd hooks (require specific events)",
+          "status": "pending",
+          "activeForm": "Checking PreCompact and SessionEnd hooks"
+        }
+      ],
+      "newTodos": [
+        {
+          "content": "Verify PreToolUse hook (logs + rm -rf blocking)",
+          "status": "completed",
+          "activeForm": "Verifying PreToolUse hook"
+        },
+        {
+          "content": "Verify PostToolUse hook (logging)",
+          "status": "completed",
+          "activeForm": "Verifying PostToolUse hook"
+        },
+        {
+          "content": "Verify UserPromptSubmit hook (logging)",
+          "status": "completed",
+          "activeForm": "Verifying UserPromptSubmit hook"
+        },
+        {
+          "content": "Test rm -rf blocking (security feature)",
+          "status": "in_progress",
+          "activeForm": "Testing rm -rf blocking"
+        },
+        {
+          "content": "Verify Stop hook (logging)",
+          "status": "pending",
+          "activeForm": "Verifying Stop hook"
+        },
+        {
+          "content": "Verify Notification hook (logging)",
+          "status": "pending",
+          "activeForm": "Verifying Notification hook"
+        },
+        {
+          "content": "Verify SubagentStop hook (via Task tool)",
+          "status": "completed",
+          "activeForm": "Verifying SubagentStop hook"
+        },
+        {
+          "content": "Check PreCompact and SessionEnd hooks (require specific events)",
+          "status": "pending",
+          "activeForm": "Checking PreCompact and SessionEnd hooks"
+        }
+      ]
+    },
+    "tool_use_id": "toolu_016xHKQY5vm2UpLbyG6ycYbg"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Task",
+    "tool_input": {
+      "description": "Test SubagentStop hook",
+      "prompt": "Simply return \"SubagentStop hook test completed\" - this is a quick test to verify the SubagentStop hook fires when a subagent completes.",
+      "subagent_type": "Explore",
+      "model": "haiku"
+    },
+    "tool_response": {
+      "status": "completed",
+      "prompt": "Simply return \"SubagentStop hook test completed\" - this is a quick test to verify the SubagentStop hook fires when a subagent completes.",
+      "agentId": "42b34f0c",
+      "content": [
+        {
+          "type": "text",
+          "text": "SubagentStop hook test completed"
+        }
+      ],
+      "totalDurationMs": 1955,
+      "totalTokens": 20953,
+      "totalToolUseCount": 0,
+      "usage": {
+        "input_tokens": 2,
+        "cache_creation_input_tokens": 20941,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 20941,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 10,
+        "service_tier": "standard"
+      }
+    },
+    "tool_use_id": "toolu_016nLmuczLymDvczj56dccqG"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "ls -la /Users/donovan/PROMAN_OS/logs/ddbaf413-7128-416f-a857-23ef037de61e/",
+      "description": "Check for subagent_stop log update"
+    },
+    "tool_response": {
+      "stdout": "total 128\ndrwxr-xr-x@ 5 donovan  staff    160 Nov 30 08:12 .\ndrwxr-xr-x@ 4 donovan  staff    128 Nov 30 08:12 ..\n-rw-r--r--@ 1 donovan  staff  52344 Nov 30 08:13 post_tool_use.json\n-rw-r--r--@ 1 donovan  staff   7932 Nov 30 08:13 pre_tool_use.json\n-rw-r--r--@ 1 donovan  staff    958 Nov 30 08:13 subagent_stop.json",
+      "stderr": "",
+      "interrupted": false,
+      "isImage": false
+    },
+    "tool_use_id": "toolu_018odaPhk2xr83vG2eqrXJDV"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Read",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/logs/ddbaf413-7128-416f-a857-23ef037de61e/subagent_stop.json"
+    },
+    "tool_response": {
+      "type": "text",
+      "file": {
+        "filePath": "/Users/donovan/PROMAN_OS/logs/ddbaf413-7128-416f-a857-23ef037de61e/subagent_stop.json",
+        "content": "[\n  {\n    \"session_id\": \"ddbaf413-7128-416f-a857-23ef037de61e\",\n    \"transcript_path\": \"/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl\",\n    \"cwd\": \"/Users/donovan/PROMAN_OS\",\n    \"permission_mode\": \"default\",\n    \"hook_event_name\": \"SubagentStop\",\n    \"stop_hook_active\": false,\n    \"agent_id\": \"19bff6a5\",\n    \"agent_transcript_path\": \"/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/agent-19bff6a5.jsonl\"\n  },\n  {\n    \"session_id\": \"ddbaf413-7128-416f-a857-23ef037de61e\",\n    \"transcript_path\": \"/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl\",\n    \"cwd\": \"/Users/donovan/PROMAN_OS\",\n    \"permission_mode\": \"bypassPermissions\",\n    \"hook_event_name\": \"SubagentStop\",\n    \"stop_hook_active\": false,\n    \"agent_id\": \"42b34f0c\",\n    \"agent_transcript_path\": \"/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/agent-42b34f0c.jsonl\"\n  }\n]",
+        "numLines": 22,
+        "startLine": 1,
+        "totalLines": 22
+      }
+    },
+    "tool_use_id": "toolu_01VjPwUbgHBBkcRp3U4dq11y"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "TodoWrite",
+    "tool_input": {
+      "todos": [
+        {
+          "content": "Verify PreToolUse hook (logs + rm -rf blocking)",
+          "status": "completed",
+          "activeForm": "Verifying PreToolUse hook"
+        },
+        {
+          "content": "Verify PostToolUse hook (logging)",
+          "status": "completed",
+          "activeForm": "Verifying PostToolUse hook"
+        },
+        {
+          "content": "Verify UserPromptSubmit hook (logging)",
+          "status": "completed",
+          "activeForm": "Verifying UserPromptSubmit hook"
+        },
+        {
+          "content": "Test rm -rf blocking (security feature)",
+          "status": "completed",
+          "activeForm": "Testing rm -rf blocking"
+        },
+        {
+          "content": "Verify Stop hook (logging)",
+          "status": "pending",
+          "activeForm": "Verifying Stop hook"
+        },
+        {
+          "content": "Verify Notification hook (via AskUserQuestion)",
+          "status": "in_progress",
+          "activeForm": "Verifying Notification hook"
+        },
+        {
+          "content": "Verify SubagentStop hook (via Task tool)",
+          "status": "completed",
+          "activeForm": "Verifying SubagentStop hook"
+        },
+        {
+          "content": "Check PreCompact and SessionEnd hooks (require specific events)",
+          "status": "pending",
+          "activeForm": "Checking PreCompact and SessionEnd hooks"
+        }
+      ]
+    },
+    "tool_response": {
+      "oldTodos": [
+        {
+          "content": "Verify PreToolUse hook (logs + rm -rf blocking)",
+          "status": "completed",
+          "activeForm": "Verifying PreToolUse hook"
+        },
+        {
+          "content": "Verify PostToolUse hook (logging)",
+          "status": "completed",
+          "activeForm": "Verifying PostToolUse hook"
+        },
+        {
+          "content": "Verify UserPromptSubmit hook (logging)",
+          "status": "completed",
+          "activeForm": "Verifying UserPromptSubmit hook"
+        },
+        {
+          "content": "Test rm -rf blocking (security feature)",
+          "status": "in_progress",
+          "activeForm": "Testing rm -rf blocking"
+        },
+        {
+          "content": "Verify Stop hook (logging)",
+          "status": "pending",
+          "activeForm": "Verifying Stop hook"
+        },
+        {
+          "content": "Verify Notification hook (logging)",
+          "status": "pending",
+          "activeForm": "Verifying Notification hook"
+        },
+        {
+          "content": "Verify SubagentStop hook (via Task tool)",
+          "status": "completed",
+          "activeForm": "Verifying SubagentStop hook"
+        },
+        {
+          "content": "Check PreCompact and SessionEnd hooks (require specific events)",
+          "status": "pending",
+          "activeForm": "Checking PreCompact and SessionEnd hooks"
+        }
+      ],
+      "newTodos": [
+        {
+          "content": "Verify PreToolUse hook (logs + rm -rf blocking)",
+          "status": "completed",
+          "activeForm": "Verifying PreToolUse hook"
+        },
+        {
+          "content": "Verify PostToolUse hook (logging)",
+          "status": "completed",
+          "activeForm": "Verifying PostToolUse hook"
+        },
+        {
+          "content": "Verify UserPromptSubmit hook (logging)",
+          "status": "completed",
+          "activeForm": "Verifying UserPromptSubmit hook"
+        },
+        {
+          "content": "Test rm -rf blocking (security feature)",
+          "status": "completed",
+          "activeForm": "Testing rm -rf blocking"
+        },
+        {
+          "content": "Verify Stop hook (logging)",
+          "status": "pending",
+          "activeForm": "Verifying Stop hook"
+        },
+        {
+          "content": "Verify Notification hook (via AskUserQuestion)",
+          "status": "in_progress",
+          "activeForm": "Verifying Notification hook"
+        },
+        {
+          "content": "Verify SubagentStop hook (via Task tool)",
+          "status": "completed",
+          "activeForm": "Verifying SubagentStop hook"
+        },
+        {
+          "content": "Check PreCompact and SessionEnd hooks (require specific events)",
+          "status": "pending",
+          "activeForm": "Checking PreCompact and SessionEnd hooks"
+        }
+      ]
+    },
+    "tool_use_id": "toolu_01MeF4vvyWCCP7CgB3vKdNCm"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "AskUserQuestion",
+    "tool_input": {
+      "questions": [
+        {
+          "question": "Testing Notification hook - does this trigger the notification.json log?",
+          "header": "Hook Test",
+          "options": [
+            {
+              "label": "Yes",
+              "description": "Continue with hook verification"
+            },
+            {
+              "label": "No",
+              "description": "Investigate notification hook issue"
+            }
+          ],
+          "multiSelect": false
+        }
+      ],
+      "answers": {
+        "Testing Notification hook - does this trigger the notification.json log?": "Yes"
+      }
+    },
+    "tool_response": {
+      "questions": [
+        {
+          "question": "Testing Notification hook - does this trigger the notification.json log?",
+          "header": "Hook Test",
+          "options": [
+            {
+              "label": "Yes",
+              "description": "Continue with hook verification"
+            },
+            {
+              "label": "No",
+              "description": "Investigate notification hook issue"
+            }
+          ],
+          "multiSelect": false
+        }
+      ],
+      "answers": {
+        "Testing Notification hook - does this trigger the notification.json log?": "Yes"
+      }
+    },
+    "tool_use_id": "toolu_01BXUMBxL2QYEStHagUeszCh"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "ls -la /Users/donovan/PROMAN_OS/logs/ddbaf413-7128-416f-a857-23ef037de61e/",
+      "description": "Check for notification.json log"
+    },
+    "tool_response": {
+      "stdout": "total 168\ndrwxr-xr-x@ 6 donovan  staff    192 Nov 30 08:14 .\ndrwxr-xr-x@ 4 donovan  staff    128 Nov 30 08:12 ..\n-rw-r--r--@ 1 donovan  staff    369 Nov 30 08:14 notification.json\n-rw-r--r--@ 1 donovan  staff  61588 Nov 30 08:15 post_tool_use.json\n-rw-r--r--@ 1 donovan  staff  11786 Nov 30 08:15 pre_tool_use.json\n-rw-r--r--@ 1 donovan  staff    958 Nov 30 08:13 subagent_stop.json",
+      "stderr": "",
+      "interrupted": false,
+      "isImage": false
+    },
+    "tool_use_id": "toolu_019B1GW8sQCFTxeGU9M9WQdx"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Read",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/logs/ddbaf413-7128-416f-a857-23ef037de61e/notification.json"
+    },
+    "tool_response": {
+      "type": "text",
+      "file": {
+        "filePath": "/Users/donovan/PROMAN_OS/logs/ddbaf413-7128-416f-a857-23ef037de61e/notification.json",
+        "content": "[\n  {\n    \"session_id\": \"ddbaf413-7128-416f-a857-23ef037de61e\",\n    \"transcript_path\": \"/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl\",\n    \"cwd\": \"/Users/donovan/PROMAN_OS\",\n    \"hook_event_name\": \"Notification\",\n    \"message\": \"Claude Code needs your attention\",\n    \"notification_type\": \"permission_prompt\"\n  }\n]",
+        "numLines": 10,
+        "startLine": 1,
+        "totalLines": 10
+      }
+    },
+    "tool_use_id": "toolu_01FxKBxLbMpEc56rN3ZPchCT"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "TodoWrite",
+    "tool_input": {
+      "todos": [
+        {
+          "content": "Verify PreToolUse hook (logs + rm -rf blocking)",
+          "status": "completed",
+          "activeForm": "Verifying PreToolUse hook"
+        },
+        {
+          "content": "Verify PostToolUse hook (logging)",
+          "status": "completed",
+          "activeForm": "Verifying PostToolUse hook"
+        },
+        {
+          "content": "Verify UserPromptSubmit hook (logging)",
+          "status": "completed",
+          "activeForm": "Verifying UserPromptSubmit hook"
+        },
+        {
+          "content": "Test rm -rf blocking (security feature)",
+          "status": "completed",
+          "activeForm": "Testing rm -rf blocking"
+        },
+        {
+          "content": "Verify Stop hook (triggers at end of response)",
+          "status": "pending",
+          "activeForm": "Verifying Stop hook"
+        },
+        {
+          "content": "Verify Notification hook (via AskUserQuestion)",
+          "status": "completed",
+          "activeForm": "Verifying Notification hook"
+        },
+        {
+          "content": "Verify SubagentStop hook (via Task tool)",
+          "status": "completed",
+          "activeForm": "Verifying SubagentStop hook"
+        },
+        {
+          "content": "Check PreCompact and SessionEnd hooks (require specific events)",
+          "status": "in_progress",
+          "activeForm": "Checking PreCompact and SessionEnd hooks"
+        }
+      ]
+    },
+    "tool_response": {
+      "oldTodos": [
+        {
+          "content": "Verify PreToolUse hook (logs + rm -rf blocking)",
+          "status": "completed",
+          "activeForm": "Verifying PreToolUse hook"
+        },
+        {
+          "content": "Verify PostToolUse hook (logging)",
+          "status": "completed",
+          "activeForm": "Verifying PostToolUse hook"
+        },
+        {
+          "content": "Verify UserPromptSubmit hook (logging)",
+          "status": "completed",
+          "activeForm": "Verifying UserPromptSubmit hook"
+        },
+        {
+          "content": "Test rm -rf blocking (security feature)",
+          "status": "completed",
+          "activeForm": "Testing rm -rf blocking"
+        },
+        {
+          "content": "Verify Stop hook (logging)",
+          "status": "pending",
+          "activeForm": "Verifying Stop hook"
+        },
+        {
+          "content": "Verify Notification hook (via AskUserQuestion)",
+          "status": "in_progress",
+          "activeForm": "Verifying Notification hook"
+        },
+        {
+          "content": "Verify SubagentStop hook (via Task tool)",
+          "status": "completed",
+          "activeForm": "Verifying SubagentStop hook"
+        },
+        {
+          "content": "Check PreCompact and SessionEnd hooks (require specific events)",
+          "status": "pending",
+          "activeForm": "Checking PreCompact and SessionEnd hooks"
+        }
+      ],
+      "newTodos": [
+        {
+          "content": "Verify PreToolUse hook (logs + rm -rf blocking)",
+          "status": "completed",
+          "activeForm": "Verifying PreToolUse hook"
+        },
+        {
+          "content": "Verify PostToolUse hook (logging)",
+          "status": "completed",
+          "activeForm": "Verifying PostToolUse hook"
+        },
+        {
+          "content": "Verify UserPromptSubmit hook (logging)",
+          "status": "completed",
+          "activeForm": "Verifying UserPromptSubmit hook"
+        },
+        {
+          "content": "Test rm -rf blocking (security feature)",
+          "status": "completed",
+          "activeForm": "Testing rm -rf blocking"
+        },
+        {
+          "content": "Verify Stop hook (triggers at end of response)",
+          "status": "pending",
+          "activeForm": "Verifying Stop hook"
+        },
+        {
+          "content": "Verify Notification hook (via AskUserQuestion)",
+          "status": "completed",
+          "activeForm": "Verifying Notification hook"
+        },
+        {
+          "content": "Verify SubagentStop hook (via Task tool)",
+          "status": "completed",
+          "activeForm": "Verifying SubagentStop hook"
+        },
+        {
+          "content": "Check PreCompact and SessionEnd hooks (require specific events)",
+          "status": "in_progress",
+          "activeForm": "Checking PreCompact and SessionEnd hooks"
+        }
+      ]
+    },
+    "tool_use_id": "toolu_01PhgSGsnokur66ipaPUUEpR"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Read",
+    "tool_input": {
+      "file_path": "/Users/donovan/PROMAN_OS/logs/ddbaf413-7128-416f-a857-23ef037de61e/pre_tool_use.json",
+      "limit": 30
+    },
+    "tool_response": {
+      "type": "text",
+      "file": {
+        "filePath": "/Users/donovan/PROMAN_OS/logs/ddbaf413-7128-416f-a857-23ef037de61e/pre_tool_use.json",
+        "content": "[\n  {\n    \"session_id\": \"ddbaf413-7128-416f-a857-23ef037de61e\",\n    \"transcript_path\": \"/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl\",\n    \"cwd\": \"/Users/donovan/PROMAN_OS\",\n    \"permission_mode\": \"bypassPermissions\",\n    \"hook_event_name\": \"PreToolUse\",\n    \"tool_name\": \"Read\",\n    \"tool_input\": {\n      \"file_path\": \"/Users/donovan/PROMAN_OS/.claude/hooks/session_end.py\"\n    },\n    \"tool_use_id\": \"toolu_01Fj9JHaS1P49KdARxQrieMa\"\n  },\n  {\n    \"session_id\": \"ddbaf413-7128-416f-a857-23ef037de61e\",\n    \"transcript_path\": \"/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl\",\n    \"cwd\": \"/Users/donovan/PROMAN_OS\",\n    \"permission_mode\": \"bypassPermissions\",\n    \"hook_event_name\": \"PreToolUse\",\n    \"tool_name\": \"Read\",\n    \"tool_input\": {\n      \"file_path\": \"/Users/donovan/PROMAN_OS/.claude/hooks/notification.py\"\n    },\n    \"tool_use_id\": \"toolu_0162RAifDhTgeW3d31KKxpyn\"\n  },\n  {\n    \"session_id\": \"ddbaf413-7128-416f-a857-23ef037de61e\",\n    \"transcript_path\": \"/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl\",\n    \"cwd\": \"/Users/donovan/PROMAN_OS\",\n    \"permission_mode\": \"bypassPermissions\",",
+        "numLines": 30,
+        "startLine": 1,
+        "totalLines": 393
+      }
+    },
+    "tool_use_id": "toolu_01YSGE6xoY4ddmHLxmiaAjDY"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "ls -la /Users/donovan/PROMAN_OS/logs/*.json 2>/dev/null",
+      "description": "Check root logs for PreCompact/SessionEnd"
+    },
+    "tool_response": {
+      "stdout": "-rw-r--r--@ 1 donovan  staff  352 Nov 30 08:12 /Users/donovan/PROMAN_OS/logs/user_prompt_submit.json",
+      "stderr": "",
+      "interrupted": false,
+      "isImage": false
+    },
+    "tool_use_id": "toolu_018c2D8vJiDYznM3LCJq5ggP"
+  },
+  {
+    "session_id": "ddbaf413-7128-416f-a857-23ef037de61e",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/ddbaf413-7128-416f-a857-23ef037de61e.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "TodoWrite",
+    "tool_input": {
+      "todos": [
+        {
+          "content": "Verify PreToolUse hook (logs + rm -rf blocking)",
+          "status": "completed",
+          "activeForm": "Verifying PreToolUse hook"
+        },
+        {
+          "content": "Verify PostToolUse hook (logging)",
+          "status": "completed",
+          "activeForm": "Verifying PostToolUse hook"
+        },
+        {
+          "content": "Verify UserPromptSubmit hook (logging)",
+          "status": "completed",
+          "activeForm": "Verifying UserPromptSubmit hook"
+        },
+        {
+          "content": "Test rm -rf blocking (security feature)",
+          "status": "completed",
+          "activeForm": "Testing rm -rf blocking"
+        },
+        {
+          "content": "Verify Stop hook (triggers at end of response)",
+          "status": "completed",
+          "activeForm": "Verifying Stop hook"
+        },
+        {
+          "content": "Verify Notification hook (via AskUserQuestion)",
+          "status": "completed",
+          "activeForm": "Verifying Notification hook"
+        },
+        {
+          "content": "Verify SubagentStop hook (via Task tool)",
+          "status": "completed",
+          "activeForm": "Verifying SubagentStop hook"
+        },
+        {
+          "content": "Check PreCompact and SessionEnd hooks (require specific events)",
+          "status": "completed",
+          "activeForm": "Checking PreCompact and SessionEnd hooks"
+        }
+      ]
+    },
+    "tool_response": {
+      "oldTodos": [
+        {
+          "content": "Verify PreToolUse hook (logs + rm -rf blocking)",
+          "status": "completed",
+          "activeForm": "Verifying PreToolUse hook"
+        },
+        {
+          "content": "Verify PostToolUse hook (logging)",
+          "status": "completed",
+          "activeForm": "Verifying PostToolUse hook"
+        },
+        {
+          "content": "Verify UserPromptSubmit hook (logging)",
+          "status": "completed",
+          "activeForm": "Verifying UserPromptSubmit hook"
+        },
+        {
+          "content": "Test rm -rf blocking (security feature)",
+          "status": "completed",
+          "activeForm": "Testing rm -rf blocking"
+        },
+        {
+          "content": "Verify Stop hook (triggers at end of response)",
+          "status": "pending",
+          "activeForm": "Verifying Stop hook"
+        },
+        {
+          "content": "Verify Notification hook (via AskUserQuestion)",
+          "status": "completed",
+          "activeForm": "Verifying Notification hook"
+        },
+        {
+          "content": "Verify SubagentStop hook (via Task tool)",
+          "status": "completed",
+          "activeForm": "Verifying SubagentStop hook"
+        },
+        {
+          "content": "Check PreCompact and SessionEnd hooks (require specific events)",
+          "status": "in_progress",
+          "activeForm": "Checking PreCompact and SessionEnd hooks"
+        }
+      ],
+      "newTodos": [
+        {
+          "content": "Verify PreToolUse hook (logs + rm -rf blocking)",
+          "status": "completed",
+          "activeForm": "Verifying PreToolUse hook"
+        },
+        {
+          "content": "Verify PostToolUse hook (logging)",
+          "status": "completed",
+          "activeForm": "Verifying PostToolUse hook"
+        },
+        {
+          "content": "Verify UserPromptSubmit hook (logging)",
+          "status": "completed",
+          "activeForm": "Verifying UserPromptSubmit hook"
+        },
+        {
+          "content": "Test rm -rf blocking (security feature)",
+          "status": "completed",
+          "activeForm": "Testing rm -rf blocking"
+        },
+        {
+          "content": "Verify Stop hook (triggers at end of response)",
+          "status": "completed",
+          "activeForm": "Verifying Stop hook"
+        },
+        {
+          "content": "Verify Notification hook (via AskUserQuestion)",
+          "status": "completed",
+          "activeForm": "Verifying Notification hook"
+        },
+        {
+          "content": "Verify SubagentStop hook (via Task tool)",
+          "status": "completed",
+          "activeForm": "Verifying SubagentStop hook"
+        },
+        {
+          "content": "Check PreCompact and SessionEnd hooks (require specific events)",
+          "status": "completed",
+          "activeForm": "Checking PreCompact and SessionEnd hooks"
+        }
+      ]
+    },
+    "tool_use_id": "toolu_01BktMnd649Lj4YSFg3GSWmd"
+  }
+]

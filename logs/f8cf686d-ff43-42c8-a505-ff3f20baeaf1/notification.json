@@ -1,0 +1,18 @@
+[
+  {
+    "session_id": "f8cf686d-ff43-42c8-a505-ff3f20baeaf1",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/f8cf686d-ff43-42c8-a505-ff3f20baeaf1.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "hook_event_name": "Notification",
+    "message": "Claude is waiting for your input",
+    "notification_type": "idle_prompt"
+  },
+  {
+    "session_id": "f8cf686d-ff43-42c8-a505-ff3f20baeaf1",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/f8cf686d-ff43-42c8-a505-ff3f20baeaf1.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "hook_event_name": "Notification",
+    "message": "Claude is waiting for your input",
+    "notification_type": "idle_prompt"
+  }
+]

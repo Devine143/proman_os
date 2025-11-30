@@ -1,0 +1,50 @@
+[
+  {
+    "session_id": "9c8f5987-f402-4736-9864-cef9a21c8033",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/9c8f5987-f402-4736-9864-cef9a21c8033.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "hook_event_name": "Notification",
+    "message": "Claude Code needs your attention",
+    "notification_type": "permission_prompt"
+  },
+  {
+    "session_id": "9c8f5987-f402-4736-9864-cef9a21c8033",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/9c8f5987-f402-4736-9864-cef9a21c8033.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "hook_event_name": "Notification",
+    "message": "Claude Code needs your attention",
+    "notification_type": "permission_prompt"
+  },
+  {
+    "session_id": "9c8f5987-f402-4736-9864-cef9a21c8033",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/9c8f5987-f402-4736-9864-cef9a21c8033.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "hook_event_name": "Notification",
+    "message": "Claude Code needs your approval for the plan",
+    "notification_type": "permission_prompt"
+  },
+  {
+    "session_id": "9c8f5987-f402-4736-9864-cef9a21c8033",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/9c8f5987-f402-4736-9864-cef9a21c8033.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "hook_event_name": "Notification",
+    "message": "Claude needs your permission to use Write",
+    "notification_type": "permission_prompt"
+  },
+  {
+    "session_id": "9c8f5987-f402-4736-9864-cef9a21c8033",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/9c8f5987-f402-4736-9864-cef9a21c8033.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "hook_event_name": "Notification",
+    "message": "Claude is waiting for your input",
+    "notification_type": "idle_prompt"
+  },
+  {
+    "session_id": "9c8f5987-f402-4736-9864-cef9a21c8033",
+    "transcript_path": "/Users/donovan/.claude/projects/-Users-donovan-PROMAN-OS/9c8f5987-f402-4736-9864-cef9a21c8033.jsonl",
+    "cwd": "/Users/donovan/PROMAN_OS",
+    "hook_event_name": "Notification",
+    "message": "Claude is waiting for your input",
+    "notification_type": "idle_prompt"
+  }
+]
